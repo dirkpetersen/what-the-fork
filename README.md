@@ -91,10 +91,10 @@ prompt without spending tokens). Run `./generate-db.py --help` for all of them.
 Then commit the updated `data/` files and push — GitHub Pages redeploys
 automatically.
 
-> The two databases currently in `data/` (`pnw-pilot`, `openpilot`) are
-> **hand-written sample data** (marked with a badge in the UI) so the dashboard
-> works out of the box. Regenerate them with the script for real, repo-derived
-> data.
+Each run writes two files: `data/<fork-id>.json` (cars published in the
+fork's CARS.md) and `data/<fork-id>.other-cars.json` (cars found only in
+code, code comments, docs, or git/PR history — shown in the dashboard with a
+† marker and italic name, and excluded from manufacturer aggregates).
 
 ## Data format (short version)
 

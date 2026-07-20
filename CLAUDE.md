@@ -20,7 +20,9 @@ generator is pointed at.
 | `app.js` | All logic. No dependencies. Two render paths (`renderForkMatrix`, `renderCarMatrix`), one shared tooltip, manifest-driven. |
 | `generate-db.py` | Claude-CLI-driven DB generator. Stdlib only. |
 | `data/manifest.json` | The dropdown's source of truth: `{id, label, file, status: "available"|"planned"}` per fork. |
-| `data/<fork-id>.json` | One database per fork. `pnw-pilot.json` and `openpilot.json` are **hand-written samples** (their `fork.generator.note` says so → UI shows a "sample data" badge). |
+| `data/<fork-id>.json` | One database per fork — **published CARS.md cars only**. |
+| `data/<fork-id>.other-cars.json` | Cars found only in code/comments/docs/history (always emitted by the generator, even empty). `loadDb()` merges them in with `codeOnly: true` → † marker, italic row, excluded from manufacturer aggregates, "+N†" in the count chip. |
+| `data/<fork-id>.overrides.json` | Accepted community corrections (see dispute section). Merged last, so overrides can target other-cars entries too. |
 
 ## The two modes
 
