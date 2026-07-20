@@ -110,7 +110,7 @@ h1 .q { color: var(--amber); }
   margin-bottom: 6px;
 }
 
-select#fork-select {
+.selector select {
   appearance: none;
   -webkit-appearance: none;
   font-family: var(--mono);
@@ -132,13 +132,21 @@ select#fork-select {
   transition: border-color 0.15s ease;
 }
 
-select#fork-select:hover,
-select#fork-select:focus-visible {
+.selector select:hover,
+.selector select:focus-visible {
   border-color: var(--amber-deep);
   outline: none;
 }
 
-select#fork-select option[disabled] { color: var(--ink-faint); }
+/* The expanded option list is rendered by the OS, usually on a white popup —
+   force dark text there so entries stay readable. */
+.selector select option {
+  color: #111;
+  background: #fff;
+  font-weight: 500;
+}
+
+.selector select option[disabled] { color: #999; }
 
 .legend {
   display: flex;
@@ -690,6 +698,6 @@ footer a { color: var(--ink-dim); }
 
 @media (max-width: 640px) {
   .wrap { padding: 0 12px 60px; }
-  select#fork-select { min-width: 100%; }
+  .selector select { min-width: 100%; }
   .matrix .rowhead { min-width: 170px; }
 }
