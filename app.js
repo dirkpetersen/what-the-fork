@@ -240,13 +240,52 @@ function initDisputeModal() {
 
 const TT_HINT = '<div class="tt-hint">Click to comment or dispute this status</div>';
 
+/* Fork-wide capabilities: rendered as chips, no car dimension. */
+function renderCapabilities(db, feats) {
+  const wrap = $('#capabilities');
+  if (!feats.length) { wrap.hidden = true; return; }
+  wrap.hidden = false;
+  wrap.innerHTML = `<div class="cap-head">Fork-wide features` +
+    `<span class="cap-sub">${feats.length} — same on every supported car</span></div>`;
+  const list = document.createElement('div');
+  list.className = 'cap-list';
+  for (const feat of feats) {
+    const chip = document.createElement('span');
+    const st = STATUS[dominantStatus(db, feat)];
+    chip.className = `cap-chip ${st.cls}`;
+    chip.tabIndex = 0;
+    chip.innerHTML = `<span class="led">${st.glyph}</span> <b>${esc(feat.abbrev)}</b> ${esc(feat.name)}`;
+    bindTip(chip, () => featTipHtml(feat) +
+      `<div class="tt-body">${statusChip(dominantStatus(db, feat))} ${esc(st.label)} on all supported cars</div>`);
+    list.appendChild(chip);
+  }
+  wrap.appendChild(list);
+}
+
+function dominantStatus(db, feat) {
+  for (const m of db.manufacturers || []) {
+    for (const c of m.cars || []) {
+      const s = resolveEntry(m, c, feat.id).status;
+      if (s !== 'unknown') return s;
+    }
+  }
+  return 'unknown';
+}
+
 function renderForkMatrix() {
   const shell = $('#matrix-shell');
   const db = state.dbs[state.forkId];
   if (!db) { showState(shell, 'No data', 'This fork database could not be loaded.'); renderMeta(null); return; }
   renderMeta(db);
 
-  const feats = db.features || [];
+  const { global, carDep } = splitByScope(db);
+  renderCapabilities(db, global);
+  const feats = carDep;
+  if (!feats.length) {
+    showState(shell, 'No car-dependent features',
+      'Every feature in this database behaves the same on all supported cars — see the panel above.');
+    return;
+  }
   const table = document.createElement('table');
   table.className = 'matrix';
 
@@ -254,7 +293,7 @@ function renderForkMatrix() {
   const hr = document.createElement('tr');
   const corner = document.createElement('th');
   corner.className = 'corner';
-  corner.textContent = 'Manufacturer / Car';
+  corner.textContent = `Manufacturer / Car — ${feats.length} car-dependent features`;
   hr.appendChild(corner);
   for (const feat of feats) {
     const th = document.createElement('th');
@@ -357,7 +396,11 @@ function renderForkMatrix() {
 
 function renderMeta(db) {
   const meta = $('#meta');
-  if (!db || state.mode !== 'fork') { meta.classList.remove('show'); return; }
+  if (!db || state.mode !== 'fork') {
+    meta.classList.remove('show');
+    if (!db) $('#capabilities').hidden = true;
+    return;
+  }
   const f = db.fork || {};
   const isSample = /sample|hand/i.test(f.generator?.note || '');
   const carCount = (db.manufacturers || []).reduce((n, m) => n + (m.cars || []).length, 0);
@@ -397,6 +440,28 @@ const FEATURE_ALIASES = {
 function featKey(f) {
   const k = norm(f.id || f.abbrev);
   return FEATURE_ALIASES[k] || k;
+}
+
+/* A feature is "global" when it behaves the same on every car the fork
+   supports, "car-dependent" when the code gates it per brand/platform.
+   Databases carry `scope`; older ones are derived on load. */
+function featScope(feat, db) {
+  if (feat.scope === 'global' || feat.scope === 'car-dependent') return feat.scope;
+  const seen = new Set();
+  for (const m of (db && db.manufacturers) || []) {
+    for (const c of m.cars || []) {
+      const s = resolveEntry(m, c, feat.id).status;
+      if (s !== 'unknown') seen.add(s);
+      if (seen.size > 1) return 'car-dependent';
+    }
+  }
+  return 'global';
+}
+
+function splitByScope(db) {
+  const global = [], carDep = [];
+  for (const f of db.features || []) (featScope(f, db) === 'global' ? global : carDep).push(f);
+  return { global, carDep };
 }
 
 /* Variants of the same model — "(with HDA II)", "(Raven)", year ranges — are
@@ -494,14 +559,25 @@ function renderCarMatrix() {
   const modelName = (modelUnion(state.mfrKey).find((m) => m.key === state.modelKey) || {}).name || state.modelKey;
 
   // Row union: every feature of every fork that lists this car, in fork order.
+  // Rows are grouped: car-dependent first (where forks actually differ), then global.
   const rows = new Map();
   for (const fk of forks) {
     if (!fk.cars) continue;
     for (const feat of fk.db.features || []) {
       const k = featKey(feat);
-      if (!rows.has(k)) rows.set(k, { key: k, abbrev: feat.abbrev, name: feat.name });
+      if (!rows.has(k)) {
+        rows.set(k, { key: k, abbrev: feat.abbrev, name: feat.name,
+                      scope: featScope(feat, fk.db) });
+      } else if (featScope(feat, fk.db) === 'car-dependent') {
+        rows.get(k).scope = 'car-dependent';
+      }
     }
   }
+  const ordered = [...rows.values()];
+  const groups = [
+    { title: 'Depends on this car', rows: ordered.filter((r) => r.scope === 'car-dependent') },
+    { title: 'Works on every car the fork supports', rows: ordered.filter((r) => r.scope !== 'car-dependent') },
+  ].filter((g) => g.rows.length);
 
   const table = document.createElement('table');
   table.className = 'matrix';
@@ -535,7 +611,16 @@ function renderCarMatrix() {
 
   const tbody = document.createElement('tbody');
   let rowIdx = 0;
-  for (const row of rows.values()) {
+  for (const group of groups) {
+  const sec = document.createElement('tr');
+  sec.className = 'section-row';
+  const secTd = document.createElement('td');
+  secTd.className = 'section-head';
+  secTd.colSpan = forks.length + 1;
+  secTd.textContent = `${group.title} — ${group.rows.length}`;
+  sec.appendChild(secTd);
+  tbody.appendChild(sec);
+  for (const row of group.rows) {
     const tr = document.createElement('tr');
     tr.className = 'mfr flat';
     tr.style.animationDelay = `${Math.min(rowIdx * 25, 500)}ms`;
@@ -601,6 +686,7 @@ function renderCarMatrix() {
     }
     tbody.appendChild(tr);
   }
+  }
   table.appendChild(tbody);
   shell.replaceChildren(table);
 
@@ -613,6 +699,121 @@ function renderCarMatrix() {
   shell.appendChild(note);
 }
 
+/* ---------- mode 3: compare forks (no car dimension) ---------- */
+
+function renderForkCompare() {
+  const shell = $('#matrix-shell');
+  renderMeta(null);
+  $('#capabilities').hidden = true;
+  const forks = loadedDbs().map(({ entry, db }) => ({
+    entry, db,
+    featIndex: new Map((db.features || []).map((f) => [featKey(f), f])),
+  }));
+  if (!forks.length) { showState(shell, 'No data', 'No fork databases loaded.'); return; }
+
+  // Union of features across all forks, grouped by scope; a feature counts as
+  // car-dependent if any fork gates it per car.
+  const rows = new Map();
+  for (const fk of forks) {
+    for (const feat of fk.db.features || []) {
+      const k = featKey(feat);
+      const scope = featScope(feat, fk.db);
+      const r = rows.get(k);
+      if (!r) rows.set(k, { key: k, abbrev: feat.abbrev, name: feat.name, scope, feat, count: 1 });
+      else {
+        r.count++;
+        if (scope === 'car-dependent') r.scope = 'car-dependent';
+      }
+    }
+  }
+  const all = [...rows.values()].sort((a, b) => b.count - a.count || a.abbrev.localeCompare(b.abbrev));
+  const groups = [
+    { title: 'Shared across forks', rows: all.filter((r) => r.count > 1) },
+    { title: 'Unique to one fork', rows: all.filter((r) => r.count === 1) },
+  ].filter((g) => g.rows.length);
+
+  const table = document.createElement('table');
+  table.className = 'matrix';
+  const thead = document.createElement('thead');
+  const hr = document.createElement('tr');
+  const corner = document.createElement('th');
+  corner.className = 'corner';
+  corner.textContent = `Feature — ${all.length} across ${forks.length} forks`;
+  hr.appendChild(corner);
+  for (const fk of forks) {
+    const th = document.createElement('th');
+    th.className = 'feat';
+    const span = document.createElement('span');
+    span.className = 'abbr';
+    span.tabIndex = 0;
+    span.textContent = fk.db.fork?.name || fk.entry.label;
+    bindTip(span, () => {
+      const f = fk.db.fork || {};
+      return `<div class="tt-title">${esc(f.name || fk.entry.label)}</div>` +
+        (f.branch ? `<div class="tt-sub">branch ${esc(f.branch)}</div>` : '') +
+        `<div class="tt-body">${esc(f.description || '')}</div>` +
+        `<div class="tt-note">${fk.featIndex.size} features</div>`;
+    });
+    th.appendChild(span);
+    hr.appendChild(th);
+  }
+  thead.appendChild(hr);
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+  let idx = 0;
+  for (const group of groups) {
+    const sec = document.createElement('tr');
+    sec.className = 'section-row';
+    const secTd = document.createElement('td');
+    secTd.className = 'section-head';
+    secTd.colSpan = forks.length + 1;
+    secTd.textContent = `${group.title} — ${group.rows.length}`;
+    sec.appendChild(secTd);
+    tbody.appendChild(sec);
+
+    for (const row of group.rows) {
+      const tr = document.createElement('tr');
+      tr.className = 'mfr flat';
+      tr.style.animationDelay = `${Math.min(idx * 12, 400)}ms`;
+      idx++;
+      const rh = document.createElement('td');
+      rh.className = 'rowhead';
+      rh.tabIndex = 0;
+      rh.innerHTML = `<b>${esc(row.abbrev)}</b><span class="feat-name"> ${esc(row.name)}</span>` +
+        (row.scope === 'car-dependent' ? '<span class="scope-tag">car-dependent</span>' : '');
+      bindTip(rh, () => featTipHtml(row.feat) +
+        `<div class="tt-note">${row.scope === 'car-dependent'
+          ? 'Availability depends on the car — use “By car” for details.'
+          : 'Same on every car the fork supports.'}</div>`);
+      tr.appendChild(rh);
+
+      for (const fk of forks) {
+        const feat = fk.featIndex.get(row.key);
+        const forkName = fk.db.fork?.name || fk.entry.label;
+        if (!feat) {
+          tr.appendChild(makeCell('no', () =>
+            cellTipHtml(`${row.abbrev} — ${forkName}`, null, 'no',
+              'Feature not present in this fork.')));
+          continue;
+        }
+        const scope = featScope(feat, fk.db);
+        const status = scope === 'global' ? dominantStatus(fk.db, feat) : 'partial';
+        tr.appendChild(makeCell(status, () =>
+          `<div class="tt-title">${esc(feat.abbrev)} — ${esc(feat.name)}</div>` +
+          `<div class="tt-sub">${esc(forkName)}${feat.origin ? ' · from ' + esc(feat.origin) : ''}</div>` +
+          `<div class="tt-body">${esc(feat.description || '')}</div>` +
+          `<div class="tt-note">${scope === 'global'
+            ? statusChip(status) + ' on every supported car'
+            : 'Car-dependent — see “By car” for per-car status'}</div>`));
+      }
+      tbody.appendChild(tr);
+    }
+  }
+  table.appendChild(tbody);
+  shell.replaceChildren(table);
+}
+
 /* ---------- shared UI ---------- */
 
 function showState(shell, big, msg) {
@@ -621,22 +822,23 @@ function showState(shell, big, msg) {
 
 function setMode(mode) {
   state.mode = mode;
-  $('#mode-fork-btn').classList.toggle('active', mode === 'fork');
-  $('#mode-car-btn').classList.toggle('active', mode === 'car');
-  $('#mode-fork-btn').setAttribute('aria-pressed', String(mode === 'fork'));
-  $('#mode-car-btn').setAttribute('aria-pressed', String(mode === 'car'));
+  for (const [id, m] of [['mode-fork-btn', 'fork'], ['mode-car-btn', 'car'], ['mode-cmp-btn', 'compare']]) {
+    $('#' + id).classList.toggle('active', mode === m);
+    $('#' + id).setAttribute('aria-pressed', String(mode === m));
+  }
   $('#fork-controls').hidden = mode !== 'fork';
   $('#car-controls').hidden = mode !== 'car';
-  if (mode === 'fork') {
-    renderForkMatrix();
-  } else {
-    const shell = $('#matrix-shell');
-    showState(shell, 'Loading', 'Fetching all fork databases…');
-    Promise.all((state.manifest.databases || [])
-      .filter((d) => d.status === 'available')
-      .map(loadDb))
-      .then(() => { renderCarControls(); renderCarMatrix(); });
-  }
+  if (mode === 'fork') { renderForkMatrix(); return; }
+  const shell = $('#matrix-shell');
+  $('#capabilities').hidden = true;
+  showState(shell, 'Loading', 'Fetching all fork databases…');
+  Promise.all((state.manifest.databases || [])
+    .filter((d) => d.status === 'available')
+    .map(loadDb))
+    .then(() => {
+      if (mode === 'car') { renderCarControls(); renderCarMatrix(); }
+      else renderForkCompare();
+    });
 }
 
 async function init() {
@@ -677,6 +879,7 @@ async function init() {
   });
   $('#mode-fork-btn').addEventListener('click', () => setMode('fork'));
   $('#mode-car-btn').addEventListener('click', () => setMode('car'));
+  $('#mode-cmp-btn').addEventListener('click', () => setMode('compare'));
   initDisputeModal();
 
   await loadDb(first);

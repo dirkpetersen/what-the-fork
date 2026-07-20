@@ -21,7 +21,8 @@
       "name": "Automated Lane Centering",
       "category": "Lateral",
       "origin": "openpilot",
-      "description": "Continuously steers to keep the car centered in its lane using the driving model. Core openpilot capability on every supported car."
+      "description": "Continuously steers to keep the car centered in its lane using the driving model. Core openpilot capability on every supported car.",
+      "scope": "car-dependent"
     },
     {
       "id": "oplong",
@@ -29,7 +30,8 @@
       "name": "openpilot Longitudinal Control",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "openpilot controls gas and brake for adaptive cruise instead of the car's stock ACC. Native on some cars; on many others it is available only behind an alpha toggle, and some cars always keep stock ACC."
+      "description": "openpilot controls gas and brake for adaptive cruise instead of the car's stock ACC. Native on some cars; on many others it is available only behind an alpha toggle, and some cars always keep stock ACC.",
+      "scope": "car-dependent"
     },
     {
       "id": "exp",
@@ -37,7 +39,8 @@
       "name": "Experimental Mode (end-to-end)",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "End-to-end longitudinal driving that can slow for turns, traffic lights and stop signs. Opt-in; requires openpilot longitudinal control on the car."
+      "description": "End-to-end longitudinal driving that can slow for turns, traffic lights and stop signs. Opt-in; requires openpilot longitudinal control on the car.",
+      "scope": "car-dependent"
     },
     {
       "id": "lca",
@@ -45,7 +48,8 @@
       "name": "Lane Change Assist",
       "category": "Lateral",
       "origin": "openpilot",
-      "description": "Steers through a lane change when the driver signals and nudges the wheel above the minimum lane-change speed."
+      "description": "Steers through a lane change when the driver signals and nudges the wheel above the minimum lane-change speed.",
+      "scope": "car-dependent"
     },
     {
       "id": "sng",
@@ -53,7 +57,8 @@
       "name": "Stop and Go",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "Follows traffic to a complete stop and resumes automatically. Some cars cannot resume from a stop or cannot engage ACC below a minimum speed."
+      "description": "Follows traffic to a complete stop and resumes automatically. Some cars cannot resume from a stop or cannot engage ACC below a minimum speed.",
+      "scope": "car-dependent"
     },
     {
       "id": "dm",
@@ -61,7 +66,8 @@
       "name": "Driver Monitoring",
       "category": "Monitoring",
       "origin": "openpilot",
-      "description": "Camera-based driver attention monitoring with escalating alerts, including an optional Always-On Driver Monitoring toggle that stays active even when sunnypilot is disengaged. sunnypilot adds steering-wheel touch enforcement under MADS."
+      "description": "Camera-based driver attention monitoring with escalating alerts, including an optional Always-On Driver Monitoring toggle that stays active even when sunnypilot is disengaged. sunnypilot adds steering-wheel touch enforcement under MADS.",
+      "scope": "car-dependent"
     },
     {
       "id": "personality",
@@ -69,7 +75,8 @@
       "name": "Driving Personality",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "Aggressive / Standard / Relaxed following-distance profiles, switchable from the settings or the steering-wheel distance button. Only affects openpilot longitudinal control."
+      "description": "Aggressive / Standard / Relaxed following-distance profiles, switchable from the settings or the steering-wheel distance button. Only affects openpilot longitudinal control.",
+      "scope": "car-dependent"
     },
     {
       "id": "mads",
@@ -77,7 +84,8 @@
       "name": "MADS (always-on lateral)",
       "category": "Lateral",
       "origin": "sunnypilot",
-      "description": "Modular Assistive Driving System: lets lane centering stay engaged independently of cruise control, with dedicated engage controls, Unified Engagement Mode and per-brand safety support. sunnypilot's flagship feature; on by default and customizable."
+      "description": "Modular Assistive Driving System: lets lane centering stay engaged independently of cruise control, with dedicated engage controls, Unified Engagement Mode and per-brand safety support. sunnypilot's flagship feature; on by default and customizable.",
+      "scope": "car-dependent"
     },
     {
       "id": "slc",
@@ -85,7 +93,8 @@
       "name": "Speed Limit Control / Assist",
       "category": "Longitudinal",
       "origin": "sunnypilot",
-      "description": "Reads speed limits from the car and offline OSM data with selectable source policy and offset. Info and Warning modes display/chime; Assist mode adjusts the set speed and needs openpilot longitudinal or ICBM."
+      "description": "Reads speed limits from the car and offline OSM data with selectable source policy and offset. Info and Warning modes display/chime; Assist mode adjusts the set speed and needs openpilot longitudinal or ICBM.",
+      "scope": "car-dependent"
     },
     {
       "id": "sunnylink",
@@ -93,7 +102,8 @@
       "name": "sunnylink Cloud Services",
       "category": "Device",
       "origin": "sunnypilot",
-      "description": "sunnypilot's own backend: device registration, settings backup and restore, sponsor/GitHub pairing, remote settings and OTA services. Opt-in with consent screen."
+      "description": "sunnypilot's own backend: device registration, settings backup and restore, sponsor/GitHub pairing, remote settings and OTA services. Opt-in with consent screen.",
+      "scope": "global"
     },
     {
       "id": "vtsc",
@@ -101,7 +111,8 @@
       "name": "Smart Cruise Control - Vision (VTSC)",
       "category": "Longitudinal",
       "origin": "sunnypilot",
-      "description": "Slows the car for upcoming curves using the vision model's predicted path. Opt-in toggle; requires openpilot longitudinal control or ICBM."
+      "description": "Slows the car for upcoming curves using the vision model's predicted path. Opt-in toggle; requires openpilot longitudinal control or ICBM.",
+      "scope": "car-dependent"
     },
     {
       "id": "mtsc",
@@ -109,7 +120,8 @@
       "name": "Smart Cruise Control - Map (MTSC)",
       "category": "Longitudinal",
       "origin": "sunnypilot",
-      "description": "Slows the car for curves ahead using offline OpenStreetMap data from the mapd daemon. Opt-in toggle; requires openpilot longitudinal control or ICBM plus downloaded maps."
+      "description": "Slows the car for curves ahead using offline OpenStreetMap data from the mapd daemon. Opt-in toggle; requires openpilot longitudinal control or ICBM plus downloaded maps.",
+      "scope": "car-dependent"
     },
     {
       "id": "dec",
@@ -117,7 +129,8 @@
       "name": "Dynamic Experimental Control",
       "category": "Longitudinal",
       "origin": "sunnypilot",
-      "description": "Automatically blends between standard ACC and end-to-end Experimental Mode based on driving context. Opt-in; requires openpilot longitudinal control."
+      "description": "Automatically blends between standard ACC and end-to-end Experimental Mode based on driving context. Opt-in; requires openpilot longitudinal control.",
+      "scope": "car-dependent"
     },
     {
       "id": "icbm",
@@ -125,7 +138,8 @@
       "name": "Intelligent Cruise Button Management",
       "category": "Longitudinal",
       "origin": "sunnypilot",
-      "description": "Alpha feature that presses the stock cruise buttons for you, enabling speed features (SLC, VTSC, MTSC) on cars that keep stock ACC. Available for Honda, Hyundai/Kia/Genesis, Chrysler-family and Mazda."
+      "description": "Alpha feature that presses the stock cruise buttons for you, enabling speed features (SLC, VTSC, MTSC) on cars that keep stock ACC. Available for Honda, Hyundai/Kia/Genesis, Chrysler-family and Mazda.",
+      "scope": "car-dependent"
     },
     {
       "id": "nlc",
@@ -133,7 +147,8 @@
       "name": "Auto Lane Change (nudgeless)",
       "category": "Lateral",
       "origin": "sunnypilot",
-      "description": "Starts the lane change automatically a configurable delay after the turn signal, without a steering nudge, with an optional extra delay when the blind-spot monitor sees a car."
+      "description": "Starts the lane change automatically a configurable delay after the turn signal, without a steering nudge, with an optional extra delay when the blind-spot monitor sees a car.",
+      "scope": "car-dependent"
     },
     {
       "id": "ndob",
@@ -141,7 +156,8 @@
       "name": "Steering Mode on Brake (MADS)",
       "category": "Lateral",
       "origin": "sunnypilot",
-      "description": "Chooses what lateral control does when you press the brake under MADS: remain active (no disengage on brake), pause until release, or disengage."
+      "description": "Chooses what lateral control does when you press the brake under MADS: remain active (no disengage on brake), pause until release, or disengage.",
+      "scope": "car-dependent"
     },
     {
       "id": "torque-tune",
@@ -149,7 +165,8 @@
       "name": "Torque Lateral Control Tuning",
       "category": "Lateral",
       "origin": "sunnypilot",
-      "description": "Enforce torque-based steering control with selectable tune versions, live self-tuning, and manual real-time lateral-accel/friction override. Torque-steering cars only."
+      "description": "Enforce torque-based steering control with selectable tune versions, live self-tuning, and manual real-time lateral-accel/friction override. Torque-steering cars only.",
+      "scope": "car-dependent"
     },
     {
       "id": "hyundai-long-tune",
@@ -157,7 +174,8 @@
       "name": "Hyundai Custom Longitudinal Tuning",
       "category": "Longitudinal",
       "origin": "sunnypilot",
-      "description": "Dynamic or Predictive jerk-limited longitudinal profiles for Hyundai/Kia/Genesis (ISO 15622-based), with per-car overrides. Requires sunnypilot longitudinal (alpha)."
+      "description": "Dynamic or Predictive jerk-limited longitudinal profiles for Hyundai/Kia/Genesis (ISO 15622-based), with per-car overrides. Requires sunnypilot longitudinal (alpha).",
+      "scope": "car-dependent"
     },
     {
       "id": "model-selector",
@@ -165,7 +183,8 @@
       "name": "OTA Driving Model Selector",
       "category": "Controls",
       "origin": "sunnypilot",
-      "description": "Download and switch between multiple driving-model bundles over the air, with favorites, cache management and per-model version compatibility."
+      "description": "Download and switch between multiple driving-model bundles over the air, with favorites, cache management and per-model version compatibility.",
+      "scope": "global"
     },
     {
       "id": "blinker-pause",
@@ -173,7 +192,8 @@
       "name": "Pause Lateral with Blinker",
       "category": "Lateral",
       "origin": "sunnypilot",
-      "description": "Pauses lane centering while the turn signal is on below a set speed, with a configurable re-engage delay after the blinker stops."
+      "description": "Pauses lane centering while the turn signal is on below a set speed, with a configurable re-engage delay after the blinker stops.",
+      "scope": "car-dependent"
     },
     {
       "id": "ui-extras",
@@ -181,7 +201,8 @@
       "name": "Onroad UI & Device Customization",
       "category": "Display",
       "origin": "sunnypilot",
-      "description": "Extra onroad widgets and device options: blind-spot warnings, steering torque bar, standstill timer, green-light and lead-departure alerts, true-speed display, acceleration bar, chevron metrics, Tesla rainbow mode, screen-off brightness and timeout controls."
+      "description": "Extra onroad widgets and device options: blind-spot warnings, steering torque bar, standstill timer, green-light and lead-departure alerts, true-speed display, acceleration bar, chevron metrics, Tesla rainbow mode, screen-off brightness and timeout controls.",
+      "scope": "global"
     },
     {
       "id": "dev-ui",
@@ -189,7 +210,8 @@
       "name": "Developer UI Metrics",
       "category": "Display",
       "origin": "dragonpilot",
-      "description": "Optional overlay of detailed driving metrics (speeds, accels, controls state) at the edge of the onroad screen."
+      "description": "Optional overlay of detailed driving metrics (speeds, accels, controls state) at the edge of the onroad screen.",
+      "scope": "global"
     },
     {
       "id": "quiet-drive",
@@ -197,7 +219,8 @@
       "name": "Quiet Mode",
       "category": "Other",
       "origin": "dragonpilot",
-      "description": "Suppresses non-critical engagement chimes and audible alerts for a quieter drive."
+      "description": "Suppresses non-critical engagement chimes and audible alerts for a quieter drive.",
+      "scope": "global"
     },
     {
       "id": "nnlc",
@@ -205,7 +228,8 @@
       "name": "Neural Network Lateral Control",
       "category": "Lateral",
       "origin": "other",
-      "description": "Torque steering controller driven by a neural feedforward model (based on twilsonco's NNFF), fetched per car fingerprint. Opt-in; torque-steering cars with a trained model only."
+      "description": "Torque steering controller driven by a neural feedforward model (based on twilsonco's NNFF), fetched per car fingerprint. Opt-in; torque-steering cars with a trained model only.",
+      "scope": "car-dependent"
     },
     {
       "id": "mapd",
@@ -213,7 +237,8 @@
       "name": "Offline OSM Maps (mapd)",
       "category": "Other",
       "origin": "other",
-      "description": "Downloads OpenStreetMap regions to the device (based on pfeiferj's mapd) to provide speed limits, curvature and road data without a connection."
+      "description": "Downloads OpenStreetMap regions to the device (based on pfeiferj's mapd) to provide speed limits, curvature and road data without a connection.",
+      "scope": "global"
     },
     {
       "id": "roadname",
@@ -221,7 +246,8 @@
       "name": "Road Name Display",
       "category": "Display",
       "origin": "other",
-      "description": "Shows the current road name on the onroad screen from offline OSM data; requires a downloaded map region."
+      "description": "Shows the current road name on the onroad screen from offline OSM data; requires a downloaded map region.",
+      "scope": "global"
     }
   ],
   "manufacturers": [

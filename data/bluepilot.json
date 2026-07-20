@@ -21,7 +21,8 @@
       "name": "Automated Lane Centering",
       "category": "Lateral",
       "origin": "openpilot",
-      "description": "Core openpilot lane centering steering. On Ford, BluePilot replaces the stock implementation with its own tunable lateral control (see BP Ford Lateral)."
+      "description": "Core openpilot lane centering steering. On Ford, BluePilot replaces the stock implementation with its own tunable lateral control (see BP Ford Lateral).",
+      "scope": "car-dependent"
     },
     {
       "id": "oplong",
@@ -29,7 +30,8 @@
       "name": "openpilot Longitudinal Control",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "openpilot controls gas and brake instead of the car's stock ACC. Availability varies per car: standard on some, opt-in alpha ('openpilot available') on others, and unavailable on cars that keep stock ACC."
+      "description": "openpilot controls gas and brake instead of the car's stock ACC. Availability varies per car: standard on some, opt-in alpha ('openpilot available') on others, and unavailable on cars that keep stock ACC.",
+      "scope": "car-dependent"
     },
     {
       "id": "lca",
@@ -37,7 +39,8 @@
       "name": "Lane Change Assist",
       "category": "Lateral",
       "origin": "openpilot",
-      "description": "Signal, apply light steering pressure, and openpilot completes the lane change. BluePilot adds a Ford-specific lane change factor and a minimum-speed disable option instead of fully disabling lateral."
+      "description": "Signal, apply light steering pressure, and openpilot completes the lane change. BluePilot adds a Ford-specific lane change factor and a minimum-speed disable option instead of fully disabling lateral.",
+      "scope": "car-dependent"
     },
     {
       "id": "exp",
@@ -45,7 +48,8 @@
       "name": "Experimental Mode (end-to-end)",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "End-to-end longitudinal driving that handles stop lights, stop signs and curves. Requires openpilot longitudinal control on the car."
+      "description": "End-to-end longitudinal driving that handles stop lights, stop signs and curves. Requires openpilot longitudinal control on the car.",
+      "scope": "car-dependent"
     },
     {
       "id": "sng",
@@ -53,7 +57,8 @@
       "name": "Stop and Go",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "Automatically resumes from a full stop in traffic. Depends on the car's hardware; some cars have minimum ACC speeds or cannot auto-resume (shown in CARS.md star ratings)."
+      "description": "Automatically resumes from a full stop in traffic. Depends on the car's hardware; some cars have minimum ACC speeds or cannot auto-resume (shown in CARS.md star ratings).",
+      "scope": "car-dependent"
     },
     {
       "id": "dm",
@@ -61,7 +66,8 @@
       "name": "Driver Monitoring",
       "category": "Monitoring",
       "origin": "openpilot",
-      "description": "Camera-based driver attention monitoring. BluePilot/sunnypilot explicitly prohibit nerfing monitoring parameters; bp-7.0 adds selectable DM icon styles only."
+      "description": "Camera-based driver attention monitoring. BluePilot/sunnypilot explicitly prohibit nerfing monitoring parameters; bp-7.0 adds selectable DM icon styles only.",
+      "scope": "car-dependent"
     },
     {
       "id": "icbm",
@@ -69,7 +75,8 @@
       "name": "Intelligent Cruise Button Management",
       "category": "Longitudinal",
       "origin": "sunnypilot",
-      "description": "Spoofs cruise-stalk button presses so openpilot features (like Speed Limit Assist) can adjust the set speed of the stock ACC. Ported per-brand (Ford, Honda, Hyundai/Kia/Genesis, Chrysler family, Mazda); the Ford ICBM support was contributed and heavily refined by BluePilot."
+      "description": "Spoofs cruise-stalk button presses so openpilot features (like Speed Limit Assist) can adjust the set speed of the stock ACC. Ported per-brand (Ford, Honda, Hyundai/Kia/Genesis, Chrysler family, Mazda); the Ford ICBM support was contributed and heavily refined by BluePilot.",
+      "scope": "car-dependent"
     },
     {
       "id": "mads",
@@ -77,7 +84,8 @@
       "name": "MADS (Always-On Lateral)",
       "category": "Lateral",
       "origin": "sunnypilot",
-      "description": "Modular Assistive Driving System: engage steering (lateral) independently of cruise control, so lane centering stays active even when ACC is off or brakes are tapped. Core sunnypilot feature included in BluePilot."
+      "description": "Modular Assistive Driving System: engage steering (lateral) independently of cruise control, so lane centering stays active even when ACC is off or brakes are tapped. Core sunnypilot feature included in BluePilot.",
+      "scope": "car-dependent"
     },
     {
       "id": "slc",
@@ -85,7 +93,8 @@
       "name": "Speed Limit Assist",
       "category": "Longitudinal",
       "origin": "sunnypilot",
-      "description": "Adjusts the cruise set speed to the posted speed limit (from map data or car), with offset and policy options. Works with openpilot longitudinal, or via ICBM button spoofing on supported stock-ACC cars."
+      "description": "Adjusts the cruise set speed to the posted speed limit (from map data or car), with offset and policy options. Works with openpilot longitudinal, or via ICBM button spoofing on supported stock-ACC cars.",
+      "scope": "car-dependent"
     },
     {
       "id": "nnlc",
@@ -93,7 +102,8 @@
       "name": "Neural Network Lateral Control",
       "category": "Lateral",
       "origin": "sunnypilot",
-      "description": "Learned per-car steering feedforward (twilsonco's NNFF) improving torque-based lateral control. Requires a trained model for the specific car; does not apply to angle/curvature-steered brands like Ford (BluePilot uses its own Ford lateral instead)."
+      "description": "Learned per-car steering feedforward (twilsonco's NNFF) improving torque-based lateral control. Requires a trained model for the specific car; does not apply to angle/curvature-steered brands like Ford (BluePilot uses its own Ford lateral instead).",
+      "scope": "car-dependent"
     },
     {
       "id": "dec",
@@ -101,7 +111,8 @@
       "name": "Dynamic Experimental Control",
       "category": "Longitudinal",
       "origin": "sunnypilot",
-      "description": "Automatically switches between ACC (chill) and end-to-end Experimental Mode based on driving context. Requires openpilot longitudinal control."
+      "description": "Automatically switches between ACC (chill) and end-to-end Experimental Mode based on driving context. Requires openpilot longitudinal control.",
+      "scope": "car-dependent"
     },
     {
       "id": "vtsc",
@@ -109,7 +120,8 @@
       "name": "Smart Cruise Control - Vision",
       "category": "Longitudinal",
       "origin": "sunnypilot",
-      "description": "Vision Turn Speed Control: slows for curves detected by the driving model. Requires openpilot longitudinal control."
+      "description": "Vision Turn Speed Control: slows for curves detected by the driving model. Requires openpilot longitudinal control.",
+      "scope": "car-dependent"
     },
     {
       "id": "mtsc",
@@ -117,7 +129,8 @@
       "name": "Smart Cruise Control - Map",
       "category": "Longitudinal",
       "origin": "sunnypilot",
-      "description": "Map Turn Speed Control: slows for upcoming curves using offline OSM map data. Requires openpilot longitudinal control and downloaded maps."
+      "description": "Map Turn Speed Control: slows for upcoming curves using offline OSM map data. Requires openpilot longitudinal control and downloaded maps.",
+      "scope": "car-dependent"
     },
     {
       "id": "mapd",
@@ -125,7 +138,8 @@
       "name": "OSM Map Data (mapd)",
       "category": "Other",
       "origin": "sunnypilot",
-      "description": "On-device OpenStreetMap data engine providing speed limits and curve information, with an OSM settings panel for regional map downloads."
+      "description": "On-device OpenStreetMap data engine providing speed limits and curve information, with an OSM settings panel for regional map downloads.",
+      "scope": "global"
     },
     {
       "id": "sunnylink",
@@ -133,7 +147,8 @@
       "name": "sunnylink Remote Settings",
       "category": "Device",
       "origin": "sunnypilot",
-      "description": "sunnypilot's cloud companion for remote settings and backups. BluePilot adds its Ford settings (scheme-aware angle/curvature tuning) to the sunnylink vehicle panel."
+      "description": "sunnypilot's cloud companion for remote settings and backups. BluePilot adds its Ford settings (scheme-aware angle/curvature tuning) to the sunnylink vehicle panel.",
+      "scope": "global"
     },
     {
       "id": "model-manager",
@@ -141,7 +156,8 @@
       "name": "Driving Model Manager",
       "category": "Controls",
       "origin": "sunnypilot",
-      "description": "Download and switch between different driving models from the settings Models panel, plus a Clear Crashed Model recovery option."
+      "description": "Download and switch between different driving models from the settings Models panel, plus a Clear Crashed Model recovery option.",
+      "scope": "global"
     },
     {
       "id": "nlc",
@@ -149,7 +165,8 @@
       "name": "Auto Lane Change Timer",
       "category": "Lateral",
       "origin": "sunnypilot",
-      "description": "Starts lane changes automatically after a set delay on blinker (nudgeless), with an optional blind-spot-monitor delay gate and blinker-pause-lateral logic."
+      "description": "Starts lane changes automatically after a set delay on blinker (nudgeless), with an optional blind-spot-monitor delay gate and blinker-pause-lateral logic.",
+      "scope": "car-dependent"
     },
     {
       "id": "bsm",
@@ -157,7 +174,8 @@
       "name": "Blind Spot Monitoring Display",
       "category": "Safety",
       "origin": "sunnypilot",
-      "description": "Reads the car's blind spot monitors for lane-change gating and shows an on-screen blindspot overlay. BluePilot and sunnypilot BSM visuals can be toggled separately; depends on the car having BSM hardware."
+      "description": "Reads the car's blind spot monitors for lane-change gating and shows an on-screen blindspot overlay. BluePilot and sunnypilot BSM visuals can be toggled separately; depends on the car having BSM hardware.",
+      "scope": "car-dependent"
     },
     {
       "id": "bp-ford-lateral",
@@ -165,7 +183,8 @@
       "name": "BluePilot Ford Curvature Lateral",
       "category": "Lateral",
       "origin": "bluepilot",
-      "description": "BluePilot's proven 4-signal curvature steering strategy for Ford with extensive user tuning: Human Turn Detection (EPAS wind-up prevention), lane positioning and in-lane offset, lanefull mode, predicted-curvature blend ratios, centering PID gain, and custom tuning profiles. Can be bypassed to fall back to stock Ford control."
+      "description": "BluePilot's proven 4-signal curvature steering strategy for Ford with extensive user tuning: Human Turn Detection (EPAS wind-up prevention), lane positioning and in-lane offset, lanefull mode, predicted-curvature blend ratios, centering PID gain, and custom tuning profiles. Can be bypassed to fall back to stock Ford control.",
+      "scope": "car-dependent"
     },
     {
       "id": "bp-angle-lateral",
@@ -173,7 +192,8 @@
       "name": "Angle-Primary Lateral Control (Ford)",
       "category": "Lateral",
       "origin": "bluepilot",
-      "description": "New in bp-7.0: a second, live-selectable Ford steering scheme using path_angle as the primary actuator, with per-platform gain defaults (CAN, CAN-FD trucks, CAN-FD SUVs), variable lookahead, PSCM saturation handling, and full panda safety enforcement (redundant-channel corroboration, shadow curvature cross-check, angle rate limits)."
+      "description": "New in bp-7.0: a second, live-selectable Ford steering scheme using path_angle as the primary actuator, with per-platform gain defaults (CAN, CAN-FD trucks, CAN-FD SUVs), variable lookahead, PSCM saturation handling, and full panda safety enforcement (redundant-channel corroboration, shadow curvature cross-check, angle rate limits).",
+      "scope": "car-dependent"
     },
     {
       "id": "bp-ford-long",
@@ -181,7 +201,8 @@
       "name": "BluePilot Ford Longitudinal Refinements",
       "category": "Longitudinal",
       "origin": "bluepilot",
-      "description": "Ford-specific longitudinal tweaks: improved ACC coasting, optional downhill-compensation disable for cars that handle it natively, optional Ford radar disable (vision-only leads), 12V battery limit, and a bypass toggle."
+      "description": "Ford-specific longitudinal tweaks: improved ACC coasting, optional downhill-compensation disable for cars that handle it natively, optional Ford radar disable (vision-only leads), 12V battery limit, and a bypass toggle.",
+      "scope": "car-dependent"
     },
     {
       "id": "bp-portal",
@@ -189,7 +210,8 @@
       "name": "BluePilot Portal (Web PWA)",
       "category": "Device",
       "origin": "bluepilot",
-      "description": "React-based Progressive Web App served from the device (port 8088): home dashboard, route browsing with video playback and GPS maps, full parameter settings with live WebSocket updates, and diagnostics with real-time tmux streaming. Modification endpoints are blocked while driving."
+      "description": "React-based Progressive Web App served from the device (port 8088): home dashboard, route browsing with video playback and GPS maps, full parameter settings with live WebSocket updates, and diagnostics with real-time tmux streaming. Modification endpoints are blocked while driving.",
+      "scope": "global"
     },
     {
       "id": "hev-gauges",
@@ -197,7 +219,8 @@
       "name": "Hybrid/EV Battery & Power Flow Gauges",
       "category": "Display",
       "origin": "bluepilot",
-      "description": "On-road hybrid/EV battery status, power-flow meter (flat or arched styles, size options), and battery overlay, driven by Ford hybrid CAN data. Ford hybrid/EV models only."
+      "description": "On-road hybrid/EV battery status, power-flow meter (flat or arched styles, size options), and battery overlay, driven by Ford hybrid CAN data. Ford hybrid/EV models only.",
+      "scope": "car-dependent"
     },
     {
       "id": "connect-backend",
@@ -205,7 +228,8 @@
       "name": "Connect Backend Selector",
       "category": "Device",
       "origin": "bluepilot",
-      "description": "Choose the drive-data backend: Comma Connect (stock), Konik Stable (stable.konik.ai), or Offline Mode (RFC 2606 unreachable hosts so uploads never succeed). Dongle ID is cached per backend so switching is reversible."
+      "description": "Choose the drive-data backend: Comma Connect (stock), Konik Stable (stable.konik.ai), or Offline Mode (RFC 2606 unreachable hosts so uploads never succeed). Dongle ID is cached per backend so switching is reversible.",
+      "scope": "global"
     },
     {
       "id": "custom-themes",
@@ -213,7 +237,8 @@
       "name": "BluePilot Visual Themes",
       "category": "Display",
       "origin": "bluepilot",
-      "description": "Rainbow lane lines (when longitudinal is active), Rad Racer theme, custom model path colors, minimal driving view (hide camera feed), animated steering wheel, brake status, confidence ball, radar lead overlay, and enhanced onroad UI with glow effects."
+      "description": "Rainbow lane lines (when longitudinal is active), Rad Racer theme, custom model path colors, minimal driving view (hide camera feed), animated steering wheel, brake status, confidence ball, radar lead overlay, and enhanced onroad UI with glow effects.",
+      "scope": "global"
     },
     {
       "id": "bluecruise-ui",
@@ -221,7 +246,8 @@
       "name": "BlueCruise Cluster UI",
       "category": "Display",
       "origin": "bluepilot",
-      "description": "Sends CAN messages so supported Ford digital dashes show the BlueCruise hands-free UI while BluePilot is engaged (opt-in; blocked on CAN vehicles where unsupported), plus optional lane-departure and driver-monitor cluster messages."
+      "description": "Sends CAN messages so supported Ford digital dashes show the BlueCruise hands-free UI while BluePilot is engaged (opt-in; blocked on CAN vehicles where unsupported), plus optional lane-departure and driver-monitor cluster messages.",
+      "scope": "car-dependent"
     }
   ],
   "manufacturers": [

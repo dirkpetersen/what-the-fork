@@ -3,8 +3,8 @@
   "fork": {
     "id": "dragonpilot",
     "name": "dragonpilot",
-    "branch": "pre-build",
-    "generated_at": "2026-07-19"
+    "branch": "current checkout",
+    "generated_at": "2026-07-20"
   },
   "manufacturers": [
     {
@@ -14,13 +14,421 @@
         {
           "id": "mg-zs-2025",
           "name": "MG ZS 2025",
-          "highlight": true,
-          "note": "Fork-added dragonpilot port, in code but not in the published CARS.md: dedicated opendbc/panda safety mode, torque steering, ICE (NON_EV) variant support added recently; FW query disabled ('no captured FW versions yet'), so the car must be manually selected",
+          "note": "Fork-added MG brand port (opendbc car/mg/ + panda safety modes/mg.h), commit 'MG: add ZS (ICE) support'; absent from CARS.md. FW query is disabled - 'no captured FW versions yet and no CAN fingerprint, so it is identified by forced car selection only' per comment in mg/values.py.",
           "features": {
             "alc": {
               "status": "partial",
-              "note": "in code but not in published CARS.md; manual car selection required"
+              "note": "torque steering port present (STEER_MAX 300); forced fingerprint required"
+            },
+            "oplong": {
+              "status": "partial",
+              "note": "opt-in alpha long wired via MgSafetyFlags.LONG_CONTROL; radarUnavailable=True"
+            },
+            "mads": {
+              "status": "partial",
+              "note": "ALKA hooks exist in mg safety and carstate, but the ALKA toggle's brand list omits mg"
             }
+          }
+        }
+      ]
+    },
+    {
+      "id": "tesla",
+      "name": "Tesla",
+      "cars": [
+        {
+          "id": "tesla-model-x-hw4-2024",
+          "name": "Tesla Model X (with HW4) 2024",
+          "note": "Platform enum + CarDocs entry in tesla/values.py (TESLA_MODEL_X) but not published in CARS.md.",
+          "features": {
+            "alc": "unknown",
+            "oplong": "unknown"
+          }
+        }
+      ]
+    },
+    {
+      "id": "peugeot",
+      "name": "Peugeot",
+      "cars": [
+        {
+          "id": "peugeot-208-2019-25",
+          "name": "Peugeot 208 2019-25",
+          "note": "PSA port present (opendbc car/psa/) but interface sets ret.dashcamOnly = True - dashcam only, no control.",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "dashcamOnly=True in psa/interface.py"
+            },
+            "oplong": "no"
+          }
+        }
+      ]
+    },
+    {
+      "id": "acura",
+      "name": "Acura",
+      "cars": [
+        {
+          "id": "acura-adx-2025-26",
+          "name": "Acura ADX 2025-26",
+          "note": "Community support tier in extra_cars.py (not in CARS.md supported table).",
+          "features": {
+            "alc": "unknown"
+          }
+        },
+        {
+          "id": "acura-integra-2023-25",
+          "name": "Acura Integra 2023-25",
+          "note": "Community support tier in extra_cars.py.",
+          "features": {
+            "alc": "unknown"
+          }
+        },
+        {
+          "id": "acura-mdx-2015-16",
+          "name": "Acura MDX 2015-16 (Advance Package)",
+          "note": "Community support tier in extra_cars.py.",
+          "features": {
+            "alc": "unknown"
+          }
+        },
+        {
+          "id": "acura-mdx-2017-20",
+          "name": "Acura MDX 2017-20",
+          "note": "Community support tier in extra_cars.py.",
+          "features": {
+            "alc": "unknown"
+          }
+        },
+        {
+          "id": "acura-mdx-hybrid-2017-20",
+          "name": "Acura MDX Hybrid 2017-20",
+          "note": "Community support tier in extra_cars.py.",
+          "features": {
+            "alc": "unknown"
+          }
+        },
+        {
+          "id": "acura-rdx-2025-26",
+          "name": "Acura RDX 2025-26",
+          "note": "Community support tier in extra_cars.py.",
+          "features": {
+            "alc": "unknown"
+          }
+        },
+        {
+          "id": "acura-rlx-2017",
+          "name": "Acura RLX 2017 (Advance or Technology Package)",
+          "note": "Community support tier in extra_cars.py.",
+          "features": {
+            "alc": "unknown"
+          }
+        },
+        {
+          "id": "acura-tlx-2015-17",
+          "name": "Acura TLX 2015-17 (Advance Package)",
+          "note": "Community support tier in extra_cars.py.",
+          "features": {
+            "alc": "unknown"
+          }
+        },
+        {
+          "id": "acura-tlx-2018-20",
+          "name": "Acura TLX 2018-20",
+          "note": "Community support tier in extra_cars.py.",
+          "features": {
+            "alc": "unknown"
+          }
+        },
+        {
+          "id": "acura-tlx-2023",
+          "name": "Acura TLX 2023",
+          "note": "Community support tier in extra_cars.py.",
+          "features": {
+            "alc": "unknown"
+          }
+        },
+        {
+          "id": "acura-zdx-2024",
+          "name": "Acura ZDX 2024",
+          "note": "Listed INCOMPATIBLE in extra_cars.py (GM CAN-bus security).",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "incompatible: CAN-bus security"
+            },
+            "oplong": "no"
+          }
+        }
+      ]
+    },
+    {
+      "id": "honda",
+      "name": "Honda",
+      "cars": [
+        {
+          "id": "honda-accord-2016-17",
+          "name": "Honda Accord 2016-17 (Honda Sensing)",
+          "note": "Community support tier in extra_cars.py.",
+          "features": {
+            "alc": "unknown"
+          }
+        },
+        {
+          "id": "honda-accord-hybrid-2017",
+          "name": "Honda Accord Hybrid 2017",
+          "note": "Community support tier in extra_cars.py.",
+          "features": {
+            "alc": "unknown"
+          }
+        },
+        {
+          "id": "honda-clarity-2018-21",
+          "name": "Honda Clarity 2018-21",
+          "note": "Community support tier in extra_cars.py.",
+          "features": {
+            "alc": "unknown"
+          }
+        },
+        {
+          "id": "honda-pilot-2026",
+          "name": "Honda Pilot 2026",
+          "note": "Community support tier in extra_cars.py.",
+          "features": {
+            "alc": "unknown"
+          }
+        },
+        {
+          "id": "honda-prologue-2024-25",
+          "name": "Honda Prologue 2024-25",
+          "note": "Listed INCOMPATIBLE in extra_cars.py (GM CAN-bus security).",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "incompatible: CAN-bus security"
+            },
+            "oplong": "no"
+          }
+        }
+      ]
+    },
+    {
+      "id": "hyundai",
+      "name": "Hyundai",
+      "cars": [
+        {
+          "id": "hyundai-palisade-2023-24",
+          "name": "Hyundai Palisade 2023-24 (HDA II)",
+          "note": "Community support tier in extra_cars.py.",
+          "features": {
+            "alc": "unknown"
+          }
+        }
+      ]
+    },
+    {
+      "id": "kia",
+      "name": "Kia",
+      "cars": [
+        {
+          "id": "kia-telluride-2023-24",
+          "name": "Kia Telluride 2023-24 (HDA II)",
+          "note": "Community support tier in extra_cars.py.",
+          "features": {
+            "alc": "unknown"
+          }
+        }
+      ]
+    },
+    {
+      "id": "subaru",
+      "name": "Subaru",
+      "cars": [
+        {
+          "id": "subaru-solterra-2023-25",
+          "name": "Subaru Solterra 2023-25",
+          "note": "Listed INCOMPATIBLE in extra_cars.py (Toyota CAN-bus security).",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "incompatible: CAN-bus security"
+            },
+            "oplong": "no"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lexus",
+      "name": "Lexus",
+      "cars": [
+        {
+          "id": "lexus-ns-2022-25",
+          "name": "Lexus NS 2022-25",
+          "note": "Listed INCOMPATIBLE in extra_cars.py (CAN-bus security).",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "incompatible: CAN-bus security"
+            },
+            "oplong": "no"
+          }
+        }
+      ]
+    },
+    {
+      "id": "toyota",
+      "name": "Toyota",
+      "cars": [
+        {
+          "id": "toyota-bz4x-2023-25",
+          "name": "Toyota bZ4x 2023-25",
+          "note": "Listed INCOMPATIBLE in extra_cars.py (CAN-bus security).",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "incompatible: CAN-bus security"
+            },
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "toyota-camry-2025",
+          "name": "Toyota Camry 2025",
+          "note": "Listed INCOMPATIBLE in extra_cars.py (CAN-bus security).",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "incompatible: CAN-bus security"
+            },
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "toyota-corolla-cross-2022-25",
+          "name": "Toyota Corolla Cross 2022-25 (US)",
+          "note": "Listed INCOMPATIBLE in extra_cars.py (CAN-bus security); the non-US Corolla Cross 2020-23 IS supported in CARS.md.",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "incompatible: CAN-bus security"
+            },
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "toyota-highlander-2025",
+          "name": "Toyota Highlander 2025",
+          "note": "Listed INCOMPATIBLE in extra_cars.py (CAN-bus security).",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "incompatible: CAN-bus security"
+            },
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "toyota-rav4-prime-2024-25",
+          "name": "Toyota RAV4 Prime 2024-25",
+          "note": "Listed INCOMPATIBLE in extra_cars.py (CAN-bus security).",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "incompatible: CAN-bus security"
+            },
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "toyota-sequoia-2023-25",
+          "name": "Toyota Sequoia 2023-25",
+          "note": "Listed INCOMPATIBLE in extra_cars.py (CAN-bus security).",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "incompatible: CAN-bus security"
+            },
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "toyota-sienna-2024-25",
+          "name": "Toyota Sienna 2024-25",
+          "note": "Listed INCOMPATIBLE in extra_cars.py (CAN-bus security).",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "incompatible: CAN-bus security"
+            },
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "toyota-tundra-2022-25",
+          "name": "Toyota Tundra 2022-25",
+          "note": "Listed INCOMPATIBLE in extra_cars.py (CAN-bus security).",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "incompatible: CAN-bus security"
+            },
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "toyota-venza-2021-25",
+          "name": "Toyota Venza 2021-25",
+          "note": "Listed INCOMPATIBLE in extra_cars.py (CAN-bus security).",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "incompatible: CAN-bus security"
+            },
+            "oplong": "no"
+          }
+        }
+      ]
+    },
+    {
+      "id": "audi",
+      "name": "Audi",
+      "cars": [
+        {
+          "id": "audi-a4-2016-24",
+          "name": "Audi A4 2016-24",
+          "note": "Listed INCOMPATIBLE in extra_cars.py (FlexRay bus).",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "incompatible: FlexRay"
+            },
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "audi-a5-2016-24",
+          "name": "Audi A5 2016-24",
+          "note": "Listed INCOMPATIBLE in extra_cars.py (FlexRay bus).",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "incompatible: FlexRay"
+            },
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "audi-q5-2017-24",
+          "name": "Audi Q5 2017-24",
+          "note": "Listed INCOMPATIBLE in extra_cars.py (FlexRay bus).",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "incompatible: FlexRay"
+            },
+            "oplong": "no"
           }
         }
       ]

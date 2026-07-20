@@ -6,8 +6,8 @@
     "repo": "https://github.com/commaai/openpilot",
     "branch": "master",
     "base": "commaai/openpilot",
-    "description": "The upstream commaai/openpilot project itself \u2014 the reference open-source driver-assistance system that all community forks derive from. Focus is on a validated, safety-reviewed core: lane centering on 300+ cars, alpha openpilot longitudinal control, end-to-end Experimental Mode, and camera-based driver monitoring, with no community convenience features (no MADS, VTSC, mapd, or nudgeless lane change).",
-    "generated_at": "2026-07-19",
+    "description": "The upstream commaai/openpilot itself \u2014 the reference ADAS operating system that all community forks derive from. Provides camera-based lane centering, adaptive cruise, end-to-end Experimental Mode, and driver monitoring on 334 officially supported cars, with additional dashcam-only, custom (SecOC), and community-known ports in the code.",
+    "generated_at": "2026-07-20",
     "generator": {
       "tool": "generate-db.py + claude CLI",
       "model": "claude-fable-5",
@@ -21,7 +21,8 @@
       "name": "Automated Lane Centering",
       "category": "Lateral",
       "origin": "openpilot",
-      "description": "Continuously steers to keep the car centered in its lane. Works on all supported cars; some models cannot steer below a minimum speed and some have limited steering torque for sharp curves."
+      "description": "Continuously steers to keep the car centered in its lane whenever engaged. Works down to 0 mph on most cars; some models have a minimum steering speed or below-standard steering torque (noted per car).",
+      "scope": "car-dependent"
     },
     {
       "id": "oplong",
@@ -29,7 +30,8 @@
       "name": "openpilot Longitudinal Control",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "openpilot controls gas and brake instead of the car's stock adaptive cruise control. Standard on some cars; on many others it is alpha quality behind the 'openpilot Longitudinal Control (Alpha)' toggle, which is only available on non-release branches; on the rest the stock ACC is used."
+      "description": "openpilot controls gas and brake instead of the car's stock adaptive cruise. Standard on some cars; on many others it is 'openpilot Longitudinal Control (Alpha)', a Developer-panel toggle (AlphaLongitudinalEnabled) only available on non-release branches; on 'Stock ACC' cars openpilot only steers.",
+      "scope": "car-dependent"
     },
     {
       "id": "exp",
@@ -37,7 +39,8 @@
       "name": "Experimental Mode (end-to-end longitudinal)",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "Opt-in end-to-end driving mode where the model also decides speed: it can stop for red lights and stop signs, slow for curves and turns, and drive beyond chill mode. Requires openpilot longitudinal control on that car."
+      "description": "The driving model directly decides speed: slows for turns, stops for traffic lights and stop signs, and drives more naturally. Opt-in toggle; requires openpilot longitudinal control, so it is unavailable on stock-ACC cars and alpha-gated where longitudinal is alpha.",
+      "scope": "car-dependent"
     },
     {
       "id": "dm",
@@ -45,7 +48,8 @@
       "name": "Driver Monitoring",
       "category": "Monitoring",
       "origin": "openpilot",
-      "description": "Infrared driver camera watches head pose and eyes and warns, then disengages, if the driver is distracted or drowsy. Works on every car and cannot be disabled while engaged."
+      "description": "Infrared interior camera tracks head pose and eyes, warning and eventually disengaging if the driver is distracted or drowsy. Works day and night on all cars.",
+      "scope": "car-dependent"
     },
     {
       "id": "sng",
@@ -53,7 +57,8 @@
       "name": "Stop and Go",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "Comes to a full stop behind traffic and automatically resumes. On some cars the driver must tap resume or the accelerator to move again, and a few cars cannot accelerate below a minimum ACC speed."
+      "description": "Follows traffic to a complete stop and resumes automatically. Some cars cannot accelerate below a threshold speed or cannot resume from a standstill without a button press (noted per car from the CARS.md columns).",
+      "scope": "car-dependent"
     },
     {
       "id": "lca",
@@ -61,15 +66,17 @@
       "name": "Lane Change Assist",
       "category": "Lateral",
       "origin": "openpilot",
-      "description": "With the turn signal on and a slight steering nudge, openpilot completes the lane change. Driver-initiated only \u2014 stock openpilot has no nudgeless/automatic lane change and does no blind spot checking."
+      "description": "Driver-initiated lane changes: signal and nudge the wheel, and openpilot completes the lane change. Stock behavior always requires the torque nudge (no nudgeless option).",
+      "scope": "car-dependent"
     },
     {
-      "id": "aod",
-      "abbrev": "AOD",
-      "name": "Always-On Driver Monitoring",
-      "category": "Monitoring",
+      "id": "fsr",
+      "abbrev": "FSR",
+      "name": "Full-Speed-Range Steering",
+      "category": "Lateral",
       "origin": "openpilot",
-      "description": "Opt-in toggle (AlwaysOnDM) that keeps driver monitoring active even when openpilot is not engaged."
+      "description": "Whether lane centering works from 0 mph. Cars with a firmware minimum steering speed ('No ALC below X mph' in CARS.md) only steer above that speed.",
+      "scope": "car-dependent"
     },
     {
       "id": "personality",
@@ -77,7 +84,8 @@
       "name": "Driving Personality",
       "category": "Controls",
       "origin": "openpilot",
-      "description": "Aggressive / Standard / Relaxed setting (LongitudinalPersonality) that adjusts follow distance and acceleration behavior. Only affects driving when openpilot longitudinal control is active."
+      "description": "Aggressive / Standard / Relaxed follow-distance and accel behavior, selectable in settings and, on supported cars, via the steering-wheel distance button (LongitudinalPersonality param).",
+      "scope": "car-dependent"
     },
     {
       "id": "ldw",
@@ -85,7 +93,17 @@
       "name": "Lane Departure Warnings",
       "category": "Safety",
       "origin": "openpilot",
-      "description": "Warns when the car drifts over a lane line above 31 mph without a turn signal, even when openpilot is not engaged. Can be toggled off."
+      "description": "Alerts when drifting over a lane line above 31 mph without a turn signal, even when openpilot is not engaged. Toggle (IsLdwEnabled).",
+      "scope": "car-dependent"
+    },
+    {
+      "id": "aodm",
+      "abbrev": "AODM",
+      "name": "Always-On Driver Monitoring",
+      "category": "Monitoring",
+      "origin": "openpilot",
+      "description": "Optional toggle (AlwaysOnDM) that keeps driver monitoring active even when openpilot is disengaged.",
+      "scope": "car-dependent"
     },
     {
       "id": "disengage-on-accelerator",
@@ -93,23 +111,26 @@
       "name": "Disengage on Accelerator toggle",
       "category": "Controls",
       "origin": "openpilot",
-      "description": "Stock toggle controlling whether pressing the gas pedal disengages openpilot; with it off, openpilot stays engaged while the driver accelerates."
+      "description": "Configurable whether pressing the gas pedal disengages openpilot (DisengageOnAccelerator). Disabling it lets openpilot stay engaged while you press the accelerator \u2014 the stock counterpart to forks' 'no disengage' options.",
+      "scope": "car-dependent"
     },
     {
       "id": "record-front",
-      "abbrev": "DCAM",
-      "name": "Driver Camera Recording",
+      "abbrev": "RECF",
+      "name": "Record & Upload Driver Camera",
       "category": "Device",
       "origin": "openpilot",
-      "description": "Opt-in toggle (RecordFront) to record and upload the driver-facing camera to improve driver monitoring."
+      "description": "Opt-in upload of the driver-facing camera to improve the driver monitoring model (RecordFront).",
+      "scope": "global"
     },
     {
       "id": "record-audio",
       "abbrev": "MIC",
-      "name": "Audio Recording",
+      "name": "Record & Upload Microphone Audio",
       "category": "Device",
       "origin": "openpilot",
-      "description": "Opt-in toggle (RecordAudio) to record microphone audio with drives; a recent upstream addition."
+      "description": "Opt-in microphone recording included in the dashcam video in comma connect (RecordAudio).",
+      "scope": "global"
     },
     {
       "id": "firehose",
@@ -117,23 +138,26 @@
       "name": "Firehose Mode",
       "category": "Device",
       "origin": "openpilot",
-      "description": "Dedicated settings page that uploads all drive data at maximum rate to contribute training data to comma; works on any car and on WiFi."
+      "description": "Dedicated settings page to maximize training-data upload to comma while on WiFi; device-level, car-independent.",
+      "scope": "global"
     },
     {
       "id": "connect",
       "abbrev": "CONN",
-      "name": "comma connect / remote access",
+      "name": "comma connect / athena + OTA updates",
       "category": "Device",
       "origin": "openpilot",
-      "description": "Cloud pairing via athena: drive review in comma connect, remote SSH tunneling, OTA updates, and upload management. Device-level, car-independent."
+      "description": "Cloud pairing via the athena service: drive review in comma connect, remote SSH tunneling, prime navigation data, and over-the-air software updates (updated/updaterd). Device-level, car-independent.",
+      "scope": "global"
     },
     {
-      "id": "maneuver-testing",
-      "abbrev": "MANVR",
-      "name": "Lateral/Longitudinal Maneuver Testing",
+      "id": "secoc",
+      "abbrev": "SECOC",
+      "name": "SecOC (TRON) car support",
       "category": "Other",
       "origin": "openpilot",
-      "description": "Developer modes (LateralManeuverMode / LongitudinalManeuverMode params) that run scripted control maneuvers for tuning and system identification; actively developed upstream (e.g. 'Improve lateral maneuvers' #38159)."
+      "description": "Support for Toyota SecOC-authenticated platforms (RAV4 Prime, Sienna 2021+, non-US Yaris) using a user-provided SecOCKey param. Classified 'Custom' support: dashcam-only on release branches; not plug-and-play.",
+      "scope": "global"
     }
   ],
   "manufacturers": [
@@ -142,44 +166,45 @@
       "name": "Acura",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "partial",
-          "note": "alpha toggle on non-release branches only; enabling disables stock AEB/FCW (CMBS)"
+          "note": "openpilot longitudinal is an alpha toggle on non-release branches; enabling it disables all AcuraWatch/CMBS AEB and FCW (fn 1,5)"
         },
         "exp": {
           "status": "partial",
-          "note": "requires alpha longitudinal toggle"
+          "note": "requires the alpha longitudinal toggle"
         },
         "sng": "yes",
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
           "id": "acura-ilx-2016-18",
           "name": "Acura ILX 2016-18",
           "features": {
-            "oplong": {
-              "status": "yes",
-              "note": "standard openpilot longitudinal; no ACC accel below 26 mph"
-            },
+            "oplong": "yes",
             "exp": "yes",
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 25 mph; low steering torque"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 26 mph; no resume from stop"
+            },
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 25 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -187,18 +212,19 @@
           "id": "acura-ilx-2019",
           "name": "Acura ILX 2019",
           "features": {
-            "oplong": {
-              "status": "yes",
-              "note": "standard openpilot longitudinal; no ACC accel below 26 mph"
-            },
+            "oplong": "yes",
             "exp": "yes",
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 25 mph; low steering torque"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 26 mph; no resume from stop"
+            },
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 25 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -206,9 +232,9 @@
           "id": "acura-mdx-2022-24",
           "name": "Acura MDX 2022-24",
           "features": {
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 43 mph"
+              "note": "no ALC below 43 mph"
             }
           }
         },
@@ -227,18 +253,19 @@
           "id": "acura-rdx-2016-18",
           "name": "Acura RDX 2016-18",
           "features": {
-            "oplong": {
-              "status": "yes",
-              "note": "standard openpilot longitudinal; no ACC accel below 26 mph"
-            },
+            "oplong": "yes",
             "exp": "yes",
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 12 mph; low steering torque"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 26 mph; no resume from stop"
+            },
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -246,9 +273,13 @@
           "id": "acura-rdx-2019-21",
           "name": "Acura RDX 2019-21",
           "features": {
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 3 mph"
+            },
             "alc": {
-              "status": "yes",
-              "note": "low steering torque"
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -266,18 +297,6 @@
             },
             "exp": "no"
           }
-        },
-        {
-          "id": "acura-zdx-2024",
-          "name": "Acura ZDX 2024",
-          "note": "In code (extra_cars.py) as incompatible \u2014 GM CAN bus security",
-          "features": {
-            "alc": "no",
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
         }
       ]
     },
@@ -286,26 +305,26 @@
       "name": "Audi",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "partial",
-          "note": "alpha toggle on non-release branches; J533 gateway harness only \u2014 camera-harness cars keep stock ACC"
+          "note": "alpha toggle, non-release branches; only with J533 gateway harness \u2014 camera-harness installs are stock ACC (fn 1,16)"
         },
         "exp": {
           "status": "partial",
-          "note": "requires alpha longitudinal toggle"
+          "note": "requires alpha longitudinal"
         },
         "sng": "yes",
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
@@ -313,7 +332,7 @@
           "name": "Audi A3 2014-19"
         },
         {
-          "id": "audi-a3-sportback-e-tron-2017-18",
+          "id": "audi-a3-sportback-etron-2017-18",
           "name": "Audi A3 Sportback e-tron 2017-18"
         },
         {
@@ -331,42 +350,6 @@
         {
           "id": "audi-s3-2015-17",
           "name": "Audi S3 2015-17"
-        },
-        {
-          "id": "audi-a4-2016-24",
-          "name": "Audi A4 2016-24",
-          "note": "In code (extra_cars.py) as incompatible \u2014 FlexRay bus",
-          "features": {
-            "alc": "no",
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "audi-a5-2016-24",
-          "name": "Audi A5 2016-24",
-          "note": "In code (extra_cars.py) as incompatible \u2014 FlexRay bus",
-          "features": {
-            "alc": "no",
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "audi-q5-2016-24",
-          "name": "Audi Q5 2016-24",
-          "note": "In code (extra_cars.py) as incompatible \u2014 FlexRay bus",
-          "features": {
-            "alc": "no",
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
         }
       ]
     },
@@ -375,34 +358,37 @@
       "name": "Chevrolet",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "partial",
-          "note": "alpha toggle on non-release branches only"
+          "note": "alpha toggle, non-release branches (fn 1)"
         },
         "exp": {
           "status": "partial",
-          "note": "requires alpha longitudinal toggle"
+          "note": "requires alpha longitudinal"
         },
         "sng": {
           "status": "partial",
-          "note": "no auto resume from stop; no ACC accel below 3 mph on most models"
+          "note": "no ACC accel below 3 mph; no resume from stop"
+        },
+        "fsr": {
+          "status": "partial",
+          "note": "no ALC below 6 mph"
         },
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
           "id": "chevrolet-bolt-euv-2022-23",
-          "name": "Chevrolet Bolt EUV 2022-23 (without Super Cruise)"
+          "name": "Chevrolet Bolt EUV 2022-23 (Premier/Premier Redline, no Super Cruise)"
         },
         {
           "id": "chevrolet-bolt-ev-2022-23",
@@ -414,7 +400,13 @@
         },
         {
           "id": "chevrolet-silverado-1500-2020-21",
-          "name": "Chevrolet Silverado 1500 2020-21"
+          "name": "Chevrolet Silverado 1500 2020-21",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "accel from 0 mph but no resume from stop"
+            }
+          }
         },
         {
           "id": "chevrolet-trailblazer-2021-22",
@@ -427,74 +419,59 @@
       "name": "Chrysler",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "no",
-          "note": "stock ACC only"
+          "note": "stock ACC only on all Chrysler models"
         },
         "exp": "no",
         "sng": "yes",
+        "fsr": {
+          "status": "partial",
+          "note": "no ALC below 39 mph"
+        },
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
           "id": "chrysler-pacifica-2017-18",
           "name": "Chrysler Pacifica 2017-18",
           "features": {
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 9 mph"
+              "note": "no ALC below 9 mph"
             }
           }
         },
         {
           "id": "chrysler-pacifica-2019-20",
-          "name": "Chrysler Pacifica 2019-20",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 39 mph"
-            }
-          }
+          "name": "Chrysler Pacifica 2019-20"
         },
         {
           "id": "chrysler-pacifica-2021-23",
-          "name": "Chrysler Pacifica 2021-23",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 39 mph"
-            }
-          }
+          "name": "Chrysler Pacifica 2021-23"
         },
         {
           "id": "chrysler-pacifica-hybrid-2017-18",
           "name": "Chrysler Pacifica Hybrid 2017-18",
           "features": {
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 9 mph"
+              "note": "no ALC below 9 mph"
             }
           }
         },
         {
           "id": "chrysler-pacifica-hybrid-2019-25",
-          "name": "Chrysler Pacifica Hybrid 2019-25",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 39 mph"
-            }
-          }
+          "name": "Chrysler Pacifica Hybrid 2019-25"
         }
       ]
     },
@@ -502,28 +479,31 @@
       "id": "comma",
       "name": "comma",
       "features": {
-        "alc": "yes",
-        "lca": "no",
+        "alc": {
+          "status": "no",
+          "note": "robotics platform, not a car"
+        },
         "oplong": "yes",
         "exp": "yes",
         "sng": "yes",
-        "dm": "yes",
-        "aod": "yes",
-        "ldw": "yes",
-        "personality": "yes",
-        "disengage-on-accelerator": "yes",
+        "fsr": "yes",
+        "dm": "no",
+        "aodm": "no",
+        "lca": "no",
+        "ldw": "no",
+        "personality": "no",
+        "disengage-on-accelerator": "no",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
           "id": "comma-body",
           "name": "comma body",
           "highlight": true,
-          "note": "comma's own two-wheeled robotics platform, supported as a 'car' with full openpilot control"
+          "note": "comma's own two-wheeled robotics dev kit \u2014 openpilot drives it natively as a 'car' platform"
         }
       ]
     },
@@ -532,26 +512,26 @@
       "name": "CUPRA",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "partial",
-          "note": "alpha toggle on non-release branches; J533 gateway harness only"
+          "note": "alpha toggle, non-release branches; J533 gateway harness only (fn 1,16)"
         },
         "exp": {
           "status": "partial",
-          "note": "requires alpha longitudinal toggle"
+          "note": "requires alpha longitudinal"
         },
         "sng": "yes",
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
@@ -565,34 +545,31 @@
       "name": "Dodge",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "no",
           "note": "stock ACC only"
         },
         "exp": "no",
         "sng": "yes",
+        "fsr": {
+          "status": "partial",
+          "note": "no ALC below 39 mph"
+        },
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
           "id": "dodge-durango-2020-21",
-          "name": "Dodge Durango 2020-21",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 39 mph"
-            }
-          }
+          "name": "Dodge Durango 2020-21"
         }
       ]
     },
@@ -601,20 +578,20 @@
       "name": "Ford",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": "yes",
         "exp": "yes",
         "sng": "yes",
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
@@ -631,11 +608,11 @@
           "features": {
             "oplong": {
               "status": "partial",
-              "note": "alpha toggle on non-release branches only"
+              "note": "CAN FD platform: alpha toggle, non-release branches (fn 1)"
             },
             "exp": {
               "status": "partial",
-              "note": "requires alpha longitudinal toggle"
+              "note": "requires alpha longitudinal"
             }
           }
         },
@@ -649,29 +626,29 @@
           "features": {
             "oplong": {
               "status": "partial",
-              "note": "alpha toggle on non-release branches only"
+              "note": "alpha toggle, non-release branches (fn 1)"
             },
             "exp": {
               "status": "partial",
-              "note": "requires alpha longitudinal toggle"
+              "note": "requires alpha longitudinal"
             }
           }
         },
         {
-          "id": "ford-escape-plug-in-hybrid-2020-22",
+          "id": "ford-escape-phev-2020-22",
           "name": "Ford Escape Plug-in Hybrid 2020-22"
         },
         {
-          "id": "ford-escape-plug-in-hybrid-2023-24",
+          "id": "ford-escape-phev-2023-24",
           "name": "Ford Escape Plug-in Hybrid 2023-24",
           "features": {
             "oplong": {
               "status": "partial",
-              "note": "alpha toggle on non-release branches only"
+              "note": "alpha toggle, non-release branches (fn 1)"
             },
             "exp": {
               "status": "partial",
-              "note": "requires alpha longitudinal toggle"
+              "note": "requires alpha longitudinal"
             }
           }
         },
@@ -681,11 +658,11 @@
           "features": {
             "oplong": {
               "status": "partial",
-              "note": "alpha toggle on non-release branches only"
+              "note": "alpha toggle, non-release branches (fn 1)"
             },
             "exp": {
               "status": "partial",
-              "note": "requires alpha longitudinal toggle"
+              "note": "requires alpha longitudinal"
             }
           }
         },
@@ -703,11 +680,11 @@
           "features": {
             "oplong": {
               "status": "partial",
-              "note": "alpha toggle on non-release branches only"
+              "note": "alpha toggle, non-release branches (fn 1)"
             },
             "exp": {
               "status": "partial",
-              "note": "requires alpha longitudinal toggle"
+              "note": "requires alpha longitudinal"
             }
           }
         },
@@ -717,48 +694,23 @@
           "features": {
             "oplong": {
               "status": "partial",
-              "note": "alpha toggle on non-release branches only"
+              "note": "alpha toggle, non-release branches (fn 1)"
             },
             "exp": {
               "status": "partial",
-              "note": "requires alpha longitudinal toggle"
+              "note": "requires alpha longitudinal"
             }
-          }
-        },
-        {
-          "id": "ford-f-150-lightning-2022-23",
-          "name": "Ford F-150 Lightning 2022-23",
-          "highlight": true,
-          "note": "In code (FORD_F_150_LIGHTNING_MK1) but deliberately hidden from CARS.md \u2014 values.py empties its car_docs 'until this issue is resolved' (openpilot issue #30302); interface also sets dashcamOnly if the PSCM lacks TJA/LCA lateral-control config",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "port exists; hidden from docs pending issue #30302 and PSCM config checks"
-            },
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
           }
         },
         {
           "id": "ford-focus-2018-22",
           "name": "Ford Focus 2018-22",
-          "features": {
-            "alc": {
-              "status": "yes",
-              "note": "Focus Mk4 (Europe/China/Taiwan/Australasia) only \u2014 not the North/South America Mk3"
-            }
-          }
+          "note": "Focus Mk4 (C519, Europe/China/Taiwan/Australasia) only \u2014 not the North/South America Mk3 (fn 2)"
         },
         {
           "id": "ford-focus-hybrid-2018-22",
           "name": "Ford Focus Hybrid 2018-22",
-          "features": {
-            "alc": {
-              "status": "yes",
-              "note": "Focus Mk4 (Europe/China/Taiwan/Australasia) only \u2014 not the North/South America Mk3"
-            }
-          }
+          "note": "Mk4 mHEV only (fn 2)"
         },
         {
           "id": "ford-kuga-2020-23",
@@ -774,29 +726,29 @@
           "features": {
             "oplong": {
               "status": "partial",
-              "note": "alpha toggle on non-release branches only"
+              "note": "alpha toggle, non-release branches (fn 1)"
             },
             "exp": {
               "status": "partial",
-              "note": "requires alpha longitudinal toggle"
+              "note": "requires alpha longitudinal"
             }
           }
         },
         {
-          "id": "ford-kuga-plug-in-hybrid-2020-23",
+          "id": "ford-kuga-phev-2020-23",
           "name": "Ford Kuga Plug-in Hybrid 2020-23"
         },
         {
-          "id": "ford-kuga-plug-in-hybrid-2024",
+          "id": "ford-kuga-phev-2024",
           "name": "Ford Kuga Plug-in Hybrid 2024",
           "features": {
             "oplong": {
               "status": "partial",
-              "note": "alpha toggle on non-release branches only"
+              "note": "alpha toggle, non-release branches (fn 1)"
             },
             "exp": {
               "status": "partial",
-              "note": "requires alpha longitudinal toggle"
+              "note": "requires alpha longitudinal"
             }
           }
         },
@@ -822,11 +774,11 @@
           "features": {
             "oplong": {
               "status": "partial",
-              "note": "alpha toggle on non-release branches only"
+              "note": "alpha toggle, non-release branches (fn 1)"
             },
             "exp": {
               "status": "partial",
-              "note": "requires alpha longitudinal toggle"
+              "note": "requires alpha longitudinal"
             }
           }
         },
@@ -836,11 +788,11 @@
           "features": {
             "oplong": {
               "status": "partial",
-              "note": "alpha toggle on non-release branches only"
+              "note": "alpha toggle, non-release branches (fn 1)"
             },
             "exp": {
               "status": "partial",
-              "note": "requires alpha longitudinal toggle"
+              "note": "requires alpha longitudinal"
             }
           }
         }
@@ -851,26 +803,26 @@
       "name": "Genesis",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "partial",
-          "note": "alpha toggle on non-release branches only"
+          "note": "alpha toggle, non-release branches (fn 1)"
         },
         "exp": {
           "status": "partial",
-          "note": "requires alpha longitudinal toggle"
+          "note": "requires alpha longitudinal"
         },
         "sng": "yes",
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
@@ -898,16 +850,16 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
+              "note": "stock ACC only"
             },
             "exp": "no",
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 37 mph"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
+            },
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 37 mph"
             }
           }
         },
@@ -948,11 +900,11 @@
         },
         {
           "id": "genesis-gv70-electrified-au-2022",
-          "name": "Genesis GV70 Electrified (Australia) 2022"
+          "name": "Genesis GV70 Electrified (Australia only) 2022"
         },
         {
-          "id": "genesis-gv70-electrified-hda2-2023-24",
-          "name": "Genesis GV70 Electrified (HDA II) 2023-24"
+          "id": "genesis-gv70-electrified-2023-24",
+          "name": "Genesis GV70 Electrified (with HDA II) 2023-24"
         },
         {
           "id": "genesis-gv80-2023",
@@ -965,34 +917,37 @@
       "name": "GMC",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "partial",
-          "note": "alpha toggle on non-release branches only"
+          "note": "alpha toggle, non-release branches (fn 1)"
         },
         "exp": {
           "status": "partial",
-          "note": "requires alpha longitudinal toggle"
+          "note": "requires alpha longitudinal"
         },
         "sng": {
           "status": "partial",
-          "note": "no auto resume from stop"
+          "note": "no resume from stop"
+        },
+        "fsr": {
+          "status": "partial",
+          "note": "no ALC below 6 mph"
         },
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
           "id": "gmc-sierra-1500-2020-21",
-          "name": "GMC Sierra 1500 2020-21"
+          "name": "GMC Sierra 1500 2020-21 (Driver Alert Package II)"
         }
       ]
     },
@@ -1001,35 +956,39 @@
       "name": "Honda",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "partial",
-          "note": "alpha toggle on non-release branches only; enabling disables stock AEB/FCW (CMBS)"
+          "note": "alpha toggle, non-release branches; enabling disables all CMBS AEB/FCW (fn 1,5)"
         },
         "exp": {
           "status": "partial",
-          "note": "requires alpha longitudinal toggle"
+          "note": "requires alpha longitudinal"
         },
         "sng": "yes",
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
           "id": "honda-accord-2018-22",
           "name": "Honda Accord 2018-22",
           "features": {
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 3 mph"
+            },
             "alc": {
-              "status": "yes",
-              "note": "low steering torque"
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1048,9 +1007,13 @@
           "id": "honda-accord-hybrid-2018-22",
           "name": "Honda Accord Hybrid 2018-22",
           "features": {
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 3 mph"
+            },
             "alc": {
-              "status": "yes",
-              "note": "low steering torque"
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1060,18 +1023,18 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC only (Bosch C)"
+              "note": "stock ACC only (Bosch C); code docs already extend to 2026"
             },
             "exp": "no"
           }
         },
         {
-          "id": "honda-city-brazil-2023",
+          "id": "honda-city-2023-br",
           "name": "Honda City (Brazil only) 2023",
           "features": {
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 14 mph"
+              "note": "no ALC below 14 mph"
             }
           }
         },
@@ -1079,14 +1042,15 @@
           "id": "honda-civic-2016-18",
           "name": "Honda Civic 2016-18",
           "features": {
-            "oplong": {
-              "status": "yes",
-              "note": "standard openpilot longitudinal"
-            },
+            "oplong": "yes",
             "exp": "yes",
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            },
             "alc": {
               "status": "partial",
-              "note": "no steering below 12 mph; low steering torque"
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1094,9 +1058,13 @@
           "id": "honda-civic-2019-21",
           "name": "Honda Civic 2019-21",
           "features": {
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 2 mph (12 mph on 2019 1.6L Diesel Sedan, fn 4)"
+            },
             "alc": {
               "status": "partial",
-              "note": "no steering below 2 mph (12 mph for the 1.6L diesel sedan); low steering torque"
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1108,9 +1076,13 @@
           "id": "honda-civic-hatchback-2017-18",
           "name": "Honda Civic Hatchback 2017-18",
           "features": {
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            },
             "alc": {
               "status": "partial",
-              "note": "no steering below 12 mph; low steering torque"
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1118,9 +1090,13 @@
           "id": "honda-civic-hatchback-2019-21",
           "name": "Honda Civic Hatchback 2019-21",
           "features": {
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            },
             "alc": {
               "status": "partial",
-              "note": "no steering below 12 mph; low steering torque"
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1133,7 +1109,7 @@
           "name": "Honda Civic Hatchback Hybrid 2025-26"
         },
         {
-          "id": "honda-civic-hatchback-hybrid-eu-2023",
+          "id": "honda-civic-hatchback-hybrid-2023-eu",
           "name": "Honda Civic Hatchback Hybrid (Europe only) 2023"
         },
         {
@@ -1144,18 +1120,19 @@
           "id": "honda-cr-v-2015-16",
           "name": "Honda CR-V 2015-16 (Touring)",
           "features": {
-            "oplong": {
-              "status": "yes",
-              "note": "standard openpilot longitudinal; no ACC accel below 26 mph"
-            },
+            "oplong": "yes",
             "exp": "yes",
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 12 mph; low steering torque"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 26 mph; no resume from stop"
+            },
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1163,9 +1140,13 @@
           "id": "honda-cr-v-2017-22",
           "name": "Honda CR-V 2017-22",
           "features": {
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 15 mph"
+            },
             "alc": {
               "status": "partial",
-              "note": "no steering below 15 mph; low steering torque"
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1184,9 +1165,13 @@
           "id": "honda-cr-v-hybrid-2017-22",
           "name": "Honda CR-V Hybrid 2017-22",
           "features": {
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            },
             "alc": {
               "status": "partial",
-              "note": "no steering below 12 mph; low steering torque"
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1205,9 +1190,13 @@
           "id": "honda-e-2020",
           "name": "Honda e 2020",
           "features": {
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 3 mph"
+            },
             "alc": {
-              "status": "yes",
-              "note": "low steering torque"
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1215,18 +1204,19 @@
           "id": "honda-fit-2018-20",
           "name": "Honda Fit 2018-20",
           "features": {
-            "oplong": {
-              "status": "yes",
-              "note": "standard openpilot longitudinal; no ACC accel below 26 mph"
-            },
+            "oplong": "yes",
             "exp": "yes",
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 12 mph; low steering torque"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 26 mph; no resume from stop"
+            },
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1234,18 +1224,19 @@
           "id": "honda-freed-2020",
           "name": "Honda Freed 2020",
           "features": {
-            "oplong": {
-              "status": "yes",
-              "note": "standard openpilot longitudinal; no ACC accel below 26 mph"
-            },
+            "oplong": "yes",
             "exp": "yes",
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 12 mph; low steering torque"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 26 mph; no resume from stop"
+            },
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1253,18 +1244,19 @@
           "id": "honda-hr-v-2019-22",
           "name": "Honda HR-V 2019-22",
           "features": {
-            "oplong": {
-              "status": "yes",
-              "note": "standard openpilot longitudinal; no ACC accel below 26 mph"
-            },
+            "oplong": "yes",
             "exp": "yes",
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 12 mph; low steering torque"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 26 mph; no resume from stop"
+            },
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1276,9 +1268,13 @@
           "id": "honda-insight-2019-22",
           "name": "Honda Insight 2019-22",
           "features": {
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 3 mph"
+            },
             "alc": {
-              "status": "yes",
-              "note": "low steering torque"
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1286,9 +1282,13 @@
           "id": "honda-inspire-2018",
           "name": "Honda Inspire 2018",
           "features": {
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 3 mph"
+            },
             "alc": {
-              "status": "yes",
-              "note": "low steering torque"
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1296,9 +1296,9 @@
           "id": "honda-n-box-2018",
           "name": "Honda N-Box 2018",
           "features": {
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 11 mph"
+              "note": "no ALC below 11 mph"
             }
           }
         },
@@ -1306,18 +1306,15 @@
           "id": "honda-odyssey-2018-20",
           "name": "Honda Odyssey 2018-20",
           "features": {
-            "oplong": {
-              "status": "yes",
-              "note": "standard openpilot longitudinal; no ACC accel below 26 mph"
-            },
+            "oplong": "yes",
             "exp": "yes",
-            "alc": {
-              "status": "yes",
-              "note": "low steering torque"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 26 mph; no resume from stop"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1325,47 +1322,45 @@
           "id": "honda-odyssey-2021-26",
           "name": "Honda Odyssey 2021-26",
           "features": {
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 43 mph"
+            },
             "alc": {
               "status": "partial",
-              "note": "no steering below 43 mph; low steering torque"
+              "note": "below-standard steering torque"
             }
           }
         },
         {
-          "id": "honda-odyssey-singapore-2021",
+          "id": "honda-odyssey-2021-sg",
           "name": "Honda Odyssey (Singapore) 2021",
           "features": {
-            "oplong": {
-              "status": "yes",
-              "note": "standard openpilot longitudinal; no ACC accel below 19 mph"
-            },
+            "oplong": "yes",
             "exp": "yes",
-            "alc": {
-              "status": "yes",
-              "note": "low steering torque"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
         {
-          "id": "honda-odyssey-taiwan-2018-19",
+          "id": "honda-odyssey-2018-19-tw",
           "name": "Honda Odyssey (Taiwan) 2018-19",
           "features": {
-            "oplong": {
-              "status": "yes",
-              "note": "standard openpilot longitudinal; no ACC accel below 19 mph"
-            },
+            "oplong": "yes",
             "exp": "yes",
-            "alc": {
-              "status": "yes",
-              "note": "low steering torque"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1373,18 +1368,19 @@
           "id": "honda-passport-2019-25",
           "name": "Honda Passport 2019-25",
           "features": {
-            "oplong": {
-              "status": "yes",
-              "note": "standard openpilot longitudinal; no ACC accel below 26 mph"
-            },
+            "oplong": "yes",
             "exp": "yes",
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 12 mph; low steering torque"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 26 mph; no resume from stop"
+            },
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1394,7 +1390,7 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC only (Bosch C)"
+              "note": "stock ACC only (Bosch CAN FD)"
             },
             "exp": "no"
           }
@@ -1403,18 +1399,19 @@
           "id": "honda-pilot-2016-22",
           "name": "Honda Pilot 2016-22",
           "features": {
-            "oplong": {
-              "status": "yes",
-              "note": "standard openpilot longitudinal; no ACC accel below 26 mph"
-            },
+            "oplong": "yes",
             "exp": "yes",
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 12 mph; low steering torque"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 26 mph; no resume from stop"
+            },
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -1424,7 +1421,7 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC only (Bosch C)"
+              "note": "stock ACC only (Bosch CAN FD)"
             },
             "exp": "no"
           }
@@ -1433,31 +1430,20 @@
           "id": "honda-ridgeline-2017-25",
           "name": "Honda Ridgeline 2017-25",
           "features": {
-            "oplong": {
-              "status": "yes",
-              "note": "standard openpilot longitudinal; no ACC accel below 26 mph"
-            },
+            "oplong": "yes",
             "exp": "yes",
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 12 mph; low steering torque"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 26 mph; no resume from stop"
+            },
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
-          }
-        },
-        {
-          "id": "honda-prologue-2024-25",
-          "name": "Honda Prologue 2024-25",
-          "note": "In code (extra_cars.py) as incompatible \u2014 GM CAN bus security",
-          "features": {
-            "alc": "no",
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
           }
         }
       ]
@@ -1467,26 +1453,26 @@
       "name": "Hyundai",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "partial",
-          "note": "alpha toggle on non-release branches only"
+          "note": "alpha toggle, non-release branches (fn 1)"
         },
         "exp": {
           "status": "partial",
-          "note": "requires alpha longitudinal toggle"
+          "note": "requires alpha longitudinal"
         },
         "sng": "yes",
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
@@ -1511,16 +1497,16 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
+              "note": "stock ACC only"
             },
             "exp": "no",
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 32 mph"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
+            },
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 32 mph"
             }
           }
         },
@@ -1530,16 +1516,16 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
+              "note": "stock ACC only"
             },
             "exp": "no",
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 32 mph"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
+            },
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 32 mph"
             }
           }
         },
@@ -1556,9 +1542,9 @@
               "note": "stock ACC only"
             },
             "exp": "no",
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 32 mph"
+              "note": "no ALC below 32 mph"
             }
           }
         },
@@ -1572,16 +1558,16 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
+              "note": "stock ACC only"
             },
             "exp": "no",
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 37 mph"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
+            },
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 37 mph"
             }
           }
         },
@@ -1594,26 +1580,26 @@
               "note": "stock ACC only"
             },
             "exp": "no",
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 32 mph"
+              "note": "no ALC below 32 mph"
             }
           }
         },
         {
-          "id": "hyundai-ioniq-5-sea-eu-2022-24",
-          "name": "Hyundai Ioniq 5 (SE Asia and Europe) 2022-24"
+          "id": "hyundai-ioniq-5-2022-24-sea-eu",
+          "name": "Hyundai Ioniq 5 (Southeast Asia and Europe only) 2022-24"
         },
         {
-          "id": "hyundai-ioniq-5-hda2-2022-24",
+          "id": "hyundai-ioniq-5-2022-24-hda2",
           "name": "Hyundai Ioniq 5 (with HDA II) 2022-24"
         },
         {
-          "id": "hyundai-ioniq-5-no-hda2-2022-24",
+          "id": "hyundai-ioniq-5-2022-24-nohda2",
           "name": "Hyundai Ioniq 5 (without HDA II) 2022-24"
         },
         {
-          "id": "hyundai-ioniq-6-hda2-2023-24",
+          "id": "hyundai-ioniq-6-2023-24-hda2",
           "name": "Hyundai Ioniq 6 (with HDA II) 2023-24",
           "features": {
             "oplong": {
@@ -1624,7 +1610,7 @@
           }
         },
         {
-          "id": "hyundai-ioniq-6-no-hda2-2023-24",
+          "id": "hyundai-ioniq-6-2023-24-nohda2",
           "name": "Hyundai Ioniq 6 (without HDA II) 2023-24",
           "features": {
             "oplong": {
@@ -1643,9 +1629,9 @@
               "note": "stock ACC only"
             },
             "exp": "no",
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 32 mph"
+              "note": "no ALC below 32 mph"
             }
           }
         },
@@ -1657,9 +1643,9 @@
           "id": "hyundai-ioniq-hybrid-2017-19",
           "name": "Hyundai Ioniq Hybrid 2017-19",
           "features": {
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 32 mph"
+              "note": "no ALC below 32 mph"
             }
           }
         },
@@ -1675,30 +1661,26 @@
           }
         },
         {
-          "id": "hyundai-ioniq-plug-in-hybrid-2019",
+          "id": "hyundai-ioniq-phev-2019",
           "name": "Hyundai Ioniq Plug-in Hybrid 2019",
           "features": {
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 32 mph"
+              "note": "no ALC below 32 mph"
             }
           }
         },
         {
-          "id": "hyundai-ioniq-plug-in-hybrid-2020-22",
+          "id": "hyundai-ioniq-phev-2020-22",
           "name": "Hyundai Ioniq Plug-in Hybrid 2020-22"
         },
         {
           "id": "hyundai-kona-2020",
           "name": "Hyundai Kona 2020",
           "features": {
-            "oplong": {
-              "status": "partial",
-              "note": "alpha toggle; no ACC accel below 6 mph"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 6 mph; no resume from stop"
             }
           }
         },
@@ -1711,8 +1693,8 @@
           "name": "Hyundai Kona Electric 2022-23"
         },
         {
-          "id": "hyundai-kona-electric-hda2-korea-2023",
-          "name": "Hyundai Kona Electric (HDA II, Korea only) 2023",
+          "id": "hyundai-kona-electric-2023-hda2-kr",
+          "name": "Hyundai Kona Electric (with HDA II, Korea only) 2023",
           "features": {
             "oplong": {
               "status": "no",
@@ -1780,13 +1762,9 @@
           "id": "hyundai-tucson-2021",
           "name": "Hyundai Tucson 2021",
           "features": {
-            "oplong": {
-              "status": "partial",
-              "note": "alpha toggle; no ACC accel below 19 mph"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
             }
           }
         },
@@ -1816,12 +1794,12 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; no ACC accel below 5 mph"
+              "note": "stock ACC only"
             },
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 5 mph; no resume from stop"
             }
           }
         }
@@ -1832,44 +1810,41 @@
       "name": "Jeep",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "no",
           "note": "stock ACC only"
         },
         "exp": "no",
         "sng": "yes",
+        "fsr": {
+          "status": "partial",
+          "note": "no ALC below 39 mph"
+        },
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
           "id": "jeep-grand-cherokee-2016-18",
           "name": "Jeep Grand Cherokee 2016-18",
           "features": {
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 9 mph"
+              "note": "no ALC below 9 mph"
             }
           }
         },
         {
           "id": "jeep-grand-cherokee-2019-21",
-          "name": "Jeep Grand Cherokee 2019-21",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 39 mph"
-            }
-          }
+          "name": "Jeep Grand Cherokee 2019-21"
         }
       ]
     },
@@ -1878,26 +1853,26 @@
       "name": "Kia",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "partial",
-          "note": "alpha toggle on non-release branches only"
+          "note": "alpha toggle, non-release branches (fn 1)"
         },
         "exp": {
           "status": "partial",
-          "note": "requires alpha longitudinal toggle"
+          "note": "requires alpha longitudinal"
         },
         "sng": "yes",
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
@@ -1905,7 +1880,7 @@
           "name": "Kia Carnival 2022-24"
         },
         {
-          "id": "kia-carnival-china-2023",
+          "id": "kia-carnival-2023-cn",
           "name": "Kia Carnival (China only) 2023"
         },
         {
@@ -1920,28 +1895,24 @@
           }
         },
         {
-          "id": "kia-ev6-sea-2022-24",
-          "name": "Kia EV6 (SE Asia only) 2022-24"
+          "id": "kia-ev6-2022-24-sea",
+          "name": "Kia EV6 (Southeast Asia only) 2022-24"
         },
         {
-          "id": "kia-ev6-hda2-2022-24",
+          "id": "kia-ev6-2022-24-hda2",
           "name": "Kia EV6 (with HDA II) 2022-24"
         },
         {
-          "id": "kia-ev6-no-hda2-2022-24",
+          "id": "kia-ev6-2022-24-nohda2",
           "name": "Kia EV6 (without HDA II) 2022-24"
         },
         {
           "id": "kia-forte-2019-21",
           "name": "Kia Forte 2019-21",
           "features": {
-            "oplong": {
-              "status": "partial",
-              "note": "alpha toggle; no ACC accel below 6 mph"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 6 mph; no resume from stop"
             }
           }
         },
@@ -1962,7 +1933,7 @@
           "name": "Kia K7 2017"
         },
         {
-          "id": "kia-k8-hybrid-hda2-2023",
+          "id": "kia-k8-hybrid-2023-hda2",
           "name": "Kia K8 Hybrid (with HDA II) 2023"
         },
         {
@@ -1982,11 +1953,11 @@
           "name": "Kia Niro EV 2022"
         },
         {
-          "id": "kia-niro-ev-hda2-2024-25",
+          "id": "kia-niro-ev-2024-25-hda2",
           "name": "Kia Niro EV (with HDA II) 2024-25"
         },
         {
-          "id": "kia-niro-ev-no-hda2-2023-25",
+          "id": "kia-niro-ev-2023-25-nohda2",
           "name": "Kia Niro EV (without HDA II) 2023-25"
         },
         {
@@ -1995,16 +1966,16 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; no ACC accel below 10 mph"
+              "note": "stock ACC only"
             },
             "exp": "no",
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 32 mph"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 10 mph; no resume from stop"
+            },
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 32 mph"
             }
           }
         },
@@ -2026,16 +1997,16 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; no ACC accel below 10 mph"
+              "note": "stock ACC only"
             },
             "exp": "no",
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 32 mph"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 10 mph; no resume from stop"
+            },
+            "fsr": {
+              "status": "partial",
+              "note": "no ALC below 32 mph"
             }
           }
         },
@@ -2048,9 +2019,9 @@
               "note": "stock ACC only"
             },
             "exp": "no",
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 32 mph"
+              "note": "no ALC below 32 mph"
             }
           }
         },
@@ -2071,9 +2042,9 @@
               "note": "stock ACC only"
             },
             "exp": "no",
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 32 mph"
+              "note": "no ALC below 32 mph"
             }
           }
         },
@@ -2164,87 +2135,77 @@
       "name": "Lexus",
       "features": {
         "alc": "yes",
-        "lca": "yes",
-        "oplong": "yes",
-        "exp": "yes",
-        "sng": "yes",
+        "oplong": {
+          "status": "no",
+          "note": "older TSS-P models: stock ACC only"
+        },
+        "exp": "no",
+        "sng": {
+          "status": "partial",
+          "note": "no resume from stop on stock-ACC models"
+        },
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
           "id": "lexus-ct-hybrid-2017-18",
-          "name": "Lexus CT Hybrid 2017-18",
-          "features": {
-            "oplong": {
-              "status": "no",
-              "note": "stock ACC only"
-            },
-            "exp": "no",
-            "sng": {
-              "status": "partial",
-              "note": "no auto resume from stop"
-            }
-          }
+          "name": "Lexus CT Hybrid 2017-18"
         },
         {
           "id": "lexus-es-2017-18",
           "name": "Lexus ES 2017-18",
           "features": {
-            "oplong": {
-              "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
-            },
-            "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
             }
           }
         },
         {
           "id": "lexus-es-2019-25",
-          "name": "Lexus ES 2019-25"
+          "name": "Lexus ES 2019-25",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": "yes"
+          }
         },
         {
           "id": "lexus-es-hybrid-2017-18",
           "name": "Lexus ES Hybrid 2017-18",
           "features": {
-            "oplong": {
-              "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
-            },
-            "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
             }
           }
         },
         {
           "id": "lexus-es-hybrid-2019-25",
-          "name": "Lexus ES Hybrid 2019-25"
+          "name": "Lexus ES Hybrid 2019-25",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": "yes"
+          }
         },
         {
           "id": "lexus-gs-f-2016",
           "name": "Lexus GS F 2016",
           "features": {
-            "oplong": {
-              "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
-            },
-            "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
             }
           }
         },
@@ -2252,179 +2213,120 @@
           "id": "lexus-is-2017-19",
           "name": "Lexus IS 2017-19",
           "features": {
-            "oplong": {
-              "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
-            },
-            "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
             }
           }
         },
         {
           "id": "lexus-is-2022-24",
-          "name": "Lexus IS 2022-24"
+          "name": "Lexus IS 2022-24",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": "yes"
+          }
         },
         {
           "id": "lexus-lc-2024-25",
-          "name": "Lexus LC 2024-25"
+          "name": "Lexus LC 2024-25",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": "yes"
+          }
         },
         {
           "id": "lexus-ls-2018",
-          "name": "Lexus LS 2018",
-          "features": {
-            "oplong": {
-              "status": "no",
-              "note": "stock ACC only"
-            },
-            "exp": "no",
-            "sng": {
-              "status": "partial",
-              "note": "no auto resume from stop"
-            }
-          }
+          "name": "Lexus LS 2018 (except Safety System+ A)"
         },
         {
           "id": "lexus-nx-2018-19",
-          "name": "Lexus NX 2018-19",
-          "features": {
-            "oplong": {
-              "status": "no",
-              "note": "stock ACC only"
-            },
-            "exp": "no",
-            "sng": {
-              "status": "partial",
-              "note": "no auto resume from stop"
-            }
-          }
+          "name": "Lexus NX 2018-19"
         },
         {
           "id": "lexus-nx-2020-21",
-          "name": "Lexus NX 2020-21"
-        },
-        {
-          "id": "lexus-nx-hybrid-2018-19",
-          "name": "Lexus NX Hybrid 2018-19",
+          "name": "Lexus NX 2020-21",
           "features": {
-            "oplong": {
-              "status": "no",
-              "note": "stock ACC only"
-            },
-            "exp": "no",
-            "sng": {
-              "status": "partial",
-              "note": "no auto resume from stop"
-            }
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": "yes"
           }
         },
         {
+          "id": "lexus-nx-hybrid-2018-19",
+          "name": "Lexus NX Hybrid 2018-19"
+        },
+        {
           "id": "lexus-nx-hybrid-2020-21",
-          "name": "Lexus NX Hybrid 2020-21"
+          "name": "Lexus NX Hybrid 2020-21",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": "yes"
+          }
         },
         {
           "id": "lexus-rc-2018-20",
           "name": "Lexus RC 2018-20",
           "features": {
-            "oplong": {
-              "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
-            },
-            "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
             }
           }
         },
         {
           "id": "lexus-rc-2023",
-          "name": "Lexus RC 2023"
+          "name": "Lexus RC 2023",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": "yes"
+          }
         },
         {
           "id": "lexus-rx-2016",
-          "name": "Lexus RX 2016",
-          "features": {
-            "oplong": {
-              "status": "no",
-              "note": "stock ACC only"
-            },
-            "exp": "no",
-            "sng": {
-              "status": "partial",
-              "note": "no auto resume from stop"
-            }
-          }
+          "name": "Lexus RX 2016"
         },
         {
           "id": "lexus-rx-2017-19",
-          "name": "Lexus RX 2017-19",
-          "features": {
-            "oplong": {
-              "status": "no",
-              "note": "stock ACC only"
-            },
-            "exp": "no",
-            "sng": {
-              "status": "partial",
-              "note": "no auto resume from stop"
-            }
-          }
+          "name": "Lexus RX 2017-19"
         },
         {
           "id": "lexus-rx-2020-22",
-          "name": "Lexus RX 2020-22"
+          "name": "Lexus RX 2020-22",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": "yes"
+          }
         },
         {
           "id": "lexus-rx-hybrid-2016",
-          "name": "Lexus RX Hybrid 2016",
-          "features": {
-            "oplong": {
-              "status": "no",
-              "note": "stock ACC only"
-            },
-            "exp": "no",
-            "sng": {
-              "status": "partial",
-              "note": "no auto resume from stop"
-            }
-          }
+          "name": "Lexus RX Hybrid 2016"
         },
         {
           "id": "lexus-rx-hybrid-2017-19",
-          "name": "Lexus RX Hybrid 2017-19",
-          "features": {
-            "oplong": {
-              "status": "no",
-              "note": "stock ACC only"
-            },
-            "exp": "no",
-            "sng": {
-              "status": "partial",
-              "note": "no auto resume from stop"
-            }
-          }
+          "name": "Lexus RX Hybrid 2017-19"
         },
         {
           "id": "lexus-rx-hybrid-2020-22",
-          "name": "Lexus RX Hybrid 2020-22"
+          "name": "Lexus RX Hybrid 2020-22",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": "yes"
+          }
         },
         {
           "id": "lexus-ux-hybrid-2019-24",
-          "name": "Lexus UX Hybrid 2019-24"
-        },
-        {
-          "id": "lexus-nx-2022-25",
-          "name": "Lexus NX 2022-25",
-          "note": "In code (extra_cars.py, listed as 'Lexus NS 2022-25' \u2014 apparent typo for NX) as incompatible \u2014 Toyota CAN bus security",
+          "name": "Lexus UX Hybrid 2019-24",
           "features": {
-            "alc": "no",
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": "yes"
           }
         }
       ]
@@ -2434,20 +2336,20 @@
       "name": "Lincoln",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": "yes",
         "exp": "yes",
         "sng": "yes",
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
@@ -2465,47 +2367,38 @@
       "name": "MAN",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "partial",
-          "note": "alpha toggle on non-release branches; J533 gateway harness only"
+          "note": "alpha toggle, non-release branches; J533 gateway harness only (fn 1,16)"
         },
         "exp": {
           "status": "partial",
-          "note": "requires alpha longitudinal toggle"
+          "note": "requires alpha longitudinal"
         },
         "sng": "yes",
+        "fsr": {
+          "status": "partial",
+          "note": "no ALC below 31 mph"
+        },
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
           "id": "man-etge-2020-24",
-          "name": "MAN eTGE 2020-24",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 31 mph"
-            }
-          }
+          "name": "MAN eTGE 2020-24"
         },
         {
           "id": "man-tge-2017-24",
-          "name": "MAN TGE 2017-24",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 31 mph"
-            }
-          }
+          "name": "MAN TGE 2017-24"
         }
       ]
     },
@@ -2514,23 +2407,23 @@
       "name": "Mazda",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "no",
           "note": "stock ACC only"
         },
         "exp": "no",
         "sng": "yes",
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
@@ -2541,9 +2434,9 @@
           "id": "mazda-cx-9-2021-23",
           "name": "Mazda CX-9 2021-23",
           "features": {
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 28 mph"
+              "note": "no ALC below 28 mph"
             }
           }
         }
@@ -2554,7 +2447,6 @@
       "name": "Nissan",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "no",
           "note": "stock ProPILOT ACC only"
@@ -2562,18 +2454,19 @@
         "exp": "no",
         "sng": {
           "status": "partial",
-          "note": "no auto resume from stop"
+          "note": "no resume from stop"
         },
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
@@ -2599,34 +2492,31 @@
       "name": "Ram",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "no",
           "note": "stock ACC only"
         },
         "exp": "no",
         "sng": "yes",
+        "fsr": {
+          "status": "partial",
+          "note": "no ALC below 32 mph"
+        },
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
           "id": "ram-1500-2019-24",
-          "name": "Ram 1500 2019-24",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "no steering below 32 mph"
-            }
-          }
+          "name": "Ram 1500 2019-24"
         }
       ]
     },
@@ -2635,20 +2525,20 @@
       "name": "Rivian",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": "yes",
         "exp": "yes",
         "sng": "yes",
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
@@ -2674,26 +2564,26 @@
       "name": "SEAT",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "partial",
-          "note": "alpha toggle on non-release branches; J533 gateway harness only"
+          "note": "alpha toggle, non-release branches; J533 gateway harness only (fn 1,16)"
         },
         "exp": {
           "status": "partial",
-          "note": "requires alpha longitudinal toggle"
+          "note": "requires alpha longitudinal"
         },
         "sng": "yes",
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
@@ -2711,26 +2601,26 @@
       "name": "\u0160koda",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "partial",
-          "note": "alpha toggle on non-release branches; J533 gateway harness only"
+          "note": "alpha toggle, non-release branches; J533 gateway harness only (fn 1,16); heated windshields on some \u0160kodas can block GPS (fn 15)"
         },
         "exp": {
           "status": "partial",
-          "note": "requires alpha longitudinal toggle"
+          "note": "requires alpha longitudinal"
         },
         "sng": "yes",
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
@@ -2740,12 +2630,7 @@
         {
           "id": "skoda-kamiq-2021-23",
           "name": "\u0160koda Kamiq 2021-23",
-          "features": {
-            "alc": {
-              "status": "yes",
-              "note": "not the China-market Kamiq (unsupported PQ34 platform)"
-            }
-          }
+          "note": "not the China-market Kamiq (unsupported PQ34 platform, fn 13)"
         },
         {
           "id": "skoda-karoq-2019-23",
@@ -2782,29 +2667,29 @@
       "name": "Subaru",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "partial",
-          "note": "alpha toggle on non-release branches; enabling disables all EyeSight functions (AEB, LDW, RAB)"
+          "note": "alpha toggle, non-release branches; enabling disables all EyeSight AEB/LDW/RAB (fn 1,8)"
         },
         "exp": {
           "status": "partial",
-          "note": "requires alpha longitudinal toggle"
+          "note": "requires alpha longitudinal"
         },
         "sng": {
           "status": "partial",
-          "note": "no auto resume from stop"
+          "note": "no resume from stop"
         },
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
@@ -2816,8 +2701,8 @@
           "name": "Subaru Crosstrek 2018-19",
           "features": {
             "alc": {
-              "status": "yes",
-              "note": "low steering torque"
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -2834,8 +2719,8 @@
           "name": "Subaru Impreza 2017-19",
           "features": {
             "alc": {
-              "status": "yes",
-              "note": "low steering torque"
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
@@ -2870,26 +2755,14 @@
           "name": "Subaru XV 2018-19",
           "features": {
             "alc": {
-              "status": "yes",
-              "note": "low steering torque"
+              "status": "partial",
+              "note": "below-standard steering torque"
             }
           }
         },
         {
           "id": "subaru-xv-2020-21",
           "name": "Subaru XV 2020-21"
-        },
-        {
-          "id": "subaru-solterra-2023-25",
-          "name": "Subaru Solterra 2023-25",
-          "note": "In code (extra_cars.py) as incompatible \u2014 Toyota CAN bus security",
-          "features": {
-            "alc": "no",
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
         }
       ]
     },
@@ -2898,49 +2771,45 @@
       "name": "Tesla",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "partial",
-          "note": "alpha toggle on non-release branches only"
+          "note": "alpha toggle, non-release branches (fn 1)"
         },
         "exp": {
           "status": "partial",
-          "note": "requires alpha longitudinal toggle"
+          "note": "requires alpha longitudinal"
         },
         "sng": "yes",
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
           "id": "tesla-model-3-hw3-2019-23",
-          "name": "Tesla Model 3 (HW3) 2019-23",
-          "features": {
-            "alc": {
-              "status": "yes",
-              "note": "code TODO questions whether 2017 HW3 cars are also supported"
-            }
-          }
+          "name": "Tesla Model 3 (with HW3) 2019-23",
+          "note": "some 2023s have HW4 \u2014 check Autopilot computer type on the touchscreen (fn 9)"
         },
         {
           "id": "tesla-model-3-hw4-2024-25",
-          "name": "Tesla Model 3 (HW4) 2024-25"
+          "name": "Tesla Model 3 (with HW4) 2024-25"
         },
         {
           "id": "tesla-model-y-hw3-2020-23",
-          "name": "Tesla Model Y (HW3) 2020-23"
+          "name": "Tesla Model Y (with HW3) 2020-23",
+          "note": "some 2023s have HW4 \u2014 check Autopilot computer type on the touchscreen (fn 9)"
         },
         {
           "id": "tesla-model-y-hw4-2024-25",
-          "name": "Tesla Model Y (HW4) 2024-25"
+          "name": "Tesla Model Y (with HW4) 2024-25"
         }
       ]
     },
@@ -2949,20 +2818,20 @@
       "name": "Toyota",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": "yes",
         "exp": "yes",
         "sng": "yes",
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
@@ -2979,12 +2848,12 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
+              "note": "stock ACC only"
             },
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
             }
           }
         },
@@ -2994,12 +2863,12 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
+              "note": "stock ACC only"
             },
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
             }
           }
         },
@@ -3014,7 +2883,7 @@
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no resume from stop"
             }
           }
         },
@@ -3033,7 +2902,7 @@
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no resume from stop"
             }
           }
         },
@@ -3052,7 +2921,7 @@
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no resume from stop"
             }
           }
         },
@@ -3062,11 +2931,11 @@
           "features": {
             "oplong": {
               "status": "partial",
-              "note": "alpha toggle on non-release branches only"
+              "note": "alpha toggle, non-release branches (fn 1)"
             },
             "exp": {
               "status": "partial",
-              "note": "requires alpha longitudinal toggle"
+              "note": "requires alpha longitudinal"
             }
           }
         },
@@ -3081,7 +2950,7 @@
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no resume from stop"
             }
           }
         },
@@ -3091,11 +2960,11 @@
           "features": {
             "oplong": {
               "status": "partial",
-              "note": "alpha toggle on non-release branches only"
+              "note": "alpha toggle, non-release branches (fn 1)"
             },
             "exp": {
               "status": "partial",
-              "note": "requires alpha longitudinal toggle"
+              "note": "requires alpha longitudinal"
             }
           }
         },
@@ -3105,12 +2974,12 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; 4CYL L/LE/SE without full-speed radar cruise operate above 28 mph only"
+              "note": "stock ACC only"
             },
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no resume from stop; 4CYL L/LE/SE without full-speed radar cruise only operate above 28 mph (fn 11)"
             }
           }
         },
@@ -3118,9 +2987,9 @@
           "id": "toyota-camry-2021-24",
           "name": "Toyota Camry 2021-24",
           "features": {
-            "oplong": {
-              "status": "yes",
-              "note": "4CYL L/LE/SE without full-speed radar cruise operate above 28 mph only"
+            "sng": {
+              "status": "partial",
+              "note": "4CYL L/LE/SE without full-speed radar cruise only operate above 28 mph (fn 11)"
             }
           }
         },
@@ -3135,7 +3004,7 @@
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no resume from stop"
             }
           }
         },
@@ -3149,12 +3018,12 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
+              "note": "stock ACC only"
             },
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
             }
           }
         },
@@ -3163,30 +3032,22 @@
           "name": "Toyota Corolla 2020-22"
         },
         {
-          "id": "toyota-corolla-cross-non-us-2020-23",
-          "name": "Toyota Corolla Cross (Non-US) 2020-23",
+          "id": "toyota-corolla-cross-2020-23-nonus",
+          "name": "Toyota Corolla Cross (Non-US only) 2020-23",
           "features": {
-            "oplong": {
-              "status": "yes",
-              "note": "no ACC accel below 17 mph"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 17 mph; no resume from stop"
             }
           }
         },
         {
-          "id": "toyota-corolla-cross-hybrid-non-us-2020-22",
-          "name": "Toyota Corolla Cross Hybrid (Non-US) 2020-22",
+          "id": "toyota-corolla-cross-hybrid-2020-22-nonus",
+          "name": "Toyota Corolla Cross Hybrid (Non-US only) 2020-22",
           "features": {
-            "oplong": {
-              "status": "yes",
-              "note": "no ACC accel below 17 mph"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 17 mph; no resume from stop"
             }
           }
         },
@@ -3199,16 +3060,12 @@
           "name": "Toyota Corolla Hybrid 2020-22"
         },
         {
-          "id": "toyota-corolla-hybrid-sa-2020-23",
-          "name": "Toyota Corolla Hybrid (South America) 2020-23",
+          "id": "toyota-corolla-hybrid-2020-23-sa",
+          "name": "Toyota Corolla Hybrid (South America only) 2020-23",
           "features": {
-            "oplong": {
-              "status": "yes",
-              "note": "no ACC accel below 17 mph"
-            },
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 17 mph; no resume from stop"
             }
           }
         },
@@ -3218,12 +3075,12 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
+              "note": "stock ACC only"
             },
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
             }
           }
         },
@@ -3237,12 +3094,12 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
+              "note": "stock ACC only"
             },
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
             }
           }
         },
@@ -3265,7 +3122,7 @@
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no resume from stop"
             }
           }
         },
@@ -3280,7 +3137,7 @@
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no resume from stop"
             }
           }
         },
@@ -3299,7 +3156,7 @@
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no resume from stop"
             }
           }
         },
@@ -3313,12 +3170,12 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
+              "note": "stock ACC only"
             },
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
             }
           }
         },
@@ -3328,12 +3185,12 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
+              "note": "stock ACC only"
             },
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
             }
           }
         },
@@ -3343,12 +3200,12 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
+              "note": "stock ACC only"
             },
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
             }
           }
         },
@@ -3362,11 +3219,11 @@
           "features": {
             "oplong": {
               "status": "partial",
-              "note": "alpha toggle on non-release branches only"
+              "note": "alpha toggle, non-release branches (fn 1)"
             },
             "exp": {
               "status": "partial",
-              "note": "requires alpha longitudinal toggle"
+              "note": "requires alpha longitudinal"
             }
           }
         },
@@ -3376,11 +3233,11 @@
           "features": {
             "oplong": {
               "status": "partial",
-              "note": "alpha toggle on non-release branches only"
+              "note": "alpha toggle, non-release branches (fn 1)"
             },
             "exp": {
               "status": "partial",
-              "note": "requires alpha longitudinal toggle"
+              "note": "requires alpha longitudinal"
             }
           }
         },
@@ -3390,12 +3247,12 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
+              "note": "stock ACC only"
             },
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
             }
           }
         },
@@ -3405,12 +3262,12 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
+              "note": "stock ACC only"
             },
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
             }
           }
         },
@@ -3424,11 +3281,11 @@
           "features": {
             "oplong": {
               "status": "partial",
-              "note": "alpha toggle on non-release branches only"
+              "note": "alpha toggle, non-release branches (fn 1)"
             },
             "exp": {
               "status": "partial",
-              "note": "requires alpha longitudinal toggle"
+              "note": "requires alpha longitudinal"
             }
           }
         },
@@ -3438,11 +3295,11 @@
           "features": {
             "oplong": {
               "status": "partial",
-              "note": "alpha toggle on non-release branches only"
+              "note": "alpha toggle, non-release branches (fn 1)"
             },
             "exp": {
               "status": "partial",
-              "note": "requires alpha longitudinal toggle"
+              "note": "requires alpha longitudinal"
             }
           }
         },
@@ -3452,121 +3309,13 @@
           "features": {
             "oplong": {
               "status": "no",
-              "note": "stock ACC; no ACC accel below 19 mph"
+              "note": "stock ACC only"
             },
             "exp": "no",
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no ACC accel below 19 mph; no resume from stop"
             }
-          }
-        },
-        {
-          "id": "toyota-bz4x-2023-25",
-          "name": "Toyota bZ4x 2023-25",
-          "note": "In code (extra_cars.py) as incompatible \u2014 Toyota CAN bus security",
-          "features": {
-            "alc": "no",
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "toyota-camry-2025",
-          "name": "Toyota Camry 2025",
-          "note": "In code (extra_cars.py) as incompatible \u2014 Toyota CAN bus security",
-          "features": {
-            "alc": "no",
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "toyota-corolla-cross-us-2022-25",
-          "name": "Toyota Corolla Cross (US) 2022-25",
-          "note": "In code (extra_cars.py) as incompatible \u2014 Toyota CAN bus security",
-          "features": {
-            "alc": "no",
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "toyota-highlander-2025",
-          "name": "Toyota Highlander 2025",
-          "note": "In code (extra_cars.py) as incompatible \u2014 Toyota CAN bus security",
-          "features": {
-            "alc": "no",
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "toyota-rav4-prime-2024-25",
-          "name": "Toyota RAV4 Prime 2024-25",
-          "note": "In code (extra_cars.py) as incompatible \u2014 Toyota CAN bus security",
-          "features": {
-            "alc": "no",
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "toyota-sequoia-2023-25",
-          "name": "Toyota Sequoia 2023-25",
-          "note": "In code (extra_cars.py) as incompatible \u2014 Toyota CAN bus security",
-          "features": {
-            "alc": "no",
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "toyota-sienna-2024-25",
-          "name": "Toyota Sienna 2024-25",
-          "note": "In code (extra_cars.py) as incompatible \u2014 Toyota CAN bus security",
-          "features": {
-            "alc": "no",
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "toyota-tundra-2022-25",
-          "name": "Toyota Tundra 2022-25",
-          "note": "In code (extra_cars.py) as incompatible \u2014 Toyota CAN bus security",
-          "features": {
-            "alc": "no",
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "toyota-venza-2021-25",
-          "name": "Toyota Venza 2021-25",
-          "note": "In code (extra_cars.py) as incompatible \u2014 Toyota CAN bus security",
-          "features": {
-            "alc": "no",
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
           }
         }
       ]
@@ -3576,26 +3325,26 @@
       "name": "Volkswagen",
       "features": {
         "alc": "yes",
-        "lca": "yes",
         "oplong": {
           "status": "partial",
-          "note": "alpha toggle on non-release branches; J533 gateway harness only \u2014 camera-harness cars keep stock ACC"
+          "note": "alpha toggle, non-release branches; J533 gateway harness only \u2014 camera-harness installs are stock ACC (fn 1,16)"
         },
         "exp": {
           "status": "partial",
-          "note": "requires alpha longitudinal toggle"
+          "note": "requires alpha longitudinal"
         },
         "sng": "yes",
+        "fsr": "yes",
         "dm": "yes",
-        "aod": "yes",
+        "aodm": "yes",
+        "lca": "yes",
         "ldw": "yes",
         "personality": "yes",
         "disengage-on-accelerator": "yes",
         "record-front": "yes",
         "record-audio": "yes",
         "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
+        "connect": "yes"
       },
       "cars": [
         {
@@ -3626,9 +3375,9 @@
           "id": "vw-california-2021-23",
           "name": "Volkswagen California 2021-23",
           "features": {
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 31 mph"
+              "note": "no ALC below 31 mph"
             }
           }
         },
@@ -3636,9 +3385,9 @@
           "id": "vw-caravelle-2020",
           "name": "Volkswagen Caravelle 2020",
           "features": {
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 31 mph"
+              "note": "no ALC below 31 mph"
             }
           }
         },
@@ -3650,9 +3399,9 @@
           "id": "vw-crafter-2017-24",
           "name": "Volkswagen Crafter 2017-24",
           "features": {
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 31 mph"
+              "note": "no ALC below 31 mph"
             }
           }
         },
@@ -3660,9 +3409,9 @@
           "id": "vw-e-crafter-2018-24",
           "name": "Volkswagen e-Crafter 2018-24",
           "features": {
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 31 mph"
+              "note": "no ALC below 31 mph"
             }
           }
         },
@@ -3676,7 +3425,7 @@
           "features": {
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no resume from stop"
             }
           }
         },
@@ -3686,7 +3435,7 @@
           "features": {
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no resume from stop"
             }
           }
         },
@@ -3704,7 +3453,7 @@
           "features": {
             "sng": {
               "status": "partial",
-              "note": "no auto resume from stop"
+              "note": "no resume from stop"
             }
           }
         },
@@ -3720,9 +3469,9 @@
           "id": "vw-grand-california-2019-24",
           "name": "Volkswagen Grand California 2019-24",
           "features": {
-            "alc": {
+            "fsr": {
               "status": "partial",
-              "note": "no steering below 31 mph"
+              "note": "no ALC below 31 mph"
             }
           }
         },
@@ -3737,12 +3486,7 @@
         {
           "id": "vw-passat-2015-22",
           "name": "Volkswagen Passat 2015-22",
-          "features": {
-            "alc": {
-              "status": "yes",
-              "note": "MQB-based European B8 Passat only, not the NMS Passat sold in USA/China/Mideast"
-            }
-          }
+          "note": "MQB-based European B8 Passat only \u2014 not the NMS Passat sold in USA/China/Mideast (fn 14)"
         },
         {
           "id": "vw-passat-alltrack-2015-22",
@@ -3762,13 +3506,7 @@
         },
         {
           "id": "vw-t-cross-2021",
-          "name": "Volkswagen T-Cross 2021",
-          "features": {
-            "alc": {
-              "status": "yes",
-              "note": "2022+ may have a combined gateway/BCM that is supported in software but has no comma-store harness yet"
-            }
-          }
+          "name": "Volkswagen T-Cross 2021"
         },
         {
           "id": "vw-t-roc-2018-23",

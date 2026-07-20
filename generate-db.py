@@ -109,6 +109,14 @@ Identify:
    - "origin": which project INTRODUCED the feature — one of "openpilot",
      "sunnypilot", "bluepilot", "frogpilot", "dragonpilot", "{fork_id}"
      (this fork's own invention), or "other".
+   - "scope": "global" if the feature behaves the SAME on every car the fork
+     supports (UI, driver monitoring, networking, uploads, themes, map
+     display …), or "car-dependent" if code gates it per brand/platform
+     (brand-specific lateral/longitudinal work, radar handling, port fixes).
+     Decide this from the CODE: does any conditional branch on car platform,
+     brand, or a capability flag change this feature's behavior? Most
+     fork-differentiating features are "global" — do not mark a feature
+     car-dependent unless you found the gate.
    - "description": 1-3 plain-English sentences a driver would understand,
      including important gating (opt-in toggle, requires openpilot
      longitudinal, brand-specific, etc.). This becomes a mouseover tooltip.
@@ -143,6 +151,25 @@ Identify:
      merely rows in a fingerprint table are NOT highlighted.
    - Only reference feature ids that appear in your features list.
 
+DEPTH REQUIREMENT — this is a thorough audit, not a skim:
+- For EVERY feature you list, locate its actual implementation and its
+  gating in code (param checks, brand/platform conditionals, capability
+  flags, panda-safety requirements) and let THAT determine per-car statuses.
+  Do not mark a feature "yes" for a car unless the code path can actually
+  reach that car.
+- Check device-level features for hidden brand gates before marking them
+  "yes" everywhere.
+- For EVERY brand port the fork modifies, inspect its carstate /
+  carcontroller / interface for fork-specific changes and reflect them as
+  per-car notes or manufacturer-level statuses.
+- Cross-check the feature list against the fork's params definitions and UI
+  toggle definitions so no user-facing toggle is missed.
+- When a feature is a renamed equivalent of another fork's well-known
+  feature (e.g. sunnypilot DEC ≈ FrogPilot CEM ≈ PNW CES, all
+  conditional-Experimental switching), keep this fork's own abbrev and name
+  but use the conventional id "dec" and mention the equivalence in the
+  description.
+
 Be factual: base every claim on what the repository actually contains. Use
 "unknown" rather than guessing. Device-level features (networking, UI themes,
 uploads) that work regardless of car should be "yes" for all cars — i.e. a
@@ -162,7 +189,8 @@ matching exactly this shape:
     "description": "<2-3 sentence summary of the fork's focus>"
   }},
   "features": [ {{ "id": "...", "abbrev": "...", "name": "...",
-                   "category": "...", "origin": "...", "description": "..." }} ],
+                   "category": "...", "origin": "...", "scope": "global",
+                   "description": "..." }} ],
   "manufacturers": [ {{ "id": "...", "name": "...",
     "features": {{ "<feature-id>": "yes" }},
     "cars": [ {{ "id": "...", "name": "...",
@@ -247,6 +275,9 @@ def validate(db: dict) -> list[str]:
         for key in ("id", "abbrev", "name", "description"):
             if not f.get(key):
                 problems.append(f"feature {f.get('id') or f.get('abbrev') or '?'} missing '{key}'")
+        if f.get("scope") not in ("global", "car-dependent"):
+            problems.append(f"feature {f.get('id') or '?'}: scope must be "
+                            f"'global' or 'car-dependent' (got {f.get('scope')!r})")
         feat_ids.add(f.get("id"))
     mfrs = db.get("manufacturers")
     if not isinstance(mfrs, list) or not mfrs:

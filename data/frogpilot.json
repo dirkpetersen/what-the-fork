@@ -21,7 +21,8 @@
       "name": "openpilot Longitudinal Control",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "openpilot controls gas and brakes instead of the car's stock adaptive cruise. Standard on some cars, an alpha toggle on many, unavailable on brands where openpilot only steers. FrogPilot exposes the alpha toggle in its release branch and also offers a 'Disable openpilot Longitudinal Control' option."
+      "description": "openpilot controls gas and brakes instead of the car's stock adaptive cruise. Standard on some cars, an alpha toggle on many, unavailable on brands where openpilot only steers. FrogPilot exposes the alpha toggle in its release branch and also offers a 'Disable openpilot Longitudinal Control' option.",
+      "scope": "car-dependent"
     },
     {
       "id": "exp",
@@ -29,7 +30,8 @@
       "name": "Experimental Mode",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "End-to-end driving: the model chooses speed itself, slowing for curves and stopping for red lights and stop signs. Requires openpilot longitudinal control."
+      "description": "End-to-end driving: the model chooses speed itself, slowing for curves and stopping for red lights and stop signs. Requires openpilot longitudinal control.",
+      "scope": "car-dependent"
     },
     {
       "id": "alc",
@@ -37,7 +39,8 @@
       "name": "Automated Lane Centering",
       "category": "Lateral",
       "origin": "openpilot",
-      "description": "Continuously steers to keep the car centered in its lane. Some cars have a minimum steering speed or limited steering torque (shown per car)."
+      "description": "Continuously steers to keep the car centered in its lane. Some cars have a minimum steering speed or limited steering torque (shown per car).",
+      "scope": "car-dependent"
     },
     {
       "id": "lca",
@@ -45,7 +48,8 @@
       "name": "Lane Change Assist",
       "category": "Lateral",
       "origin": "openpilot",
-      "description": "Signal and nudge the wheel and openpilot completes the lane change. FrogPilot adds a configurable minimum lane-change speed, lane-detection check and one-lane-change-per-signal option."
+      "description": "Signal and nudge the wheel and openpilot completes the lane change. FrogPilot adds a configurable minimum lane-change speed, lane-detection check and one-lane-change-per-signal option.",
+      "scope": "global"
     },
     {
       "id": "sng",
@@ -53,7 +57,8 @@
       "name": "Stop and Go",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "Follows traffic to a complete stop and resumes automatically. Some cars can't engage below a minimum speed or won't auto-resume; FrogPilot adds brand-specific workarounds (Toyota SNG Hack, Subaru SNG, GM Volt SNG, Honda low-speed pedal)."
+      "description": "Follows traffic to a complete stop and resumes automatically. Some cars can't engage below a minimum speed or won't auto-resume; FrogPilot adds brand-specific workarounds (Toyota SNG Hack, Subaru SNG, GM Volt SNG, Honda low-speed pedal).",
+      "scope": "car-dependent"
     },
     {
       "id": "dm",
@@ -61,7 +66,8 @@
       "name": "Driver Monitoring",
       "category": "Monitoring",
       "origin": "openpilot",
-      "description": "Infrared camera watches the driver and escalates alerts when distracted or drowsy. FrogPilot keeps stock driver monitoring."
+      "description": "Infrared camera watches the driver and escalates alerts when distracted or drowsy. FrogPilot keeps stock driver monitoring.",
+      "scope": "global"
     },
     {
       "id": "bsm",
@@ -69,7 +75,8 @@
       "name": "Blind Spot Integration",
       "category": "Safety",
       "origin": "openpilot",
-      "description": "Reads the car's factory blind-spot sensors; FrogPilot adds a red blind-spot path on screen and an optional loud audible alert. Requires factory blind-spot hardware."
+      "description": "Reads the car's factory blind-spot sensors; FrogPilot adds a red blind-spot path on screen and an optional loud audible alert. Requires factory blind-spot hardware.",
+      "scope": "global"
     },
     {
       "id": "pedal",
@@ -77,7 +84,8 @@
       "name": "comma Pedal / SDSU / ZSS Support",
       "category": "Device",
       "origin": "openpilot",
-      "description": "Support for the discontinued comma pedal gas interceptor (Toyota, Honda, GM) plus Toyota Smart DSU and ZSS (Zorro Steering Sensor) hardware, retained and maintained by FrogPilot after removal upstream."
+      "description": "Support for the discontinued comma pedal gas interceptor (Toyota, Honda, GM) plus Toyota Smart DSU and ZSS (Zorro Steering Sensor) hardware, retained and maintained by FrogPilot after removal upstream.",
+      "scope": "car-dependent"
     },
     {
       "id": "vtsc",
@@ -85,7 +93,8 @@
       "name": "Vision Turn Speed Controller",
       "category": "Longitudinal",
       "origin": "sunnypilot",
-      "description": "Slows the car for curves detected by the camera. In FrogPilot it is part of the unified 'Curve Speed Controller'. Requires openpilot longitudinal control."
+      "description": "Slows the car for curves detected by the camera. In FrogPilot it is part of the unified 'Curve Speed Controller'. Requires openpilot longitudinal control.",
+      "scope": "car-dependent"
     },
     {
       "id": "cem",
@@ -93,7 +102,8 @@
       "name": "Conditional Experimental Mode",
       "category": "Longitudinal",
       "origin": "frogpilot",
-      "description": "Automatically switches between Chill and Experimental Mode based on speed, upcoming curves, slower/stopped leads, detected stop lights/signs, navigation turns and turn signals. Requires openpilot longitudinal control."
+      "description": "Automatically switches between Chill and Experimental Mode based on speed, upcoming curves, slower/stopped leads, detected stop lights/signs, navigation turns and turn signals. Requires openpilot longitudinal control.",
+      "scope": "car-dependent"
     },
     {
       "id": "custom-themes",
@@ -101,7 +111,8 @@
       "name": "Custom Themes",
       "category": "Display",
       "origin": "frogpilot",
-      "description": "Color schemes, icon/sound/signal packs, steering-wheel icons, automatic holiday themes, rainbow path, random events and a theme maker with downloadable community themes."
+      "description": "Color schemes, icon/sound/signal packs, steering-wheel icons, automatic holiday themes, rainbow path, random events and a theme maker with downloadable community themes.",
+      "scope": "global"
     },
     {
       "id": "personalities",
@@ -109,7 +120,8 @@
       "name": "Driving Personalities & Traffic Mode",
       "category": "Longitudinal",
       "origin": "frogpilot",
-      "description": "Four fully tunable profiles (Traffic, Aggressive, Standard, Relaxed) covering following distance, acceleration/braking smoothness and jerk, switchable from the steering-wheel distance button; holding the button enables Traffic Mode. Tuning requires openpilot longitudinal control."
+      "description": "Four fully tunable profiles (Traffic, Aggressive, Standard, Relaxed) covering following distance, acceleration/braking smoothness and jerk, switchable from the steering-wheel distance button; holding the button enables Traffic Mode. Tuning requires openpilot longitudinal control.",
+      "scope": "car-dependent"
     },
     {
       "id": "aol",
@@ -117,7 +129,8 @@
       "name": "Always On Lateral",
       "category": "Lateral",
       "origin": "frogpilot",
-      "description": "Steering assist stays engaged whenever cruise control is on, even while braking or accelerating; optional pause-on-brake and LKAS-button control. Works on all supported cars via FrogPilot's panda safety 'AlwaysOnLateral' alternative experience."
+      "description": "Steering assist stays engaged whenever cruise control is on, even while braking or accelerating; optional pause-on-brake and LKAS-button control. Works on all supported cars via FrogPilot's panda safety 'AlwaysOnLateral' alternative experience.",
+      "scope": "global"
     },
     {
       "id": "custom-ui",
@@ -125,7 +138,8 @@
       "name": "Custom Onroad UI",
       "category": "Display",
       "origin": "frogpilot",
-      "description": "Configurable driving screen: blind-spot path, adjustable path/lane widths, compass, lead info, pedals, big/full map, developer sidebar and metrics, FPS counter, and a screen recorder (from the OPKR community)."
+      "description": "Configurable driving screen: blind-spot path, adjustable path/lane widths, compass, lead info, pedals, big/full map, developer sidebar and metrics, FPS counter, and a screen recorder (from the OPKR community).",
+      "scope": "global"
     },
     {
       "id": "model-selector",
@@ -133,7 +147,8 @@
       "name": "Driving Model Selector",
       "category": "Controls",
       "origin": "frogpilot",
-      "description": "Download and switch between multiple driving models (classic and tinygrad runners), with automatic downloads, a Model Randomizer and per-model drive scoring."
+      "description": "Download and switch between multiple driving models (classic and tinygrad runners), with automatic downloads, a Model Randomizer and per-model drive scoring.",
+      "scope": "global"
     },
     {
       "id": "live-tuning",
@@ -141,7 +156,8 @@
       "name": "Advanced Live Tuning",
       "category": "Controls",
       "origin": "frogpilot",
-      "description": "Live lateral tuning (steer ratio, friction, kP, lateral acceleration, force auto-tune) and advanced longitudinal tuning (actuator delay, start/stop accel, max acceleration), adjustable without recompiling."
+      "description": "Live lateral tuning (steer ratio, friction, kP, lateral acceleration, force auto-tune) and advanced longitudinal tuning (actuator delay, start/stop accel, max acceleration), adjustable without recompiling.",
+      "scope": "global"
     },
     {
       "id": "device-mgmt",
@@ -149,7 +165,8 @@
       "name": "Device Management",
       "category": "Device",
       "origin": "frogpilot",
-      "description": "Shutdown timer, low-voltage shutdown, increased thermal limits, screen brightness/timeout controls, standby mode, disable logging/uploads, higher-bitrate HD recordings and automatic version backups."
+      "description": "Shutdown timer, low-voltage shutdown, increased thermal limits, screen brightness/timeout controls, standby mode, disable logging/uploads, higher-bitrate HD recordings and automatic version backups.",
+      "scope": "global"
     },
     {
       "id": "custom-alerts",
@@ -157,7 +174,8 @@
       "name": "Custom Alerts",
       "category": "Safety",
       "origin": "frogpilot",
-      "description": "Optional alerts for green lights, a departing lead, loud blind-spot warnings, speed-limit changes, plus custom sounds like the Goat Scream engage sound and per-alert volume control."
+      "description": "Optional alerts for green lights, a departing lead, loud blind-spot warnings, speed-limit changes, plus custom sounds like the Goat Scream engage sound and per-alert volume control.",
+      "scope": "global"
     },
     {
       "id": "weather",
@@ -165,7 +183,8 @@
       "name": "Weather-Based Driving Adjustments",
       "category": "Longitudinal",
       "origin": "frogpilot",
-      "description": "Detects rain, rainstorms, snow and low visibility and automatically increases following/stopping distance and reduces acceleration and curve speed. Requires openpilot longitudinal control for the speed adjustments."
+      "description": "Detects rain, rainstorms, snow and low visibility and automatically increases following/stopping distance and reduces acceleration and curve speed. Requires openpilot longitudinal control for the speed adjustments.",
+      "scope": "global"
     },
     {
       "id": "the-pond",
@@ -173,7 +192,8 @@
       "name": "The Pond Web Manager",
       "category": "Device",
       "origin": "frogpilot",
-      "description": "Built-in web interface (Flask) for managing the device from a browser: change settings, view error logs, replay route videos and send navigation destinations. Route playback ported from Fleet Manager."
+      "description": "Built-in web interface (Flask) for managing the device from a browser: change settings, view error logs, replay route videos and send navigation destinations. Route playback ported from Fleet Manager.",
+      "scope": "global"
     },
     {
       "id": "nlc",
@@ -181,7 +201,8 @@
       "name": "Nudgeless Lane Change",
       "category": "Lateral",
       "origin": "dragonpilot",
-      "description": "Automatically changes lanes on turn signal alone, with configurable delay, minimum speed, one-change-per-signal and lane-detection safeguards."
+      "description": "Automatically changes lanes on turn signal alone, with configurable delay, minimum speed, one-change-per-signal and lane-detection safeguards.",
+      "scope": "global"
     },
     {
       "id": "roadname",
@@ -189,7 +210,8 @@
       "name": "Road Name Display",
       "category": "Display",
       "origin": "dragonpilot",
-      "description": "Shows the current road name on the driving screen using downloaded OpenStreetMap data."
+      "description": "Shows the current road name on the driving screen using downloaded OpenStreetMap data.",
+      "scope": "global"
     },
     {
       "id": "slc",
@@ -197,7 +219,8 @@
       "name": "Speed Limit Controller",
       "category": "Longitudinal",
       "origin": "other",
-      "description": "Automatically adapts the set speed to the posted limit using offline OpenStreetMap data, Mapbox, or the car's dashboard, with per-range offsets, fallback rules and confirmation prompts. Built on pfeiferj's work; FrogPilot adds a crowd-sourced 'Speed Limit Filler'. Requires openpilot longitudinal control."
+      "description": "Automatically adapts the set speed to the posted limit using offline OpenStreetMap data, Mapbox, or the car's dashboard, with per-range offsets, fallback rules and confirmation prompts. Built on pfeiferj's work; FrogPilot adds a crowd-sourced 'Speed Limit Filler'. Requires openpilot longitudinal control.",
+      "scope": "car-dependent"
     },
     {
       "id": "mtsc",
@@ -205,7 +228,8 @@
       "name": "Map Turn Speed Controller",
       "category": "Longitudinal",
       "origin": "other",
-      "description": "Slows for upcoming curves using downloaded map curvature data (pfeiferj's MTSC); merged into FrogPilot's Curve Speed Controller. Requires openpilot longitudinal control."
+      "description": "Slows for upcoming curves using downloaded map curvature data (pfeiferj's MTSC); merged into FrogPilot's Curve Speed Controller. Requires openpilot longitudinal control.",
+      "scope": "car-dependent"
     },
     {
       "id": "mapd",
@@ -213,7 +237,8 @@
       "name": "Offline OSM Map Data",
       "category": "Other",
       "origin": "other",
-      "description": "Downloads OpenStreetMap regions to the device (pfeiferj's mapd) for speed limits, curvature and road names, with scheduled automatic updates."
+      "description": "Downloads OpenStreetMap regions to the device (pfeiferj's mapd) for speed limits, curvature and road names, with scheduled automatic updates.",
+      "scope": "global"
     },
     {
       "id": "nnff",
@@ -221,7 +246,8 @@
       "name": "Neural Network Feedforward",
       "category": "Lateral",
       "origin": "other",
-      "description": "Twilsonco's neural-network torque feedforward for smoother, more accurate steering; uses per-car trained models with an NNFF-Lite fallback for cars without one."
+      "description": "Twilsonco's neural-network torque feedforward for smoother, more accurate steering; uses per-car trained models with an NNFF-Lite fallback for cars without one.",
+      "scope": "global"
     }
   ],
   "manufacturers": [

@@ -21,7 +21,8 @@
       "name": "openpilot Longitudinal Control",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "openpilot controls gas and brake instead of the car's stock ACC. On many cars it is standard; on others it is an opt-in Alpha toggle (non-release branches). On the fork's F-150 Lightning it is the opt-in 'Alpha Long' A/B switch versus stock-ACC ICBM."
+      "description": "openpilot controls gas and brake instead of the car's stock ACC. On many cars it is standard; on others it is an opt-in Alpha toggle (non-release branches). On the fork's F-150 Lightning it is the opt-in 'Alpha Long' A/B switch versus stock-ACC ICBM.",
+      "scope": "car-dependent"
     },
     {
       "id": "exp",
@@ -29,7 +30,8 @@
       "name": "Experimental Mode",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "End-to-end driving mode that slows for curves, stop lights and stop signs. Requires openpilot longitudinal control, so per-car availability follows the oplong status of each car."
+      "description": "End-to-end driving mode that slows for curves, stop lights and stop signs. Requires openpilot longitudinal control, so per-car availability follows the oplong status of each car.",
+      "scope": "car-dependent"
     },
     {
       "id": "alc",
@@ -37,7 +39,8 @@
       "name": "Automated Lane Centering",
       "category": "Lateral",
       "origin": "openpilot",
-      "description": "Continuous lane centering on all supported cars. Some models cannot steer below a minimum speed (noted per car)."
+      "description": "Continuous lane centering on all supported cars. Some models cannot steer below a minimum speed (noted per car).",
+      "scope": "car-dependent"
     },
     {
       "id": "sng",
@@ -45,7 +48,8 @@
       "name": "Stop and Go",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "Follows traffic to a complete stop and resumes automatically. Cars with a minimum ACC speed or without resume-from-stop are noted per car."
+      "description": "Follows traffic to a complete stop and resumes automatically. Cars with a minimum ACC speed or without resume-from-stop are noted per car.",
+      "scope": "car-dependent"
     },
     {
       "id": "lca",
@@ -53,7 +57,8 @@
       "name": "Lane Change Assist",
       "category": "Lateral",
       "origin": "openpilot",
-      "description": "Steers through a lane change when the driver signals and nudges the wheel. See the separate nudgeless option for the no-nudge variant."
+      "description": "Steers through a lane change when the driver signals and nudges the wheel. See the separate nudgeless option for the no-nudge variant.",
+      "scope": "global"
     },
     {
       "id": "dm",
@@ -61,7 +66,8 @@
       "name": "Driver Monitoring",
       "category": "Monitoring",
       "origin": "openpilot",
-      "description": "Camera-based driver attention monitoring; always active. This fork keeps stock-strict defaults and layers optional glare and highway-timeout refinements on top."
+      "description": "Camera-based driver attention monitoring; always active. This fork keeps stock-strict defaults and layers optional glare and highway-timeout refinements on top.",
+      "scope": "global"
     },
     {
       "id": "lebowski",
@@ -69,7 +75,8 @@
       "name": "Lebowski driving model (commaai-master port)",
       "category": "Other",
       "origin": "openpilot",
-      "description": "The fork ports commaai/master's modeld stack and the 'lebowski' driving model (combined supercombo, tinygrad-compiled, ~27 ms on a comma 3X) onto its line. Car-agnostic perception upgrade."
+      "description": "The fork ports commaai/master's modeld stack and the 'lebowski' driving model (combined supercombo, tinygrad-compiled, ~27 ms on a comma 3X) onto its line. Car-agnostic perception upgrade.",
+      "scope": "global"
     },
     {
       "id": "upstream-picks",
@@ -77,7 +84,8 @@
       "name": "Upstream stability cherry-picks",
       "category": "Other",
       "origin": "openpilot",
-      "description": "Selected commaai/master fixes folded in without a full rebase: locationd/lagd timestamps, radar-lead probability filter, camerad driver-cam fixes, cruise-fault-not-silent, athena RPC."
+      "description": "Selected commaai/master fixes folded in without a full rebase: locationd/lagd timestamps, radar-lead probability filter, camerad driver-cam fixes, cruise-fault-not-silent, athena RPC.",
+      "scope": "global"
     },
     {
       "id": "icbm",
@@ -85,7 +93,8 @@
       "name": "ICBM \u2014 stock-ACC curve slowdown",
       "category": "Longitudinal",
       "origin": "sunnypilot",
-      "description": "When openpilot longitudinal is OFF, taps the car's own SET\u2212/SET+ cruise buttons over CAN to steer the stock ACC set speed toward a curve target, then restores it. Concept invented by sunnypilot (Intelligent Cruise Button Management); PNW re-implements it for the F-150 Lightning only, gated on CESMode."
+      "description": "When openpilot longitudinal is OFF, taps the car's own SET\u2212/SET+ cruise buttons over CAN to steer the stock ACC set speed toward a curve target, then restores it. Concept invented by sunnypilot (Intelligent Cruise Button Management); PNW re-implements it for the F-150 Lightning only, gated on CESMode.",
+      "scope": "global"
     },
     {
       "id": "green-light",
@@ -93,7 +102,8 @@
       "name": "Green Light Alert",
       "category": "Other",
       "origin": "sunnypilot",
-      "description": "Ding + green banner when a held stop releases with no lead ('Light is green'), and a separate 'Car ahead is leaving' note when a close stopped lead departs. Core mechanics adopted from sunnypilot (with FrogPilot-informed lead handling); always on, no toggle."
+      "description": "Ding + green banner when a held stop releases with no lead ('Light is green'), and a separate 'Car ahead is leaving' note when a close stopped lead departs. Core mechanics adopted from sunnypilot (with FrogPilot-informed lead handling); always on, no toggle.",
+      "scope": "global"
     },
     {
       "id": "ford-4sig",
@@ -101,7 +111,8 @@
       "name": "4-signal Ford lateral + hardened panda safety",
       "category": "Lateral",
       "origin": "bluepilot",
-      "description": "BluePilot's validated 4-signal steer command (curvature + curvature rate + path offset + path angle) with matching custom panda safety, ported to the F-150 Lightning. Requires a panda reflash; capability-gated to the Lightning so Tesla safety stays byte-identical."
+      "description": "BluePilot's validated 4-signal steer command (curvature + curvature rate + path offset + path angle) with matching custom panda safety, ported to the F-150 Lightning. Requires a panda reflash; capability-gated to the Lightning so Tesla safety stays byte-identical.",
+      "scope": "global"
     },
     {
       "id": "ford-lat-refine",
@@ -109,7 +120,8 @@
       "name": "Ford lateral refinements",
       "category": "Lateral",
       "origin": "bluepilot",
-      "description": "Predicted-curvature blend (fixes turn-exit wind-up), clean reset after a sustained manual turn, and BlueCruise blue-cluster display on engagement. Derived from BluePilot's Ford lateral work; stock-panda-safe; Lightning only in this fork."
+      "description": "Predicted-curvature blend (fixes turn-exit wind-up), clean reset after a sustained manual turn, and BlueCruise blue-cluster display on engagement. Derived from BluePilot's Ford lateral work; stock-panda-safe; Lightning only in this fork.",
+      "scope": "global"
     },
     {
       "id": "ford-follow",
@@ -117,7 +129,8 @@
       "name": "Ford highway follow (LongitudinalExt)",
       "category": "Longitudinal",
       "origin": "bluepilot",
-      "description": "BluePilot's follow-aware longitudinal shaping (gaining/pacing/trailing lead states) on the Lightning's openpilot-longitudinal path. Inert until the Alpha Longitudinal toggle is on."
+      "description": "BluePilot's follow-aware longitudinal shaping (gaining/pacing/trailing lead states) on the Lightning's openpilot-longitudinal path. Inert until the Alpha Longitudinal toggle is on.",
+      "scope": "global"
     },
     {
       "id": "ces",
@@ -125,7 +138,8 @@
       "name": "CES \u2014 Conditional Experimental Switching",
       "category": "Longitudinal",
       "origin": "frogpilot",
-      "description": "Chill mode by default, auto-switching to Experimental for upcoming curves (map + vision), stops, low speed and slow leads, with a 3-state on-screen button (CES/Chill/Exp). Independent implementation of FrogPilot's Conditional Experimental Mode concept; opt-in (CESMode, default OFF) and requires openpilot longitudinal."
+      "description": "Chill mode by default, auto-switching to Experimental for upcoming curves (map + vision), stops, low speed and slow leads, with a 3-state on-screen button (CES/Chill/Exp). Independent implementation of FrogPilot's Conditional Experimental Mode concept; opt-in (CESMode, default OFF) and requires openpilot longitudinal.",
+      "scope": "car-dependent"
     },
     {
       "id": "sharp-curve",
@@ -133,7 +147,8 @@
       "name": "Sharp-curve full-horizon + regen-coast",
       "category": "Longitudinal",
       "origin": "pnw-pilot",
-      "description": "Scans the full ~500 m map horizon and lifts off the gas early so the curve entrance is the slowest point, using EV regen-style coasting (~0.2 g) instead of friction braking unless a genuinely sharp curve needs more. Rides the CES master toggle."
+      "description": "Scans the full ~500 m map horizon and lifts off the gas early so the curve entrance is the slowest point, using EV regen-style coasting (~0.2 g) instead of friction braking unless a genuinely sharp curve needs more. Rides the CES master toggle.",
+      "scope": "car-dependent"
     },
     {
       "id": "lightning-curve-penalty",
@@ -141,7 +156,8 @@
       "name": "Lightning per-car curve penalty",
       "category": "Longitudinal",
       "origin": "pnw-pilot",
-      "description": "The F-150 Lightning slows more for curves than the Tesla \u2014 a field-calibrated speed-dependent 'hump' (up to ~5 mph at 45\u201362 mph) plus extra margin on downhill and left-hand curves, because its EPS is physically weaker. Lightning only."
+      "description": "The F-150 Lightning slows more for curves than the Tesla \u2014 a field-calibrated speed-dependent 'hump' (up to ~5 mph at 45\u201362 mph) plus extra margin on downhill and left-hand curves, because its EPS is physically weaker. Lightning only.",
+      "scope": "global"
     },
     {
       "id": "standstill-latch",
@@ -149,7 +165,8 @@
       "name": "Standstill latch",
       "category": "Safety",
       "origin": "pnw-pilot",
-      "description": "CES never adopts Chill at 0 mph, so launches from a standstill behind a close lead are model-governed instead of a hard MPC launch. Fixes stop-and-go 'horse bucking' and red-light jolts."
+      "description": "CES never adopts Chill at 0 mph, so launches from a standstill behind a close lead are model-governed instead of a hard MPC launch. Fixes stop-and-go 'horse bucking' and red-light jolts.",
+      "scope": "car-dependent"
     },
     {
       "id": "redlight-guards",
@@ -157,7 +174,8 @@
       "name": "Red-light stop-hold guards",
       "category": "Safety",
       "origin": "pnw-pilot",
-      "description": "The stop reason keeps governing even with a creeping lead present, and a standstill hold blocks the Experimental-to-Chill exit at ~0 mph \u2014 preventing the red-light lurch toward set speed. Internal CES logic."
+      "description": "The stop reason keeps governing even with a creeping lead present, and a standstill hold blocks the Experimental-to-Chill exit at ~0 mph \u2014 preventing the red-light lurch toward set speed. Internal CES logic.",
+      "scope": "car-dependent"
     },
     {
       "id": "stop-intent",
@@ -165,7 +183,8 @@
       "name": "Stop-intent fast path + evidence-gated pull-away",
       "category": "Safety",
       "origin": "pnw-pilot",
-      "description": "An absolute fast path into Experimental on model stop-intent, with a guarded exception that lets the car follow a lead genuinely pulling away below the red-light floor. Internal CES logic."
+      "description": "An absolute fast path into Experimental on model stop-intent, with a guarded exception that lets the car follow a lead genuinely pulling away below the red-light floor. Internal CES logic.",
+      "scope": "car-dependent"
     },
     {
       "id": "twisty-descent",
@@ -173,7 +192,8 @@
       "name": "Twisty-descent base trim",
       "category": "Longitudinal",
       "origin": "pnw-pilot",
-      "description": "On a packed sequence of descending curves, holds a lower base cruise through the section instead of surging back to full set speed between blind curves. Flat twisty roads keep full speed. Rides the CES master."
+      "description": "On a packed sequence of descending curves, holds a lower base cruise through the section instead of surging back to full set speed between blind curves. Flat twisty roads keep full speed. Rides the CES master.",
+      "scope": "car-dependent"
     },
     {
       "id": "hwy-floor",
@@ -181,7 +201,8 @@
       "name": "Highway speed-limit floor",
       "category": "Longitudinal",
       "origin": "pnw-pilot",
-      "description": "Curve speed control never trims below the posted highway limit read from mapd, bounding the downside of aggressive curve tuning."
+      "description": "Curve speed control never trims below the posted highway limit read from mapd, bounding the downside of aggressive curve tuning.",
+      "scope": "car-dependent"
     },
     {
       "id": "rain",
@@ -189,7 +210,8 @@
       "name": "Rain slowdown",
       "category": "Longitudinal",
       "origin": "pnw-pilot",
-      "description": "Driver-selected wet-weather margin subtracted from curve targets (Light \u22483 mph, Heavy \u22485 mph), applied identically on both cars. RainMode toggle, default off."
+      "description": "Driver-selected wet-weather margin subtracted from curve targets (Light \u22483 mph, Heavy \u22485 mph), applied identically on both cars. RainMode toggle, default off.",
+      "scope": "car-dependent"
     },
     {
       "id": "ces2-shadow",
@@ -197,7 +219,8 @@
       "name": "CES2 decision core (shadow)",
       "category": "Longitudinal",
       "origin": "pnw-pilot",
-      "description": "A redesigned CES decision core with graded stop urgency and precedence rules. Runs shadow-only: it logs telemetry while CES v1 still makes every decision. Ces2Core toggle, default OFF."
+      "description": "A redesigned CES decision core with graded stop urgency and precedence rules. Runs shadow-only: it logs telemetry while CES v1 still makes every decision. Ces2Core toggle, default OFF.",
+      "scope": "car-dependent"
     },
     {
       "id": "bsm",
@@ -205,7 +228,8 @@
       "name": "Blind-spot gate (Tesla Raven)",
       "category": "Safety",
       "origin": "pnw-pilot",
-      "description": "Reads Tesla Raven blind-spot state from the AutopilotStatus 0x399 message, logged and available to block nudgeless lane changes into an occupied lane. Raven-specific; walk-by flip test still pending per the fork's docs."
+      "description": "Reads Tesla Raven blind-spot state from the AutopilotStatus 0x399 message, logged and available to block nudgeless lane changes into an occupied lane. Raven-specific; walk-by flip test still pending per the fork's docs.",
+      "scope": "global"
     },
     {
       "id": "glare",
@@ -213,7 +237,8 @@
       "name": "Glare desensitization (DM)",
       "category": "Monitoring",
       "origin": "pnw-pilot",
-      "description": "Keeps driver monitoring in its active mode through low-sun/windshield glare bursts instead of dropping to passive wheel-touch nagging \u2014 higher pose-uncertainty threshold, fast reset, face-loss grace. Always on (ungated)."
+      "description": "Keeps driver monitoring in its active mode through low-sun/windshield glare bursts instead of dropping to passive wheel-touch nagging \u2014 higher pose-uncertainty threshold, fast reset, face-loss grace. Always on (ungated).",
+      "scope": "global"
     },
     {
       "id": "dm-road",
@@ -221,7 +246,8 @@
       "name": "Road-gated DM timeout selector",
       "category": "Monitoring",
       "origin": "pnw-pilot",
-      "description": "3-way DmMode selector: Default (stock strict), Highway (relaxed cadence only on freeways/divided roads), Relaxed. Monitoring is never off; default is stock-strict."
+      "description": "3-way DmMode selector: Default (stock strict), Highway (relaxed cadence only on freeways/divided roads), Relaxed. Monitoring is never off; default is stock-strict.",
+      "scope": "global"
     },
     {
       "id": "dm-tiers",
@@ -229,7 +255,8 @@
       "name": "Configurable DM tiers (device-local)",
       "category": "Monitoring",
       "origin": "pnw-pilot",
-      "description": "Shipped timeout magnitudes stay strict in source; personal longer values live only in a device-local /data/pnw/dm.json set via a CLI (clamped 10 s\u20134 h). The Relaxed tier is hidden in the UI unless unlocked."
+      "description": "Shipped timeout magnitudes stay strict in source; personal longer values live only in a device-local /data/pnw/dm.json set via a CLI (clamped 10 s\u20134 h). The Relaxed tier is hidden in the UI unless unlocked.",
+      "scope": "global"
     },
     {
       "id": "pnw-maps",
@@ -237,7 +264,8 @@
       "name": "PNW maps default + auto-download",
       "category": "Other",
       "origin": "pnw-pilot",
-      "description": "Default OSM coverage is WA/OR/ID and the first map download auto-arms on a fresh install \u2014 no settings fiddling for Pacific Northwest use."
+      "description": "Default OSM coverage is WA/OR/ID and the first map download auto-arms on a fresh install \u2014 no settings fiddling for Pacific Northwest use.",
+      "scope": "global"
     },
     {
       "id": "get-map",
@@ -245,7 +273,8 @@
       "name": "Get map for this location",
       "category": "Other",
       "origin": "pnw-pilot",
-      "description": "On-demand OSM region download for the area under the current GPS position, with a covered/greyed indicator for trips outside the default states."
+      "description": "On-demand OSM region download for the area under the current GPS position, with a covered/greyed indicator for trips outside the default states.",
+      "scope": "global"
     },
     {
       "id": "mapd-persist",
@@ -253,7 +282,8 @@
       "name": "mapd binary persistence",
       "category": "Device",
       "origin": "pnw-pilot",
-      "description": "Installs the mapd Go binary to persistent /data/mapd outside the git tree, so auto-update's git clean can no longer silently delete it and kill map data."
+      "description": "Installs the mapd Go binary to persistent /data/mapd outside the git tree, so auto-update's git clean can no longer silently delete it and kill map data.",
+      "scope": "global"
     },
     {
       "id": "happening-ahead",
@@ -261,7 +291,8 @@
       "name": "Happening Ahead overlay",
       "category": "Display",
       "origin": "pnw-pilot",
-      "description": "One display-only daemon merges police reports, highway rest areas and EV DC-fast chargers into a right-side overlay for long corridor drives. Master toggle LocationServicesEnabled, default ON."
+      "description": "One display-only daemon merges police reports, highway rest areas and EV DC-fast chargers into a right-side overlay for long corridor drives. Master toggle LocationServicesEnabled, default ON.",
+      "scope": "global"
     },
     {
       "id": "police-alerts",
@@ -269,7 +300,8 @@
       "name": "Police alerts (Waze-sourced)",
       "category": "Display",
       "origin": "pnw-pilot",
-      "description": "Waze-parity police alerts: live distance, clears when passed, drops other-side and stale reports, banner only inside 0.25 mi, no siren. The feed defaults to a keyless caching proxy (AWS Lambda) with fallback to a device-local key; poll errors are surfaced in red instead of a false 'Clear'."
+      "description": "Waze-parity police alerts: live distance, clears when passed, drops other-side and stale reports, banner only inside 0.25 mi, no siren. The feed defaults to a keyless caching proxy (AWS Lambda) with fallback to a device-local key; poll errors are surfaced in red instead of a false 'Clear'.",
+      "scope": "global"
     },
     {
       "id": "ev-chargers",
@@ -277,7 +309,8 @@
       "name": "EV charger hints",
       "category": "Display",
       "origin": "pnw-pilot",
-      "description": "DC-fast chargers (and optionally Level 2 via EvIncludeLevel2, default OFF) in the overlay, with compass direction, near-field roadside handling, and slow-L2 suppression when a DC-fast is within 5 miles."
+      "description": "DC-fast chargers (and optionally Level 2 via EvIncludeLevel2, default OFF) in the overlay, with compass direction, near-field roadside handling, and slow-L2 suppression when a DC-fast is within 5 miles.",
+      "scope": "global"
     },
     {
       "id": "rest-areas",
@@ -285,7 +318,8 @@
       "name": "Corridor rest-area previews",
       "category": "Display",
       "origin": "pnw-pilot",
-      "description": "Stable 15-mile rest-area previews keyed by corridor identity (I-5/I-90/I-82/US-12/US-95), shipped as curated JSON because OSM tiles strip these POIs."
+      "description": "Stable 15-mile rest-area previews keyed by corridor identity (I-5/I-90/I-82/US-12/US-95), shipped as curated JSON because OSM tiles strip these POIs.",
+      "scope": "global"
     },
     {
       "id": "self-hosted-connect",
@@ -293,7 +327,8 @@
       "name": "Self-hosted upload gateway + connect",
       "category": "Device",
       "origin": "pnw-pilot",
-      "description": "Drives upload to the owner's AWS S3 bucket via a presigned-PUT API gateway instead of comma connect; pairing QR and connect URLs point at the self-hosted endpoint. API_HOST is pinned so uploads can't silently fall back and be lost."
+      "description": "Drives upload to the owner's AWS S3 bucket via a presigned-PUT API gateway instead of comma connect; pairing QR and connect URLs point at the self-hosted endpoint. API_HOST is pinned so uploads can't silently fall back and be lost.",
+      "scope": "global"
     },
     {
       "id": "firehose-home",
@@ -301,7 +336,8 @@
       "name": "Upload at home while charging + no silent data loss",
       "category": "Device",
       "origin": "pnw-pilot",
-      "description": "HD/rlog uploads may run even while onroad when on a priority (home, geo-gated) WiFi \u2014 so an EV charging at home still gets its best upload window \u2014 and the last hard upload failure is surfaced on screen instead of dropped silently."
+      "description": "HD/rlog uploads may run even while onroad when on a priority (home, geo-gated) WiFi \u2014 so an EV charging at home still gets its best upload window \u2014 and the last hard upload failure is surfaced on screen instead of dropped silently.",
+      "scope": "global"
     },
     {
       "id": "two-pass",
@@ -309,7 +345,8 @@
       "name": "Two-pass upload + HD interleave",
       "category": "Device",
       "origin": "pnw-pilot",
-      "description": "Pass 1 uploads small files (qlog/qcamera) on any network; pass 2 uploads HD video and rlog only on real non-metered WiFi and offroad, with an HD file forced after every N small uploads so video is never starved."
+      "description": "Pass 1 uploads small files (qlog/qcamera) on any network; pass 2 uploads HD video and rlog only on real non-metered WiFi and offroad, with an HD file forced after every N small uploads so video is never starved.",
+      "scope": "global"
     },
     {
       "id": "upload-indicators",
@@ -317,7 +354,8 @@
       "name": "Upload-phase indicators",
       "category": "Display",
       "origin": "pnw-pilot",
-      "description": "CONNECT logo turns green during pass-1 log uploads and blue during pass-2 HD uploads, with live Mbps shown; clears within ~0.5 s of a WiFi drop."
+      "description": "CONNECT logo turns green during pass-1 log uploads and blue during pass-2 HD uploads, with live Mbps shown; clears within ~0.5 s of a WiFi drop.",
+      "scope": "global"
     },
     {
       "id": "defer-hd",
@@ -325,7 +363,8 @@
       "name": "Defer HD Video Upload",
       "category": "Device",
       "origin": "pnw-pilot",
-      "description": "Optional toggle that holds camera video uploads while qlog/rlog/qcamera still flow, keeping scarce WiFi for logs. Default OFF."
+      "description": "Optional toggle that holds camera video uploads while qlog/rlog/qcamera still flow, keeping scarce WiFi for logs. Default OFF.",
+      "scope": "global"
     },
     {
       "id": "device-locator",
@@ -333,7 +372,8 @@
       "name": "Device locator",
       "category": "Device",
       "origin": "pnw-pilot",
-      "description": "The uploader self-reports its LAN IP on each upload request (logged server-side), making the roaming device findable via CloudWatch."
+      "description": "The uploader self-reports its LAN IP on each upload request (logged server-side), making the roaming device findable via CloudWatch.",
+      "scope": "global"
     },
     {
       "id": "tethering",
@@ -341,7 +381,8 @@
       "name": "Perpetual tethering + priority WiFi + geo-gate",
       "category": "Device",
       "origin": "pnw-pilot",
-      "description": "Keeps the device hotspot up and auto-joins known priority networks only near saved home locations, for reliable connectivity without manual switching."
+      "description": "Keeps the device hotspot up and auto-joins known priority networks only near saved home locations, for reliable connectivity without manual switching.",
+      "scope": "global"
     },
     {
       "id": "captive-portal",
@@ -349,7 +390,8 @@
       "name": "Captive-portal auto-accept",
       "category": "Device",
       "origin": "pnw-pilot",
-      "description": "Automatically walks known click-through WiFi TOS portals (MikroTik variants) so uploads work behind guest networks; never blocks LTE or tethering."
+      "description": "Automatically walks known click-through WiFi TOS portals (MikroTik variants) so uploads work behind guest networks; never blocks LTE or tethering.",
+      "scope": "global"
     },
     {
       "id": "lte-guard",
@@ -357,7 +399,8 @@
       "name": "LTE throttle guard + NAT fix",
       "category": "Device",
       "origin": "pnw-pilot",
-      "description": "Recovers a throttled or stuck LTE data session and adds iptables masquerade so tethered clients get internet."
+      "description": "Recovers a throttled or stuck LTE data session and adds iptables masquerade so tethered clients get internet.",
+      "scope": "global"
     },
     {
       "id": "auto-recal",
@@ -365,7 +408,8 @@
       "name": "Auto-recalibrate on car swap",
       "category": "Device",
       "origin": "pnw-pilot",
-      "description": "When the device is moved to a different car, the learned car-specific calibration and live-tune params are cleared automatically before CarParams publish \u2014 no manual Reset Calibration. Same-car reboots are untouched."
+      "description": "When the device is moved to a different car, the learned car-specific calibration and live-tune params are cleared automatically before CarParams publish \u2014 no manual Reset Calibration. Same-car reboots are untouched.",
+      "scope": "global"
     },
     {
       "id": "fp-hardening",
@@ -373,7 +417,8 @@
       "name": "Fingerprint hardening",
       "category": "Device",
       "origin": "pnw-pilot",
-      "description": "Never persists a MOCK fingerprint over a known-good car, adds a fleet-identity fallback so an OTA can't drop the fingerprint, and fixes a poisoned firmware-cache dashcam-after-toggle failure mode."
+      "description": "Never persists a MOCK fingerprint over a known-good car, adds a fleet-identity fallback so an OTA can't drop the fingerprint, and fixes a poisoned firmware-cache dashcam-after-toggle failure mode.",
+      "scope": "global"
     },
     {
       "id": "card-resilience",
@@ -381,7 +426,8 @@
       "name": "card crash resilience",
       "category": "Device",
       "origin": "pnw-pilot",
-      "description": "The manager restarts the car-interface process if it crashes (same policy as the UI) and logs fatal crashes before dying, so a crash can't silently strand a drive."
+      "description": "The manager restarts the car-interface process if it crashes (same policy as the UI) and logs fatal crashes before dying, so a crash can't silently strand a drive.",
+      "scope": "global"
     },
     {
       "id": "ces-overlay",
@@ -389,7 +435,8 @@
       "name": "Dark-cockpit CES overlay + 3-state button",
       "category": "Display",
       "origin": "pnw-pilot",
-      "description": "A tiered on-road cockpit card with health dots, a standstill diagnostic dump, the live 3-state CES button, and a Hide-CES-Debug toggle."
+      "description": "A tiered on-road cockpit card with health dots, a standstill diagnostic dump, the live 3-state CES button, and a Hide-CES-Debug toggle.",
+      "scope": "global"
     },
     {
       "id": "context-indicators",
@@ -397,7 +444,8 @@
       "name": "Right-side context indicators",
       "category": "Display",
       "origin": "pnw-pilot",
-      "description": "Lightning-specific silent-when-healthy indicators: CALIBRATING x% (why it won't engage after a swap), STEER: STOCK / NO 4SIG PANDA (lateral fallback or panda-flash mismatch), and RAIN \u2212N (wet-weather margin armed)."
+      "description": "Lightning-specific silent-when-healthy indicators: CALIBRATING x% (why it won't engage after a swap), STEER: STOCK / NO 4SIG PANDA (lateral fallback or panda-flash mismatch), and RAIN \u2212N (wet-weather margin armed).",
+      "scope": "global"
     },
     {
       "id": "confidence-ball",
@@ -405,7 +453,8 @@
       "name": "Confidence ball",
       "category": "Display",
       "origin": "pnw-pilot",
-      "description": "A comma-4-style ball on the right edge showing the model's own confidence in the current plan (teal high / amber mid / red low). Display-only."
+      "description": "A comma-4-style ball on the right edge showing the model's own confidence in the current plan (teal high / amber mid / red low). Display-only.",
+      "scope": "global"
     },
     {
       "id": "long-mismatch",
@@ -413,7 +462,8 @@
       "name": "LONG MISMATCH warning",
       "category": "Safety",
       "origin": "pnw-pilot",
-      "description": "A red warning flagging the dangerous state where Alpha Longitudinal was toggled ON but the running session is still in shadow because persistent CarParams lag a session."
+      "description": "A red warning flagging the dangerous state where Alpha Longitudinal was toggled ON but the running session is still in shadow because persistent CarParams lag a session.",
+      "scope": "car-dependent"
     },
     {
       "id": "self-deploy",
@@ -421,7 +471,8 @@
       "name": "Auto-update self-deploy channels",
       "category": "Device",
       "origin": "pnw-pilot",
-      "description": "The device is a git checkout tracking the fork's channel branches with the stock updater (fetch also runs onroad); opendbc/panda ride as SHA-pinned submodules and persistence guards stop a reboot from reverting an install."
+      "description": "The device is a git checkout tracking the fork's channel branches with the stock updater (fetch also runs onroad); opendbc/panda ride as SHA-pinned submodules and persistence guards stop a reboot from reverting an install.",
+      "scope": "global"
     },
     {
       "id": "vtsc",
@@ -429,7 +480,8 @@
       "name": "Vision Turn Speed Control",
       "category": "Longitudinal",
       "origin": "other",
-      "description": "Caps cruise speed in curves from the model's predicted path curvature, decel-limited and smooth. Lineage: Move Fast team's VisionTurnController (imported by sunnypilot); PNW's own implementation rides the CES master toggle and requires openpilot longitudinal."
+      "description": "Caps cruise speed in curves from the model's predicted path curvature, decel-limited and smooth. Lineage: Move Fast team's VisionTurnController (imported by sunnypilot); PNW's own implementation rides the CES master toggle and requires openpilot longitudinal.",
+      "scope": "car-dependent"
     },
     {
       "id": "mtsc",
@@ -437,7 +489,8 @@
       "name": "Map turn speed control (map-curve braking)",
       "category": "Longitudinal",
       "origin": "other",
-      "description": "Folds pfeiferj-mapd OSM curve target speeds into VTSC so the car brakes for blind curves beyond camera sight. VtscMapCurves toggle, ON by default; requires openpilot longitudinal."
+      "description": "Folds pfeiferj-mapd OSM curve target speeds into VTSC so the car brakes for blind curves beyond camera sight. VtscMapCurves toggle, ON by default; requires openpilot longitudinal.",
+      "scope": "car-dependent"
     },
     {
       "id": "mapd",
@@ -445,7 +498,8 @@
       "name": "OSM data via pfeiferj mapd",
       "category": "Other",
       "origin": "other",
-      "description": "Ships pfeiferj/mapd v2 (Go) for OpenStreetMap speed limits, road names and curve speeds, feeding the speed-limit display and map-curve braking."
+      "description": "Ships pfeiferj/mapd v2 (Go) for OpenStreetMap speed limits, road names and curve speeds, feeding the speed-limit display and map-curve braking.",
+      "scope": "global"
     },
     {
       "id": "tesla-legacy",
@@ -453,7 +507,8 @@
       "name": "Legacy Tesla (HW1/HW2/HW3 Raven) support",
       "category": "Other",
       "origin": "other",
-      "description": "Inherited from xnor-tech: pre-2021 Tesla Model S/X support via a dedicated tesla_legacy panda safety mode, legacy CAN builder, Continental/Bosch radar handling and external/multi-panda integration. The fork's primary car (Model S Raven HW3) runs on this."
+      "description": "Inherited from xnor-tech: pre-2021 Tesla Model S/X support via a dedicated tesla_legacy panda safety mode, legacy CAN builder, Continental/Bosch radar handling and external/multi-panda integration. The fork's primary car (Model S Raven HW3) runs on this.",
+      "scope": "global"
     },
     {
       "id": "roadname",
@@ -461,7 +516,8 @@
       "name": "Road name + speed limit display",
       "category": "Display",
       "origin": "other",
-      "description": "Shows the current road name and posted speed limit from mapd/OSM on screen (ShowRoadName / ShowSpeedLimit)."
+      "description": "Shows the current road name and posted speed limit from mapd/OSM on screen (ShowRoadName / ShowSpeedLimit).",
+      "scope": "global"
     },
     {
       "id": "nlc",
@@ -469,7 +525,8 @@
       "name": "Nudgeless lane change",
       "category": "Lateral",
       "origin": "other",
-      "description": "Lane change without a steering nudge once the blinker is on (timed hold). Common community feature; in this fork it is an opt-in toggle wired for the Tesla Raven and F-150 Lightning, default OFF."
+      "description": "Lane change without a steering nudge once the blinker is on (timed hold). Common community feature; in this fork it is an opt-in toggle wired for the Tesla Raven and F-150 Lightning, default OFF.",
+      "scope": "global"
     },
     {
       "id": "ndob",
@@ -477,7 +534,8 @@
       "name": "No disengage on brake",
       "category": "Controls",
       "origin": "other",
-      "description": "Would keep openpilot engaged through a brake tap. The toggle exists but is marked unsupported and greyed out in this fork's params \u2014 effectively not functional."
+      "description": "Would keep openpilot engaged through a brake tap. The toggle exists but is marked unsupported and greyed out in this fork's params \u2014 effectively not functional.",
+      "scope": "global"
     }
   ],
   "manufacturers": [

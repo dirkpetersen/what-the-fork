@@ -257,6 +257,85 @@ h1 .q { color: var(--amber); }
   align-self: center;
 }
 
+/* ---------- fork-wide capabilities panel ---------- */
+
+.capabilities {
+  background: linear-gradient(180deg, #14181e, var(--bg-raise));
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 18px 16px;
+  margin-bottom: 18px;
+}
+
+.cap-head {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 12px;
+}
+
+.cap-sub {
+  color: var(--ink-faint);
+  letter-spacing: 0.06em;
+  margin-left: 10px;
+  text-transform: none;
+  font-size: 11px;
+}
+
+.cap-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.cap-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 5px 13px;
+  font-size: 12px;
+  color: var(--ink-dim);
+  cursor: help;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.cap-chip b { color: var(--ink); font-weight: 600; }
+.cap-chip:hover, .cap-chip:focus-visible {
+  border-color: var(--amber-deep);
+  color: var(--ink);
+  outline: none;
+}
+
+/* ---------- section header rows ---------- */
+
+tr.section-row td.section-head {
+  position: sticky;
+  left: 0;
+  background: #101419;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 8px 16px;
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.scope-tag {
+  margin-left: 8px;
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+
 /* ---------- matrix table ---------- */
 
 .matrix-shell {

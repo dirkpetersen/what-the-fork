@@ -21,7 +21,8 @@
       "name": "Automated Lane Centering",
       "category": "Lateral",
       "origin": "openpilot",
-      "description": "Steers to keep the car centered in its lane whenever openpilot is engaged. Some cars cannot steer below a minimum speed or have limited steering torque for tight turns (noted per car)."
+      "description": "Steers to keep the car centered in its lane whenever openpilot is engaged. Some cars cannot steer below a minimum speed or have limited steering torque for tight turns (noted per car).",
+      "scope": "car-dependent"
     },
     {
       "id": "oplong",
@@ -29,7 +30,8 @@
       "name": "openpilot Longitudinal Control",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "openpilot controls gas and brakes (adaptive cruise) instead of the car's stock ACC. Standard on some brands; on others it is an alpha feature behind a toggle that is only shown on non-release branches; some cars always use stock ACC."
+      "description": "openpilot controls gas and brakes (adaptive cruise) instead of the car's stock ACC. Standard on some brands; on others it is an alpha feature behind a toggle that is only shown on non-release branches; some cars always use stock ACC.",
+      "scope": "car-dependent"
     },
     {
       "id": "exp",
@@ -37,7 +39,8 @@
       "name": "Experimental Mode (end-to-end)",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "End-to-end driving mode where the model also decides speed: slows for turns, stops for lights and stop signs. Requires openpilot longitudinal control on that car."
+      "description": "End-to-end driving mode where the model also decides speed: slows for turns, stops for lights and stop signs. Requires openpilot longitudinal control on that car.",
+      "scope": "car-dependent"
     },
     {
       "id": "dm",
@@ -45,7 +48,8 @@
       "name": "Driver Monitoring",
       "category": "Monitoring",
       "origin": "openpilot",
-      "description": "Camera-based driver attention monitoring with escalating alerts, using the 0.11.x driver monitoring model. Always active while openpilot is engaged, on every supported car."
+      "description": "Camera-based driver attention monitoring with escalating alerts, using the 0.11.x driver monitoring model. Always active while openpilot is engaged, on every supported car.",
+      "scope": "car-dependent"
     },
     {
       "id": "sng",
@@ -53,7 +57,8 @@
       "name": "Stop and Go",
       "category": "Longitudinal",
       "origin": "openpilot",
-      "description": "Comes to a complete stop and resumes in traffic. Some cars cannot automatically resume from a stop and some older cars have no ACC below a minimum speed (noted per car)."
+      "description": "Comes to a complete stop and resumes in traffic. Some cars cannot automatically resume from a stop and some older cars have no ACC below a minimum speed (noted per car).",
+      "scope": "car-dependent"
     },
     {
       "id": "lca",
@@ -61,7 +66,8 @@
       "name": "Lane Change Assist",
       "category": "Lateral",
       "origin": "openpilot",
-      "description": "Nudge-confirmed automatic lane changes: signal, then briefly nudge the wheel and openpilot completes the lane change when it is safe."
+      "description": "Nudge-confirmed automatic lane changes: signal, then briefly nudge the wheel and openpilot completes the lane change when it is safe.",
+      "scope": "car-dependent"
     },
     {
       "id": "firehose",
@@ -69,7 +75,8 @@
       "name": "Firehose Mode Uploads",
       "category": "Device",
       "origin": "openpilot",
-      "description": "Opt-in mode that uploads all driving camera data to comma to contribute training data for future driving models. Device-level feature, works with any car."
+      "description": "Opt-in mode that uploads all driving camera data to comma to contribute training data for future driving models. Device-level feature, works with any car.",
+      "scope": "global"
     },
     {
       "id": "tesla-legacy",
@@ -77,7 +84,8 @@
       "name": "Legacy Tesla Model S/X Support",
       "category": "Other",
       "origin": "xnor",
-      "description": "The fork's headline feature: ports for pre-2024 Tesla Model S and Model X with HW1 (AP1), HW2 (AP2/2.5) and HW3 (Raven), using a dedicated teslaLegacy panda safety mode, custom harnesses, Bosch/Continental radar parsers, and a Raven-specific DBC. Angle steering with openpilot longitudinal enabled by default in the port. Not listed in the published CARS.md."
+      "description": "The fork's headline feature: ports for pre-2024 Tesla Model S and Model X with HW1 (AP1), HW2 (AP2/2.5) and HW3 (Raven), using a dedicated teslaLegacy panda safety mode, custom harnesses, Bosch/Continental radar parsers, and a Raven-specific DBC. Angle steering with openpilot longitudinal enabled by default in the port. Not listed in the published CARS.md.",
+      "scope": "car-dependent"
     },
     {
       "id": "panda-ext",
@@ -85,7 +93,8 @@
       "name": "External & Legacy Panda Support",
       "category": "Device",
       "origin": "xnor",
-      "description": "Restores multi-panda operation that stock openpilot removed: pandad detects, auto-flashes and runs external USB pandas, including deprecated STM32F4 white/black pandas, and the firmware query supports auxiliary pandas. Panda firmware also gains CAN-based ignition detection for legacy Tesla (GTW_status) and VW MEB. Needed for the dual-panda legacy Tesla setups."
+      "description": "Restores multi-panda operation that stock openpilot removed: pandad detects, auto-flashes and runs external USB pandas, including deprecated STM32F4 white/black pandas, and the firmware query supports auxiliary pandas. Panda firmware also gains CAN-based ignition detection for legacy Tesla (GTW_status) and VW MEB. Needed for the dual-panda legacy Tesla setups.",
+      "scope": "car-dependent"
     },
     {
       "id": "mg-port",
@@ -93,7 +102,8 @@
       "name": "MG Brand Support",
       "category": "Other",
       "origin": "other",
-      "description": "Community-originated port for MG vehicles (MG5 EV, MG ZS EV; MG ZS ICE in newer fork commits) integrated into this fork with its own mg panda safety mode and DBC. Torque-based steering; longitudinal only via the opt-in alpha path."
+      "description": "Community-originated port for MG vehicles (MG5 EV, MG ZS EV; MG ZS ICE in newer fork commits) integrated into this fork with its own mg panda safety mode and DBC. Torque-based steering; longitudinal only via the opt-in alpha path.",
+      "scope": "global"
     }
   ],
   "manufacturers": [
