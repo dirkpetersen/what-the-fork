@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "issues_repo": "dirkpetersen/what-the-fork",
+  "databases": [
+    {
+      "id": "pnw-pilot",
+      "label": "PNW Pilot \u2014 3testpnw",
+      "file": "data/pnw-pilot.json",
+      "status": "available"
+    },
+    {
+      "id": "openpilot",
+      "label": "openpilot (commaai upstream)",
+      "file": "data/openpilot.json",
+      "status": "available"
+    },
+    {
+      "id": "xnor",
+      "label": "xnor-tech/openpilot",
+      "file": "data/xnor.json",
+      "status": "available"
+    },
+    {
+      "id": "sunnypilot",
+      "label": "sunnypilot",
+      "file": "data/sunnypilot.json",
+      "status": "available"
+    },
+    {
+      "id": "bluepilot",
+      "label": "BluePilot \u2014 bp-7.0",
+      "file": "data/bluepilot.json",
+      "status": "available"
+    },
+    {
+      "id": "frogpilot",
+      "label": "FrogPilot",
+      "file": "data/frogpilot.json",
+      "status": "available"
+    },
+    {
+      "id": "dragonpilot",
+      "label": "dragonpilot",
+      "file": "data/dragonpilot.json",
+      "status": "available"
+    }
+  ]
+}

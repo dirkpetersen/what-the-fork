@@ -1,0 +1,5198 @@
+{
+  "schema_version": 1,
+  "fork": {
+    "id": "pnw-pilot",
+    "name": "PNW Pilot",
+    "repo": "https://github.com/dirkpetersen/pnw-pilot",
+    "branch": "origin/3testpnw",
+    "base": "xnor-tech/openpilot (itself a fork of commaai/openpilot)",
+    "description": "A personal production distribution of openpilot built on the xnor-tech fork for its legacy Tesla (Raven) support and tuned for the Pacific Northwest I-5 corridor. It serves exactly two daily-driven cars \u2014 a 2021 Tesla Model S (Raven, HW3) and a 2025 Ford F-150 Lightning \u2014 with one comma 3X moved between them, layering a chill-by-default curve-anticipating longitudinal stack (CES/VTSC/MTSC/ICBM), BluePilot-derived Ford lateral control, self-hosted uploads, and OSM map services on top. Safety posture: new toggles default OFF, panda safety is never weakened, and car-specific code is capability-gated so each car is inert to the other's features.",
+    "generated_at": "2026-07-19",
+    "generator": {
+      "tool": "generate-db.py + claude CLI",
+      "model": "claude-fable-5",
+      "branch": "origin/3testpnw"
+    }
+  },
+  "features": [
+    {
+      "id": "oplong",
+      "abbrev": "OPLONG",
+      "name": "openpilot Longitudinal Control",
+      "category": "Longitudinal",
+      "origin": "openpilot",
+      "description": "openpilot controls gas and brake instead of the car's stock adaptive cruise. Native on some cars; on many others it is available only behind the Alpha Longitudinal toggle. On this fork the Tesla Model S Raven runs it always-on, while the F-150 Lightning has an opt-in Alpha toggle (off = stock Ford ACC)."
+    },
+    {
+      "id": "exp",
+      "abbrev": "EXP",
+      "name": "Experimental Mode (end-to-end longitudinal)",
+      "category": "Longitudinal",
+      "origin": "openpilot",
+      "description": "End-to-end driving mode that slows for curves, stop lights and stop signs using the driving model. Requires openpilot longitudinal control; availability follows each car's oplong status. This fork mostly drives Chill and lets CES switch into Experimental automatically."
+    },
+    {
+      "id": "dm",
+      "abbrev": "DM",
+      "name": "Driver Monitoring",
+      "category": "Monitoring",
+      "origin": "openpilot",
+      "description": "Infrared camera-based driver attention monitoring with escalating alerts. Always active on every car; this fork ships the newer sleep-probability DM model from upstream."
+    },
+    {
+      "id": "alc",
+      "abbrev": "ALC",
+      "name": "Automated Lane Centering",
+      "category": "Lateral",
+      "origin": "openpilot",
+      "description": "Continuous lane centering steering on highways and city streets. Works on all supported cars; some models have a minimum steering speed."
+    },
+    {
+      "id": "lca",
+      "abbrev": "LCA",
+      "name": "Lane Change Assist",
+      "category": "Lateral",
+      "origin": "openpilot",
+      "description": "Signal and nudge the wheel and openpilot completes the lane change. Standard openpilot behavior on all supported cars."
+    },
+    {
+      "id": "sng",
+      "abbrev": "SNG",
+      "name": "Stop and Go",
+      "category": "Longitudinal",
+      "origin": "openpilot",
+      "description": "Follows traffic down to a complete stop and resumes automatically. Depends on the car's ACC hardware; some cars cannot accelerate from a stop or below a minimum speed."
+    },
+    {
+      "id": "confidence-ball",
+      "abbrev": "CBALL",
+      "name": "Model Confidence Ball",
+      "category": "Display",
+      "origin": "openpilot",
+      "description": "A comma-four-style indicator ball on the right edge of the screen showing the driving model's own confidence in its current plan (green high, amber mid, red low). Display-only; ported via sunnypilot."
+    },
+    {
+      "id": "vtsc",
+      "abbrev": "VTSC",
+      "name": "Vision Turn Speed Control",
+      "category": "Longitudinal",
+      "origin": "sunnypilot",
+      "description": "Caps cruise speed through curves based on the driving model's predicted path curvature, with a gentle regen-style decel envelope and a highway speed-limit floor. Lineage: Move Fast team via sunnypilot; this fork's own implementation rides the CES master toggle and requires openpilot longitudinal. Tuned only on the fork's two cars."
+    },
+    {
+      "id": "mtsc",
+      "abbrev": "MTSC",
+      "name": "Map Turn Speed Control (map-curve braking)",
+      "category": "Longitudinal",
+      "origin": "sunnypilot",
+      "description": "Folds OpenStreetMap curve speeds (pfeiferj mapd) into VTSC so the car brakes for sharp curves the camera cannot see yet, scanning the full ~500 m map horizon and timing the slowdown so the curve entrance is the slowest point. Default ON when CES is enabled; requires openpilot longitudinal."
+    },
+    {
+      "id": "icbm",
+      "abbrev": "ICBM",
+      "name": "ICBM \u2014 stock-ACC curve slowdowns via cruise buttons",
+      "category": "Longitudinal",
+      "origin": "sunnypilot",
+      "description": "When openpilot longitudinal is off, steers the car's own ACC set speed toward a curve target by pressing its SET-/SET+ cruise buttons over CAN \u2014 curve anticipation without taking longitudinal authority. Concept invented by sunnypilot, Ford port by BluePilot; this fork re-implements it for the F-150 Lightning only."
+    },
+    {
+      "id": "green-light-alert",
+      "abbrev": "GLA",
+      "name": "Green Light / Lead Departure Alert",
+      "category": "Safety",
+      "origin": "sunnypilot",
+      "description": "A chime and green banner when a held stop releases with no lead ('Light is green'), and a separate note when a close stopped lead pulls away. Always on for both cars; mechanics adopted from sunnypilot with FrogPilot's stop-context arming."
+    },
+    {
+      "id": "ndob",
+      "abbrev": "NDOB",
+      "name": "No Disengage on Brake",
+      "category": "Controls",
+      "origin": "sunnypilot",
+      "description": "Would keep openpilot engaged through a brake tap. The toggle exists in this fork but is marked unsupported and greyed out \u2014 braking still disengages."
+    },
+    {
+      "id": "ford-4sig-lateral",
+      "abbrev": "4SIG",
+      "name": "Ford 4-signal (BlueCruise-grade) lateral",
+      "category": "Lateral",
+      "origin": "bluepilot",
+      "description": "Ports BluePilot's validated 4-signal steer command (curvature + curvature rate + path offset + path angle) with matching hardened panda safety, giving noticeably stronger steering than the stock 2-signal path. Requires a panda reflash; capability-gated to the F-150 Lightning, Tesla safety untouched."
+    },
+    {
+      "id": "ford-angle-lateral",
+      "abbrev": "ANGLE",
+      "name": "Ford angle-primary lateral (experimental)",
+      "category": "Lateral",
+      "origin": "bluepilot",
+      "description": "A faithful port of Alan Polk's BluePilot bp-7.0 angle-primary steering control for Ford, behind the FordAngleLateral driver toggle (default OFF, experimental). Actively being tuned with a curve-triggered logger; gain anchors confirmed by the original author."
+    },
+    {
+      "id": "ford-long-ext",
+      "abbrev": "FLEXT",
+      "name": "Ford highway follow control (LongitudinalExt)",
+      "category": "Longitudinal",
+      "origin": "bluepilot",
+      "description": "BluePilot's lead-follow shaping \u2014 classifies the lead as gaining/pacing/trailing and shapes gas and brake per state with a highway speed deadband. Ships in the tree for the Lightning but stays dormant until the Alpha Longitudinal toggle is on."
+    },
+    {
+      "id": "bluecruise-hud",
+      "abbrev": "BCHUD",
+      "name": "BlueCruise cluster display + rich cluster messaging",
+      "category": "Display",
+      "origin": "bluepilot",
+      "description": "The Ford factory instrument cluster shows the blue BlueCruise engaged state when openpilot is steering, plus openpilot status messages (Cancelled, lane departure, etc.) rendered in the cluster. Display-only, no reflash needed; Lightning-specific."
+    },
+    {
+      "id": "ces",
+      "abbrev": "CES",
+      "name": "CES \u2014 Conditional Experimental Switching",
+      "category": "Longitudinal",
+      "origin": "frogpilot",
+      "description": "Chill mode stays the default and the car auto-switches into Experimental only for upcoming curves (map + vision), low speed, stop lights and slow leads, with red-light stop-hold guards, standstill latch, lead-pacing and merge/accel-zone gates. 3-state on-screen button (CES/Chill/Exp). Concept from FrogPilot's Conditional Experimental Mode, independently implemented; opt-in (CESMode default Off) and requires openpilot longitudinal; tuned on real I-5/I-90 drive logs."
+    },
+    {
+      "id": "nlc",
+      "abbrev": "NLC",
+      "name": "Nudgeless Lane Change",
+      "category": "Lateral",
+      "origin": "frogpilot",
+      "description": "After the blinker is on for a short hold, the lane change starts without a steering nudge. Opt-in toggle, default OFF; wired only for the fork's two cars (Tesla Raven + F-150 Lightning), with the Tesla's blind-spot state available to block a change into an occupied lane."
+    },
+    {
+      "id": "connect",
+      "abbrev": "CONN",
+      "name": "Self-hosted connect + two-pass uploads",
+      "category": "Device",
+      "origin": "pnw-pilot",
+      "description": "Drives upload to the owner's own AWS S3 gateway instead of comma connect: pass 1 (logs) on any network, pass 2 (HD video/rlog) only on real WiFi and offroad, HD-interleave, Defer-HD toggle, upload-phase sidebar indicators with Mbps, failed-upload surfacing, and a device locator that reports the car's LAN IP on every upload."
+    },
+    {
+      "id": "location-services",
+      "abbrev": "AHEAD",
+      "name": "'Happening Ahead' overlay (police / rest areas / EV chargers)",
+      "category": "Display",
+      "origin": "pnw-pilot",
+      "description": "A display-only overlay merging live Waze police reports (keyless caching proxy), curated corridor rest-area data, and EV DC-fast chargers (opt-in L2) ahead on your route. Never affects steering or speed; on by default on any car."
+    },
+    {
+      "id": "dm-plus",
+      "abbrev": "DM+",
+      "name": "DM road-gated timeouts + glare desensitization",
+      "category": "Monitoring",
+      "origin": "pnw-pilot",
+      "description": "A 3-way DmMode selector (Default stock-strict / Highway-relaxed only on freeways via map data / Relaxed) with personal timeout magnitudes kept device-local, plus glare handling that keeps DM active through low-sun glare bursts instead of nagging. Monitoring itself is never disabled."
+    },
+    {
+      "id": "networking",
+      "abbrev": "NET",
+      "name": "Perpetual tethering + priority WiFi + captive portal",
+      "category": "Device",
+      "origin": "pnw-pilot",
+      "description": "Keeps the device hotspot up, auto-joins known priority WiFi networks only near saved home locations (GPS-gated), auto-accepts captive portals (MikroTik/OSU variants), and guards against LTE throttling with a NAT fix for tethered clients. Works on any car."
+    },
+    {
+      "id": "rain",
+      "abbrev": "RAIN",
+      "name": "Rain mode curve slowdown",
+      "category": "Longitudinal",
+      "origin": "pnw-pilot",
+      "description": "Driver-selected wet-weather margin subtracted from curve target speeds (Light ~3 mph, Heavy ~5 mph) without touching the dry tuning. Applies wherever the fork's curve control (VTSC/CES) is active; default None."
+    },
+    {
+      "id": "auto-recal",
+      "abbrev": "RECAL",
+      "name": "Auto-recalibrate on car swap",
+      "category": "Device",
+      "origin": "pnw-pilot",
+      "description": "When the comma device is moved to a different car, the learned camera calibration and per-car steering parameters are cleared automatically before the next drive \u2014 no manual Reset Calibration. Same-car reboots are untouched; pairs with fingerprint hardening so a swap can never show the wrong car."
+    },
+    {
+      "id": "bsm",
+      "abbrev": "BSM",
+      "name": "Blind-spot monitoring gate (Tesla Raven)",
+      "category": "Safety",
+      "origin": "pnw-pilot",
+      "description": "Reads the Tesla Raven's own blind-spot state from the Autopilot status CAN message, logs it and uses it to block nudgeless lane changes into an occupied lane. Deployed but the physical walk-by flip test is still pending; Tesla Raven only."
+    },
+    {
+      "id": "mapd",
+      "abbrev": "MAPD",
+      "name": "OSM map data (pfeiferj mapd)",
+      "category": "Other",
+      "origin": "other",
+      "description": "pfeiferj/mapd v2 provides OpenStreetMap speed limits, road names and curve speeds. Map data for Washington, Oregon and Idaho auto-downloads on first launch; other regions downloadable on demand ('Get map for this location'). Feeds MTSC and the on-screen speed-limit display."
+    },
+    {
+      "id": "roadname",
+      "abbrev": "RDNM",
+      "name": "Road name + speed limit display",
+      "category": "Display",
+      "origin": "other",
+      "description": "Shows the current road name and posted speed limit from OSM on screen, with a warning styling when driving over the limit. Display-only on every car."
+    },
+    {
+      "id": "tesla-raven",
+      "abbrev": "RAVEN",
+      "name": "Legacy Tesla (pre-AP/AP1/Raven) support",
+      "category": "Other",
+      "origin": "other",
+      "description": "Full legacy Tesla support inherited from the xnor-tech base: tesla_legacy panda safety, legacy CAN stack, Continental radar and ignition detection for pre-refresh Model S/X \u2014 cars stock openpilot dropped. This is the reason the fork builds on xnor. Only the 2021 Model S Raven HW3 is actually driven and validated."
+    }
+  ],
+  "manufacturers": [
+    {
+      "id": "acura",
+      "name": "Acura",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": "yes",
+        "exp": "yes",
+        "sng": "yes",
+        "alc": {
+          "status": "partial",
+          "note": "minimum lane-centering speed varies by model \u2014 see per-car notes"
+        }
+      },
+      "cars": [
+        {
+          "id": "acura-ilx-2016-18",
+          "name": "Acura ILX 2016-18",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 26 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 25 mph"
+            }
+          }
+        },
+        {
+          "id": "acura-ilx-2019",
+          "name": "Acura ILX 2019",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 26 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 25 mph"
+            }
+          }
+        },
+        {
+          "id": "acura-mdx-2025-26",
+          "name": "Acura MDX 2025-26",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "alc": "yes"
+          }
+        },
+        {
+          "id": "acura-rdx-2016-18",
+          "name": "Acura RDX 2016-18",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 26 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            }
+          }
+        },
+        {
+          "id": "acura-rdx-2019-21",
+          "name": "Acura RDX 2019-21",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+            },
+            "exp": "partial",
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 3 mph"
+            }
+          }
+        },
+        {
+          "id": "acura-tlx-2021",
+          "name": "Acura TLX 2021",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+            },
+            "exp": "partial",
+            "alc": "yes"
+          }
+        },
+        {
+          "id": "acura-tlx-2025",
+          "name": "Acura TLX 2025",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "alc": "yes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "audi",
+      "name": "Audi",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "partial",
+          "note": "openpilot longitudinal behind the Alpha Longitudinal toggle; J533 gateway-harness cars only"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "needs the Alpha Longitudinal toggle"
+        },
+        "sng": "yes",
+        "alc": "yes"
+      },
+      "cars": [
+        {
+          "id": "audi-a3-2014-19",
+          "name": "Audi A3 2014-19"
+        },
+        {
+          "id": "audi-a3-sportback-e-tron-2017-18",
+          "name": "Audi A3 Sportback e-tron 2017-18"
+        },
+        {
+          "id": "audi-q2-2018",
+          "name": "Audi Q2 2018"
+        },
+        {
+          "id": "audi-q3-2019-24",
+          "name": "Audi Q3 2019-24"
+        },
+        {
+          "id": "audi-rs3-2018",
+          "name": "Audi RS3 2018"
+        },
+        {
+          "id": "audi-s3-2015-17",
+          "name": "Audi S3 2015-17"
+        }
+      ]
+    },
+    {
+      "id": "chevrolet",
+      "name": "Chevrolet",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "partial",
+          "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "needs the Alpha Longitudinal toggle"
+        },
+        "sng": {
+          "status": "partial",
+          "note": "minimum ACC engage speed varies by model \u2014 see per-car notes"
+        },
+        "alc": {
+          "status": "partial",
+          "note": "minimum lane-centering speed varies by model \u2014 see per-car notes"
+        }
+      },
+      "cars": [
+        {
+          "id": "chevrolet-bolt-euv-2022-23",
+          "name": "Chevrolet Bolt EUV 2022-23",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 3 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 6 mph"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-bolt-ev-2022-23",
+          "name": "Chevrolet Bolt EV 2022-23",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 3 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 6 mph"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-equinox-2019-22",
+          "name": "Chevrolet Equinox 2019-22",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 3 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 6 mph"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-silverado-1500-2020-21",
+          "name": "Chevrolet Silverado 1500 2020-21",
+          "features": {
+            "sng": "yes",
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 6 mph"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-trailblazer-2021-22",
+          "name": "Chevrolet Trailblazer 2021-22",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 3 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 6 mph"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "chrysler",
+      "name": "Chrysler",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "no",
+          "note": "stock ACC only"
+        },
+        "exp": {
+          "status": "no",
+          "note": "requires openpilot longitudinal"
+        },
+        "sng": "yes",
+        "alc": {
+          "status": "partial",
+          "note": "minimum lane-centering speed varies by model \u2014 see per-car notes"
+        }
+      },
+      "cars": [
+        {
+          "id": "chrysler-pacifica-2017-18",
+          "name": "Chrysler Pacifica 2017-18",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 9 mph"
+            }
+          }
+        },
+        {
+          "id": "chrysler-pacifica-2019-20",
+          "name": "Chrysler Pacifica 2019-20",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 39 mph"
+            }
+          }
+        },
+        {
+          "id": "chrysler-pacifica-2021-23",
+          "name": "Chrysler Pacifica 2021-23",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 39 mph"
+            }
+          }
+        },
+        {
+          "id": "chrysler-pacifica-hybrid-2017-18",
+          "name": "Chrysler Pacifica Hybrid 2017-18",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 9 mph"
+            }
+          }
+        },
+        {
+          "id": "chrysler-pacifica-hybrid-2019-25",
+          "name": "Chrysler Pacifica Hybrid 2019-25",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 39 mph"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "comma",
+      "name": "comma",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": "yes",
+        "exp": "yes",
+        "sng": "yes",
+        "alc": "yes"
+      },
+      "cars": [
+        {
+          "id": "comma-body",
+          "name": "comma body"
+        }
+      ]
+    },
+    {
+      "id": "cupra",
+      "name": "CUPRA",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "partial",
+          "note": "openpilot longitudinal behind the Alpha Longitudinal toggle; J533 gateway-harness cars only"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "needs the Alpha Longitudinal toggle"
+        },
+        "sng": "yes",
+        "alc": "yes"
+      },
+      "cars": [
+        {
+          "id": "cupra-ateca-2018-23",
+          "name": "CUPRA Ateca 2018-23"
+        }
+      ]
+    },
+    {
+      "id": "dodge",
+      "name": "Dodge",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "no",
+          "note": "stock ACC only"
+        },
+        "exp": {
+          "status": "no",
+          "note": "requires openpilot longitudinal"
+        },
+        "sng": "yes",
+        "alc": {
+          "status": "partial",
+          "note": "minimum lane-centering speed varies by model \u2014 see per-car notes"
+        }
+      },
+      "cars": [
+        {
+          "id": "dodge-durango-2020-21",
+          "name": "Dodge Durango 2020-21",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 39 mph"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "ford",
+      "name": "Ford",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": "yes",
+        "exp": "yes",
+        "sng": "yes",
+        "alc": "yes"
+      },
+      "cars": [
+        {
+          "id": "ford-bronco-sport-2021-24",
+          "name": "Ford Bronco Sport 2021-24"
+        },
+        {
+          "id": "ford-escape-2020-22",
+          "name": "Ford Escape 2020-22"
+        },
+        {
+          "id": "ford-escape-2023-24",
+          "name": "Ford Escape 2023-24",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+            },
+            "exp": "partial"
+          }
+        },
+        {
+          "id": "ford-escape-hybrid-2020-22",
+          "name": "Ford Escape Hybrid 2020-22"
+        },
+        {
+          "id": "ford-escape-hybrid-2023-24",
+          "name": "Ford Escape Hybrid 2023-24",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+            },
+            "exp": "partial"
+          }
+        },
+        {
+          "id": "ford-escape-plug-in-hybrid-2020-22",
+          "name": "Ford Escape Plug-in Hybrid 2020-22"
+        },
+        {
+          "id": "ford-escape-plug-in-hybrid-2023-24",
+          "name": "Ford Escape Plug-in Hybrid 2023-24",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+            },
+            "exp": "partial"
+          }
+        },
+        {
+          "id": "ford-expedition-2022-24",
+          "name": "Ford Expedition 2022-24",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+            },
+            "exp": "partial"
+          }
+        },
+        {
+          "id": "ford-explorer-2020-24",
+          "name": "Ford Explorer 2020-24"
+        },
+        {
+          "id": "ford-explorer-hybrid-2020-24",
+          "name": "Ford Explorer Hybrid 2020-24"
+        },
+        {
+          "id": "ford-f-150-2021-23",
+          "name": "Ford F-150 2021-23",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+            },
+            "exp": "partial"
+          }
+        },
+        {
+          "id": "ford-f-150-hybrid-2021-23",
+          "name": "Ford F-150 Hybrid 2021-23",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+            },
+            "exp": "partial"
+          }
+        },
+        {
+          "id": "ford-focus-2018",
+          "name": "Ford Focus 2018",
+          "note": "Focus Mk4 (Europe/China/Taiwan/Australasia), not the North American Mk3"
+        },
+        {
+          "id": "ford-focus-hybrid-2018",
+          "name": "Ford Focus Hybrid 2018",
+          "note": "Focus Mk4 (Europe/China/Taiwan/Australasia), not the North American Mk3"
+        },
+        {
+          "id": "ford-kuga-2020-23",
+          "name": "Ford Kuga 2020-23"
+        },
+        {
+          "id": "ford-kuga-hybrid-2020-23",
+          "name": "Ford Kuga Hybrid 2020-23"
+        },
+        {
+          "id": "ford-kuga-hybrid-2024",
+          "name": "Ford Kuga Hybrid 2024",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+            },
+            "exp": "partial"
+          }
+        },
+        {
+          "id": "ford-kuga-plug-in-hybrid-2020-23",
+          "name": "Ford Kuga Plug-in Hybrid 2020-23"
+        },
+        {
+          "id": "ford-kuga-plug-in-hybrid-2024",
+          "name": "Ford Kuga Plug-in Hybrid 2024",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+            },
+            "exp": "partial"
+          }
+        },
+        {
+          "id": "ford-maverick-2022",
+          "name": "Ford Maverick 2022"
+        },
+        {
+          "id": "ford-maverick-2023-24",
+          "name": "Ford Maverick 2023-24"
+        },
+        {
+          "id": "ford-maverick-hybrid-2022",
+          "name": "Ford Maverick Hybrid 2022"
+        },
+        {
+          "id": "ford-maverick-hybrid-2023-24",
+          "name": "Ford Maverick Hybrid 2023-24"
+        },
+        {
+          "id": "ford-mustang-mach-e-2021-24",
+          "name": "Ford Mustang Mach-E 2021-24",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+            },
+            "exp": "partial"
+          }
+        },
+        {
+          "id": "ford-ranger-2024",
+          "name": "Ford Ranger 2024",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+            },
+            "exp": "partial"
+          }
+        },
+        {
+          "id": "ford-f-150-lightning-2022-25",
+          "name": "Ford F-150 Lightning 2022-25 (Mk14, CAN FD)",
+          "highlight": true,
+          "note": "The fork's second daily driver (2025 Flash, 131 kWh). Platform FORD_F_150_LIGHTNING_MK1 is deliberately hidden from CARS.md upstream (car_docs=[] pending commaai issue #30302); the 2025 fingerprint was fork-added with BluePilot collaboration. Heavy per-car work: 4-signal lateral + custom panda safety, angle-primary lateral tuning, ICBM, Lightning-specific curve penalty, EV regen longitudinal damping (fordregen2pnw), SecOC false-positive dashcam fix.",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "opt-in Alpha Longitudinal toggle; OFF = stock Ford ACC (with ICBM curve slowdowns)"
+            },
+            "exp": {
+              "status": "partial",
+              "note": "requires the Alpha Longitudinal toggle"
+            },
+            "ces": {
+              "status": "yes",
+              "note": "with Alpha Long on; with it off, ICBM provides stock-ACC curve slowdowns under the same CES master"
+            },
+            "vtsc": "yes",
+            "mtsc": "yes",
+            "rain": "yes",
+            "icbm": {
+              "status": "yes",
+              "note": "taps stock SET-/SET+ cruise buttons over CAN 0x083; active when Alpha Long is off"
+            },
+            "ford-4sig-lateral": {
+              "status": "yes",
+              "note": "requires a driver-authorized panda reflash; falls back to stock 2-signal otherwise (STEER: STOCK indicator)"
+            },
+            "ford-angle-lateral": {
+              "status": "partial",
+              "note": "experimental FordAngleLateral toggle, default OFF, in active tuning"
+            },
+            "ford-long-ext": {
+              "status": "partial",
+              "note": "in tree but dormant until Alpha Longitudinal is on"
+            },
+            "bluecruise-hud": "yes",
+            "nlc": {
+              "status": "yes",
+              "note": "opt-in toggle, default OFF"
+            },
+            "sng": "yes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "genesis",
+      "name": "Genesis",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "partial",
+          "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "needs the Alpha Longitudinal toggle"
+        },
+        "sng": "yes",
+        "alc": "yes"
+      },
+      "cars": [
+        {
+          "id": "genesis-g70-2018",
+          "name": "Genesis G70 2018",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no"
+          }
+        },
+        {
+          "id": "genesis-g70-2019-21",
+          "name": "Genesis G70 2019-21"
+        },
+        {
+          "id": "genesis-g70-2022-23",
+          "name": "Genesis G70 2022-23"
+        },
+        {
+          "id": "genesis-g80-2017",
+          "name": "Genesis G80 2017",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 37 mph"
+            }
+          }
+        },
+        {
+          "id": "genesis-g80-2018-19",
+          "name": "Genesis G80 2018-19",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no"
+          }
+        },
+        {
+          "id": "genesis-g80-2-5t-advanced-trim-with-hda-ii-2024",
+          "name": "Genesis G80 (2.5T Advanced Trim, with HDA II) 2024"
+        },
+        {
+          "id": "genesis-g90-2017-20",
+          "name": "Genesis G90 2017-20"
+        },
+        {
+          "id": "genesis-gv60-advanced-trim-2023",
+          "name": "Genesis GV60 (Advanced Trim) 2023"
+        },
+        {
+          "id": "genesis-gv60-performance-trim-2022-23",
+          "name": "Genesis GV60 (Performance Trim) 2022-23"
+        },
+        {
+          "id": "genesis-gv70-2-5t-trim-without-hda-ii-2022-24",
+          "name": "Genesis GV70 (2.5T Trim, without HDA II) 2022-24"
+        },
+        {
+          "id": "genesis-gv70-3-5t-trim-without-hda-ii-2022-23",
+          "name": "Genesis GV70 (3.5T Trim, without HDA II) 2022-23"
+        },
+        {
+          "id": "genesis-gv70-electrified-australia-only-2022",
+          "name": "Genesis GV70 Electrified (Australia Only) 2022"
+        },
+        {
+          "id": "genesis-gv70-electrified-with-hda-ii-2023-24",
+          "name": "Genesis GV70 Electrified (with HDA II) 2023-24"
+        },
+        {
+          "id": "genesis-gv80-2023",
+          "name": "Genesis GV80 2023"
+        }
+      ]
+    },
+    {
+      "id": "gmc",
+      "name": "GMC",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "partial",
+          "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "needs the Alpha Longitudinal toggle"
+        },
+        "sng": "yes",
+        "alc": {
+          "status": "partial",
+          "note": "minimum lane-centering speed varies by model \u2014 see per-car notes"
+        }
+      },
+      "cars": [
+        {
+          "id": "gmc-sierra-1500-2020-21",
+          "name": "GMC Sierra 1500 2020-21",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 6 mph"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "honda",
+      "name": "Honda",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "partial",
+          "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "needs the Alpha Longitudinal toggle"
+        },
+        "sng": "yes",
+        "alc": {
+          "status": "partial",
+          "note": "minimum lane-centering speed varies by model \u2014 see per-car notes"
+        }
+      },
+      "cars": [
+        {
+          "id": "honda-accord-2018-22",
+          "name": "Honda Accord 2018-22",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 3 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-accord-2023-25",
+          "name": "Honda Accord 2023-25",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "alc": "yes"
+          }
+        },
+        {
+          "id": "honda-accord-hybrid-2018-22",
+          "name": "Honda Accord Hybrid 2018-22",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 3 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-accord-hybrid-2023-25",
+          "name": "Honda Accord Hybrid 2023-25",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "alc": "yes"
+          }
+        },
+        {
+          "id": "honda-city-brazil-only-2023",
+          "name": "Honda City (Brazil only) 2023",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 14 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-civic-2016-18",
+          "name": "Honda Civic 2016-18",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-civic-2019-21",
+          "name": "Honda Civic 2019-21",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 2 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-civic-2022-24",
+          "name": "Honda Civic 2022-24",
+          "features": {
+            "alc": "yes"
+          }
+        },
+        {
+          "id": "honda-civic-hatchback-2017-18",
+          "name": "Honda Civic Hatchback 2017-18",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-civic-hatchback-2019-21",
+          "name": "Honda Civic Hatchback 2019-21",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-civic-hatchback-2022-24",
+          "name": "Honda Civic Hatchback 2022-24",
+          "features": {
+            "alc": "yes"
+          }
+        },
+        {
+          "id": "honda-civic-hatchback-hybrid-2025-26",
+          "name": "Honda Civic Hatchback Hybrid 2025-26",
+          "features": {
+            "alc": "yes"
+          }
+        },
+        {
+          "id": "honda-civic-hatchback-hybrid-europe-only-2023",
+          "name": "Honda Civic Hatchback Hybrid (Europe only) 2023",
+          "features": {
+            "alc": "yes"
+          }
+        },
+        {
+          "id": "honda-civic-hybrid-2025-26",
+          "name": "Honda Civic Hybrid 2025-26",
+          "features": {
+            "alc": "yes"
+          }
+        },
+        {
+          "id": "honda-cr-v-2015-16",
+          "name": "Honda CR-V 2015-16",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 26 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-cr-v-2017-22",
+          "name": "Honda CR-V 2017-22",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 15 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-cr-v-2023-26",
+          "name": "Honda CR-V 2023-26",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "alc": "yes"
+          }
+        },
+        {
+          "id": "honda-cr-v-hybrid-2017-22",
+          "name": "Honda CR-V Hybrid 2017-22",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-cr-v-hybrid-2023-26",
+          "name": "Honda CR-V Hybrid 2023-26",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "alc": "yes"
+          }
+        },
+        {
+          "id": "honda-e-2020",
+          "name": "Honda e 2020",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 3 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-fit-2018-20",
+          "name": "Honda Fit 2018-20",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 26 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-freed-2020",
+          "name": "Honda Freed 2020",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 26 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-hr-v-2019-22",
+          "name": "Honda HR-V 2019-22",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 26 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-hr-v-2023-25",
+          "name": "Honda HR-V 2023-25",
+          "features": {
+            "alc": "yes"
+          }
+        },
+        {
+          "id": "honda-insight-2019-22",
+          "name": "Honda Insight 2019-22",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 3 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-inspire-2018",
+          "name": "Honda Inspire 2018",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 3 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-n-box-2018",
+          "name": "Honda N-Box 2018",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 11 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-odyssey-2018-20",
+          "name": "Honda Odyssey 2018-20",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 26 mph"
+            },
+            "alc": "yes"
+          }
+        },
+        {
+          "id": "honda-odyssey-2021-26",
+          "name": "Honda Odyssey 2021-26",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 43 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-odyssey-taiwan-2018-19",
+          "name": "Honda Odyssey (Taiwan) 2018-19",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            },
+            "alc": "yes"
+          }
+        },
+        {
+          "id": "honda-passport-2019-25",
+          "name": "Honda Passport 2019-25",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 26 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-passport-2026",
+          "name": "Honda Passport 2026",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "alc": "yes"
+          }
+        },
+        {
+          "id": "honda-pilot-2016-22",
+          "name": "Honda Pilot 2016-22",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 26 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            }
+          }
+        },
+        {
+          "id": "honda-pilot-2023-25",
+          "name": "Honda Pilot 2023-25",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "alc": "yes"
+          }
+        },
+        {
+          "id": "honda-ridgeline-2017-25",
+          "name": "Honda Ridgeline 2017-25",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 26 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 12 mph"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "hyundai",
+      "name": "Hyundai",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "partial",
+          "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "needs the Alpha Longitudinal toggle"
+        },
+        "sng": "yes",
+        "alc": "yes"
+      },
+      "cars": [
+        {
+          "id": "hyundai-azera-2022",
+          "name": "Hyundai Azera 2022"
+        },
+        {
+          "id": "hyundai-azera-hybrid-2019",
+          "name": "Hyundai Azera Hybrid 2019"
+        },
+        {
+          "id": "hyundai-azera-hybrid-2020",
+          "name": "Hyundai Azera Hybrid 2020"
+        },
+        {
+          "id": "hyundai-custin-2023",
+          "name": "Hyundai Custin 2023"
+        },
+        {
+          "id": "hyundai-elantra-2017-18",
+          "name": "Hyundai Elantra 2017-18",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 32 mph"
+            }
+          }
+        },
+        {
+          "id": "hyundai-elantra-2019",
+          "name": "Hyundai Elantra 2019",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 32 mph"
+            }
+          }
+        },
+        {
+          "id": "hyundai-elantra-2021-23",
+          "name": "Hyundai Elantra 2021-23"
+        },
+        {
+          "id": "hyundai-elantra-gt-2017-20",
+          "name": "Hyundai Elantra GT 2017-20",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 32 mph"
+            }
+          }
+        },
+        {
+          "id": "hyundai-elantra-hybrid-2021-23",
+          "name": "Hyundai Elantra Hybrid 2021-23"
+        },
+        {
+          "id": "hyundai-genesis-2015-16",
+          "name": "Hyundai Genesis 2015-16",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 37 mph"
+            }
+          }
+        },
+        {
+          "id": "hyundai-i30-2017-19",
+          "name": "Hyundai i30 2017-19",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 32 mph"
+            }
+          }
+        },
+        {
+          "id": "hyundai-ioniq-5-southeast-asia-and-europe-only-2022-24",
+          "name": "Hyundai Ioniq 5 (Southeast Asia and Europe only) 2022-24"
+        },
+        {
+          "id": "hyundai-ioniq-5-with-hda-ii-2022-24",
+          "name": "Hyundai Ioniq 5 (with HDA II) 2022-24"
+        },
+        {
+          "id": "hyundai-ioniq-5-without-hda-ii-2022-24",
+          "name": "Hyundai Ioniq 5 (without HDA II) 2022-24"
+        },
+        {
+          "id": "hyundai-ioniq-6-with-hda-ii-2023-24",
+          "name": "Hyundai Ioniq 6 (with HDA II) 2023-24",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no"
+          }
+        },
+        {
+          "id": "hyundai-ioniq-electric-2019",
+          "name": "Hyundai Ioniq Electric 2019",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 32 mph"
+            }
+          }
+        },
+        {
+          "id": "hyundai-ioniq-electric-2020",
+          "name": "Hyundai Ioniq Electric 2020"
+        },
+        {
+          "id": "hyundai-ioniq-hybrid-2017-19",
+          "name": "Hyundai Ioniq Hybrid 2017-19",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 32 mph"
+            }
+          }
+        },
+        {
+          "id": "hyundai-ioniq-hybrid-2020-22",
+          "name": "Hyundai Ioniq Hybrid 2020-22",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no"
+          }
+        },
+        {
+          "id": "hyundai-ioniq-plug-in-hybrid-2019",
+          "name": "Hyundai Ioniq Plug-in Hybrid 2019",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 32 mph"
+            }
+          }
+        },
+        {
+          "id": "hyundai-ioniq-plug-in-hybrid-2020-22",
+          "name": "Hyundai Ioniq Plug-in Hybrid 2020-22"
+        },
+        {
+          "id": "hyundai-kona-2020",
+          "name": "Hyundai Kona 2020",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 6 mph"
+            }
+          }
+        },
+        {
+          "id": "hyundai-kona-electric-2018-21",
+          "name": "Hyundai Kona Electric 2018-21"
+        },
+        {
+          "id": "hyundai-kona-electric-2022-23",
+          "name": "Hyundai Kona Electric 2022-23"
+        },
+        {
+          "id": "hyundai-kona-electric-with-hda-ii-korea-only-2023",
+          "name": "Hyundai Kona Electric (with HDA II, Korea only) 2023",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no"
+          }
+        },
+        {
+          "id": "hyundai-kona-hybrid-2020",
+          "name": "Hyundai Kona Hybrid 2020"
+        },
+        {
+          "id": "hyundai-nexo-2021",
+          "name": "Hyundai Nexo 2021"
+        },
+        {
+          "id": "hyundai-palisade-2020-22",
+          "name": "Hyundai Palisade 2020-22"
+        },
+        {
+          "id": "hyundai-santa-cruz-2022-24",
+          "name": "Hyundai Santa Cruz 2022-24"
+        },
+        {
+          "id": "hyundai-santa-fe-2019-20",
+          "name": "Hyundai Santa Fe 2019-20"
+        },
+        {
+          "id": "hyundai-santa-fe-2021-23",
+          "name": "Hyundai Santa Fe 2021-23"
+        },
+        {
+          "id": "hyundai-santa-fe-hybrid-2022-23",
+          "name": "Hyundai Santa Fe Hybrid 2022-23"
+        },
+        {
+          "id": "hyundai-santa-fe-plug-in-hybrid-2022-23",
+          "name": "Hyundai Santa Fe Plug-in Hybrid 2022-23"
+        },
+        {
+          "id": "hyundai-sonata-2018-19",
+          "name": "Hyundai Sonata 2018-19",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no"
+          }
+        },
+        {
+          "id": "hyundai-sonata-2020-23",
+          "name": "Hyundai Sonata 2020-23"
+        },
+        {
+          "id": "hyundai-sonata-hybrid-2020-23",
+          "name": "Hyundai Sonata Hybrid 2020-23"
+        },
+        {
+          "id": "hyundai-staria-2023",
+          "name": "Hyundai Staria 2023"
+        },
+        {
+          "id": "hyundai-tucson-2021",
+          "name": "Hyundai Tucson 2021",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            }
+          }
+        },
+        {
+          "id": "hyundai-tucson-2022",
+          "name": "Hyundai Tucson 2022"
+        },
+        {
+          "id": "hyundai-tucson-2023-24",
+          "name": "Hyundai Tucson 2023-24"
+        },
+        {
+          "id": "hyundai-tucson-diesel-2019",
+          "name": "Hyundai Tucson Diesel 2019"
+        },
+        {
+          "id": "hyundai-tucson-hybrid-2022-24",
+          "name": "Hyundai Tucson Hybrid 2022-24"
+        },
+        {
+          "id": "hyundai-tucson-plug-in-hybrid-2024",
+          "name": "Hyundai Tucson Plug-in Hybrid 2024"
+        },
+        {
+          "id": "hyundai-veloster-2019-20",
+          "name": "Hyundai Veloster 2019-20",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 5 mph"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "jeep",
+      "name": "Jeep",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "no",
+          "note": "stock ACC only"
+        },
+        "exp": {
+          "status": "no",
+          "note": "requires openpilot longitudinal"
+        },
+        "sng": "yes",
+        "alc": {
+          "status": "partial",
+          "note": "minimum lane-centering speed varies by model \u2014 see per-car notes"
+        }
+      },
+      "cars": [
+        {
+          "id": "jeep-grand-cherokee-2016-18",
+          "name": "Jeep Grand Cherokee 2016-18",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 9 mph"
+            }
+          }
+        },
+        {
+          "id": "jeep-grand-cherokee-2019-21",
+          "name": "Jeep Grand Cherokee 2019-21",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 39 mph"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "kia",
+      "name": "Kia",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "partial",
+          "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "needs the Alpha Longitudinal toggle"
+        },
+        "sng": "yes",
+        "alc": "yes"
+      },
+      "cars": [
+        {
+          "id": "kia-carnival-2022-24",
+          "name": "Kia Carnival 2022-24"
+        },
+        {
+          "id": "kia-carnival-china-only-2023",
+          "name": "Kia Carnival (China only) 2023"
+        },
+        {
+          "id": "kia-ceed-2019-21",
+          "name": "Kia Ceed 2019-21",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no"
+          }
+        },
+        {
+          "id": "kia-ev6-southeast-asia-only-2022-24",
+          "name": "Kia EV6 (Southeast Asia only) 2022-24"
+        },
+        {
+          "id": "kia-ev6-with-hda-ii-2022-24",
+          "name": "Kia EV6 (with HDA II) 2022-24"
+        },
+        {
+          "id": "kia-ev6-without-hda-ii-2022-24",
+          "name": "Kia EV6 (without HDA II) 2022-24"
+        },
+        {
+          "id": "kia-forte-2019-21",
+          "name": "Kia Forte 2019-21",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 6 mph"
+            }
+          }
+        },
+        {
+          "id": "kia-forte-2022-23",
+          "name": "Kia Forte 2022-23"
+        },
+        {
+          "id": "kia-k5-2021-24",
+          "name": "Kia K5 2021-24"
+        },
+        {
+          "id": "kia-k5-hybrid-2020-22",
+          "name": "Kia K5 Hybrid 2020-22"
+        },
+        {
+          "id": "kia-k7-2017",
+          "name": "Kia K7 2017"
+        },
+        {
+          "id": "kia-k8-hybrid-with-hda-ii-2023",
+          "name": "Kia K8 Hybrid (with HDA II) 2023"
+        },
+        {
+          "id": "kia-niro-ev-2019",
+          "name": "Kia Niro EV 2019"
+        },
+        {
+          "id": "kia-niro-ev-2020",
+          "name": "Kia Niro EV 2020"
+        },
+        {
+          "id": "kia-niro-ev-2021",
+          "name": "Kia Niro EV 2021"
+        },
+        {
+          "id": "kia-niro-ev-2022",
+          "name": "Kia Niro EV 2022"
+        },
+        {
+          "id": "kia-niro-ev-with-hda-ii-2025",
+          "name": "Kia Niro EV (with HDA II) 2025"
+        },
+        {
+          "id": "kia-niro-ev-without-hda-ii-2023-25",
+          "name": "Kia Niro EV (without HDA II) 2023-25"
+        },
+        {
+          "id": "kia-niro-hybrid-2018",
+          "name": "Kia Niro Hybrid 2018",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 10 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 32 mph"
+            }
+          }
+        },
+        {
+          "id": "kia-niro-hybrid-2021",
+          "name": "Kia Niro Hybrid 2021"
+        },
+        {
+          "id": "kia-niro-hybrid-2022",
+          "name": "Kia Niro Hybrid 2022"
+        },
+        {
+          "id": "kia-niro-hybrid-2023",
+          "name": "Kia Niro Hybrid 2023"
+        },
+        {
+          "id": "kia-niro-plug-in-hybrid-2018-19",
+          "name": "Kia Niro Plug-in Hybrid 2018-19",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 10 mph"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 32 mph"
+            }
+          }
+        },
+        {
+          "id": "kia-niro-plug-in-hybrid-2020",
+          "name": "Kia Niro Plug-in Hybrid 2020",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 32 mph"
+            }
+          }
+        },
+        {
+          "id": "kia-niro-plug-in-hybrid-2021",
+          "name": "Kia Niro Plug-in Hybrid 2021"
+        },
+        {
+          "id": "kia-niro-plug-in-hybrid-2022",
+          "name": "Kia Niro Plug-in Hybrid 2022"
+        },
+        {
+          "id": "kia-optima-2017",
+          "name": "Kia Optima 2017",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no",
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 32 mph"
+            }
+          }
+        },
+        {
+          "id": "kia-optima-2019-20",
+          "name": "Kia Optima 2019-20",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no"
+          }
+        },
+        {
+          "id": "kia-optima-hybrid-2019",
+          "name": "Kia Optima Hybrid 2019",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no"
+          }
+        },
+        {
+          "id": "kia-seltos-2021",
+          "name": "Kia Seltos 2021"
+        },
+        {
+          "id": "kia-sorento-2018",
+          "name": "Kia Sorento 2018",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no"
+          }
+        },
+        {
+          "id": "kia-sorento-2019",
+          "name": "Kia Sorento 2019",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no"
+          }
+        },
+        {
+          "id": "kia-sorento-2021-23",
+          "name": "Kia Sorento 2021-23"
+        },
+        {
+          "id": "kia-sorento-hybrid-2021-23",
+          "name": "Kia Sorento Hybrid 2021-23"
+        },
+        {
+          "id": "kia-sorento-plug-in-hybrid-2022-23",
+          "name": "Kia Sorento Plug-in Hybrid 2022-23"
+        },
+        {
+          "id": "kia-sportage-2023-24",
+          "name": "Kia Sportage 2023-24"
+        },
+        {
+          "id": "kia-sportage-hybrid-2023",
+          "name": "Kia Sportage Hybrid 2023"
+        },
+        {
+          "id": "kia-stinger-2018-20",
+          "name": "Kia Stinger 2018-20"
+        },
+        {
+          "id": "kia-stinger-2022-23",
+          "name": "Kia Stinger 2022-23"
+        },
+        {
+          "id": "kia-telluride-2020-22",
+          "name": "Kia Telluride 2020-22"
+        }
+      ]
+    },
+    {
+      "id": "lexus",
+      "name": "Lexus",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "no",
+          "note": "stock ACC only"
+        },
+        "exp": {
+          "status": "no",
+          "note": "requires openpilot longitudinal"
+        },
+        "sng": "yes",
+        "alc": "yes"
+      },
+      "cars": [
+        {
+          "id": "lexus-ct-hybrid-2017-18",
+          "name": "Lexus CT Hybrid 2017-18"
+        },
+        {
+          "id": "lexus-es-2017-18",
+          "name": "Lexus ES 2017-18",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            }
+          }
+        },
+        {
+          "id": "lexus-es-2019-25",
+          "name": "Lexus ES 2019-25",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "lexus-es-hybrid-2017-18",
+          "name": "Lexus ES Hybrid 2017-18",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            }
+          }
+        },
+        {
+          "id": "lexus-es-hybrid-2019-25",
+          "name": "Lexus ES Hybrid 2019-25",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "lexus-gs-f-2016",
+          "name": "Lexus GS F 2016",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            }
+          }
+        },
+        {
+          "id": "lexus-is-2017-19",
+          "name": "Lexus IS 2017-19",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            }
+          }
+        },
+        {
+          "id": "lexus-is-2022-24",
+          "name": "Lexus IS 2022-24",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "lexus-lc-2024-25",
+          "name": "Lexus LC 2024-25",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "lexus-ls-2018",
+          "name": "Lexus LS 2018"
+        },
+        {
+          "id": "lexus-nx-2018-19",
+          "name": "Lexus NX 2018-19"
+        },
+        {
+          "id": "lexus-nx-2020-21",
+          "name": "Lexus NX 2020-21",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "lexus-nx-hybrid-2018-19",
+          "name": "Lexus NX Hybrid 2018-19"
+        },
+        {
+          "id": "lexus-nx-hybrid-2020-21",
+          "name": "Lexus NX Hybrid 2020-21",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "lexus-rc-2018-20",
+          "name": "Lexus RC 2018-20",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            }
+          }
+        },
+        {
+          "id": "lexus-rc-2023",
+          "name": "Lexus RC 2023",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "lexus-rx-2016",
+          "name": "Lexus RX 2016"
+        },
+        {
+          "id": "lexus-rx-2017-19",
+          "name": "Lexus RX 2017-19"
+        },
+        {
+          "id": "lexus-rx-2020-22",
+          "name": "Lexus RX 2020-22",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "lexus-rx-hybrid-2016",
+          "name": "Lexus RX Hybrid 2016"
+        },
+        {
+          "id": "lexus-rx-hybrid-2017-19",
+          "name": "Lexus RX Hybrid 2017-19"
+        },
+        {
+          "id": "lexus-rx-hybrid-2020-22",
+          "name": "Lexus RX Hybrid 2020-22",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "lexus-ux-hybrid-2019-24",
+          "name": "Lexus UX Hybrid 2019-24",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lincoln",
+      "name": "Lincoln",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": "yes",
+        "exp": "yes",
+        "sng": "yes",
+        "alc": "yes"
+      },
+      "cars": [
+        {
+          "id": "lincoln-aviator-2020-24",
+          "name": "Lincoln Aviator 2020-24"
+        },
+        {
+          "id": "lincoln-aviator-plug-in-hybrid-2020-24",
+          "name": "Lincoln Aviator Plug-in Hybrid 2020-24"
+        }
+      ]
+    },
+    {
+      "id": "man",
+      "name": "MAN",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "partial",
+          "note": "openpilot longitudinal behind the Alpha Longitudinal toggle; J533 gateway-harness cars only"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "needs the Alpha Longitudinal toggle"
+        },
+        "sng": "yes",
+        "alc": {
+          "status": "partial",
+          "note": "minimum lane-centering speed varies by model \u2014 see per-car notes"
+        }
+      },
+      "cars": [
+        {
+          "id": "man-etge-2020-24",
+          "name": "MAN eTGE 2020-24",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 31 mph"
+            }
+          }
+        },
+        {
+          "id": "man-tge-2017-24",
+          "name": "MAN TGE 2017-24",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 31 mph"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "mazda",
+      "name": "Mazda",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "no",
+          "note": "stock ACC only"
+        },
+        "exp": {
+          "status": "no",
+          "note": "requires openpilot longitudinal"
+        },
+        "sng": "yes",
+        "alc": "yes"
+      },
+      "cars": [
+        {
+          "id": "mazda-cx-5-2022-25",
+          "name": "Mazda CX-5 2022-25"
+        },
+        {
+          "id": "mazda-cx-9-2021-23",
+          "name": "Mazda CX-9 2021-23",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 28 mph"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "nissan",
+      "name": "Nissan",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "no",
+          "note": "stock ACC only"
+        },
+        "exp": {
+          "status": "no",
+          "note": "requires openpilot longitudinal"
+        },
+        "sng": "yes",
+        "alc": "yes"
+      },
+      "cars": [
+        {
+          "id": "nissan-altima-2019-20-2024",
+          "name": "Nissan Altima 2019-20, 2024"
+        },
+        {
+          "id": "nissan-leaf-2018-23",
+          "name": "Nissan Leaf 2018-23"
+        },
+        {
+          "id": "nissan-rogue-2018-20",
+          "name": "Nissan Rogue 2018-20"
+        },
+        {
+          "id": "nissan-x-trail-2017",
+          "name": "Nissan X-Trail 2017"
+        }
+      ]
+    },
+    {
+      "id": "ram",
+      "name": "Ram",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "no",
+          "note": "stock ACC only"
+        },
+        "exp": {
+          "status": "no",
+          "note": "requires openpilot longitudinal"
+        },
+        "sng": "yes",
+        "alc": {
+          "status": "partial",
+          "note": "minimum lane-centering speed varies by model \u2014 see per-car notes"
+        }
+      },
+      "cars": [
+        {
+          "id": "ram-1500-2019-24",
+          "name": "Ram 1500 2019-24",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 32 mph"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "rivian",
+      "name": "Rivian",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": "yes",
+        "exp": "yes",
+        "sng": "yes",
+        "alc": "yes"
+      },
+      "cars": [
+        {
+          "id": "rivian-r1s-2022-24",
+          "name": "Rivian R1S 2022-24"
+        },
+        {
+          "id": "rivian-r1t-2022-24",
+          "name": "Rivian R1T 2022-24"
+        },
+        {
+          "id": "rivian-r1s-2025",
+          "name": "Rivian R1S 2025",
+          "note": "2025 variant (rivian_b harness) present in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "in code but not in published CARS.md"
+            }
+          }
+        },
+        {
+          "id": "rivian-r1t-2025",
+          "name": "Rivian R1T 2025",
+          "note": "2025 variant (rivian_b harness) present in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "in code but not in published CARS.md"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "seat",
+      "name": "SEAT",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "partial",
+          "note": "openpilot longitudinal behind the Alpha Longitudinal toggle; J533 gateway-harness cars only"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "needs the Alpha Longitudinal toggle"
+        },
+        "sng": "yes",
+        "alc": "yes"
+      },
+      "cars": [
+        {
+          "id": "seat-ateca-2016-23",
+          "name": "SEAT Ateca 2016-23"
+        },
+        {
+          "id": "seat-leon-2014-20",
+          "name": "SEAT Leon 2014-20"
+        }
+      ]
+    },
+    {
+      "id": "subaru",
+      "name": "Subaru",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "partial",
+          "note": "openpilot longitudinal behind the Alpha Longitudinal toggle; enabling it disables all EyeSight AEB/LDW/RAB"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "needs the Alpha Longitudinal toggle"
+        },
+        "sng": "yes",
+        "alc": "yes"
+      },
+      "cars": [
+        {
+          "id": "subaru-ascent-2019-21",
+          "name": "Subaru Ascent 2019-21"
+        },
+        {
+          "id": "subaru-crosstrek-2018-19",
+          "name": "Subaru Crosstrek 2018-19"
+        },
+        {
+          "id": "subaru-crosstrek-2020-23",
+          "name": "Subaru Crosstrek 2020-23"
+        },
+        {
+          "id": "subaru-forester-2019-21",
+          "name": "Subaru Forester 2019-21"
+        },
+        {
+          "id": "subaru-impreza-2017-19",
+          "name": "Subaru Impreza 2017-19"
+        },
+        {
+          "id": "subaru-impreza-2020-22",
+          "name": "Subaru Impreza 2020-22"
+        },
+        {
+          "id": "subaru-legacy-2020-22",
+          "name": "Subaru Legacy 2020-22",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no"
+          }
+        },
+        {
+          "id": "subaru-outback-2020-22",
+          "name": "Subaru Outback 2020-22",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only"
+            },
+            "exp": "no"
+          }
+        },
+        {
+          "id": "subaru-xv-2018-19",
+          "name": "Subaru XV 2018-19"
+        },
+        {
+          "id": "subaru-xv-2020-21",
+          "name": "Subaru XV 2020-21"
+        }
+      ]
+    },
+    {
+      "id": "skoda",
+      "name": "\u0160koda",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "partial",
+          "note": "openpilot longitudinal behind the Alpha Longitudinal toggle; J533 gateway-harness cars only"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "needs the Alpha Longitudinal toggle"
+        },
+        "sng": "yes",
+        "alc": "yes"
+      },
+      "cars": [
+        {
+          "id": "skoda-fabia-2022-23",
+          "name": "\u0160koda Fabia 2022-23"
+        },
+        {
+          "id": "skoda-kamiq-2021-23",
+          "name": "\u0160koda Kamiq 2021-23",
+          "note": "not the China-market PQ34-platform Kamiq"
+        },
+        {
+          "id": "skoda-karoq-2019-23",
+          "name": "\u0160koda Karoq 2019-23"
+        },
+        {
+          "id": "skoda-kodiaq-2017-23",
+          "name": "\u0160koda Kodiaq 2017-23"
+        },
+        {
+          "id": "skoda-octavia-2015-19",
+          "name": "\u0160koda Octavia 2015-19"
+        },
+        {
+          "id": "skoda-octavia-rs-2016",
+          "name": "\u0160koda Octavia RS 2016"
+        },
+        {
+          "id": "skoda-octavia-scout-2017-19",
+          "name": "\u0160koda Octavia Scout 2017-19"
+        },
+        {
+          "id": "skoda-scala-2020-23",
+          "name": "\u0160koda Scala 2020-23"
+        },
+        {
+          "id": "skoda-superb-2015-22",
+          "name": "\u0160koda Superb 2015-22"
+        }
+      ]
+    },
+    {
+      "id": "tesla",
+      "name": "Tesla",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "partial",
+          "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "needs the Alpha Longitudinal toggle"
+        },
+        "sng": "yes",
+        "alc": "yes"
+      },
+      "cars": [
+        {
+          "id": "tesla-model-3-with-hw3-2019-23",
+          "name": "Tesla Model 3 (with HW3) 2019-23",
+          "note": "some 2023 model years have HW4 \u2014 check Autopilot computer type"
+        },
+        {
+          "id": "tesla-model-3-with-hw4-2024-25",
+          "name": "Tesla Model 3 (with HW4) 2024-25"
+        },
+        {
+          "id": "tesla-model-y-with-hw3-2020-23",
+          "name": "Tesla Model Y (with HW3) 2020-23",
+          "note": "some 2023 model years have HW4 \u2014 check Autopilot computer type"
+        },
+        {
+          "id": "tesla-model-y-with-hw4-2024-25",
+          "name": "Tesla Model Y (with HW4) 2024-25"
+        },
+        {
+          "id": "tesla-model-s-hw3-raven-2020-23",
+          "name": "Tesla Model S (HW3, Raven) 2020-23",
+          "highlight": true,
+          "note": "The fork's primary daily driver (2021 Model S Long Range Plus). Full xnor legacy Raven support: tesla_legacy panda safety, tesla_raven_party CAN, Continental ARS4-B radar, GTW_status ignition. In code but ABSENT from the published CARS.md.",
+          "features": {
+            "oplong": {
+              "status": "yes",
+              "note": "native openpilot longitudinal, forced on"
+            },
+            "exp": "yes",
+            "ces": "yes",
+            "vtsc": "yes",
+            "mtsc": "yes",
+            "rain": "yes",
+            "tesla-raven": "yes",
+            "nlc": {
+              "status": "yes",
+              "note": "opt-in toggle, default OFF"
+            },
+            "bsm": {
+              "status": "partial",
+              "note": "deployed via AutopilotStatus 0x399; physical walk-by flip test still pending"
+            }
+          }
+        },
+        {
+          "id": "tesla-model-s-hw1-2014-16",
+          "name": "Tesla Model S (HW1) 2014-16",
+          "note": "xnor legacy port (teslaLegacy panda safety); in code but ABSENT from the published CARS.md; not driven or validated by this fork",
+          "features": {
+            "oplong": "unknown",
+            "exp": "unknown",
+            "alc": "unknown",
+            "sng": "unknown",
+            "tesla-raven": "yes"
+          }
+        },
+        {
+          "id": "tesla-model-s-hw2-2017-19",
+          "name": "Tesla Model S (HW2) 2017-19",
+          "note": "xnor legacy port (teslaLegacy panda safety); in code but ABSENT from the published CARS.md; not driven or validated by this fork; radarUnavailable=True in code (vision-only lead detection)",
+          "features": {
+            "oplong": "unknown",
+            "exp": "unknown",
+            "alc": "unknown",
+            "sng": "unknown",
+            "tesla-raven": "yes"
+          }
+        },
+        {
+          "id": "tesla-model-x-hw1-2014-16",
+          "name": "Tesla Model X (HW1) 2014-16",
+          "note": "xnor legacy port (teslaLegacy panda safety); in code but ABSENT from the published CARS.md; not driven or validated by this fork; a commented-out dashcam gate ('pending find invalidLkasSetting signal') suggests Model X support is less settled",
+          "features": {
+            "oplong": "unknown",
+            "exp": "unknown",
+            "alc": "unknown",
+            "sng": "unknown",
+            "tesla-raven": "yes"
+          }
+        },
+        {
+          "id": "tesla-model-x-hw2-2016-19",
+          "name": "Tesla Model X (HW2) 2016-19",
+          "note": "xnor legacy port (teslaLegacy panda safety); in code but ABSENT from the published CARS.md; not driven or validated by this fork; a commented-out dashcam gate ('pending find invalidLkasSetting signal') suggests Model X support is less settled",
+          "features": {
+            "oplong": "unknown",
+            "exp": "unknown",
+            "alc": "unknown",
+            "sng": "unknown",
+            "tesla-raven": "yes"
+          }
+        },
+        {
+          "id": "tesla-model-s-hw4-2024",
+          "name": "Tesla Model S (HW4) 2024",
+          "note": "stock upstream platform with CarDocs in code, but absent from the fork's stale published CARS.md",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "in code but not in published CARS.md"
+            }
+          }
+        },
+        {
+          "id": "tesla-model-x-hw4-2024",
+          "name": "Tesla Model X (HW4) 2024",
+          "note": "stock upstream platform with CarDocs in code, but absent from the fork's stale published CARS.md",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "in code but not in published CARS.md"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "toyota",
+      "name": "Toyota",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "no",
+          "note": "stock ACC only"
+        },
+        "exp": {
+          "status": "no",
+          "note": "requires openpilot longitudinal"
+        },
+        "sng": "yes",
+        "alc": "yes"
+      },
+      "cars": [
+        {
+          "id": "toyota-alphard-2019-20",
+          "name": "Toyota Alphard 2019-20",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "toyota-alphard-hybrid-2021",
+          "name": "Toyota Alphard Hybrid 2021",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "toyota-avalon-2016",
+          "name": "Toyota Avalon 2016",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            }
+          }
+        },
+        {
+          "id": "toyota-avalon-2017-18",
+          "name": "Toyota Avalon 2017-18",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            }
+          }
+        },
+        {
+          "id": "toyota-avalon-2019-21",
+          "name": "Toyota Avalon 2019-21"
+        },
+        {
+          "id": "toyota-avalon-2022",
+          "name": "Toyota Avalon 2022",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "toyota-avalon-hybrid-2019-21",
+          "name": "Toyota Avalon Hybrid 2019-21"
+        },
+        {
+          "id": "toyota-avalon-hybrid-2022",
+          "name": "Toyota Avalon Hybrid 2022",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "toyota-c-hr-2017-20",
+          "name": "Toyota C-HR 2017-20"
+        },
+        {
+          "id": "toyota-c-hr-2021",
+          "name": "Toyota C-HR 2021",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+            },
+            "exp": "partial"
+          }
+        },
+        {
+          "id": "toyota-c-hr-hybrid-2017-20",
+          "name": "Toyota C-HR Hybrid 2017-20"
+        },
+        {
+          "id": "toyota-c-hr-hybrid-2021-22",
+          "name": "Toyota C-HR Hybrid 2021-22",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+            },
+            "exp": "partial"
+          }
+        },
+        {
+          "id": "toyota-camry-2018-20",
+          "name": "Toyota Camry 2018-20"
+        },
+        {
+          "id": "toyota-camry-2021-24",
+          "name": "Toyota Camry 2021-24",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "toyota-camry-hybrid-2018-20",
+          "name": "Toyota Camry Hybrid 2018-20"
+        },
+        {
+          "id": "toyota-camry-hybrid-2021-24",
+          "name": "Toyota Camry Hybrid 2021-24",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "toyota-corolla-2017-19",
+          "name": "Toyota Corolla 2017-19",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            }
+          }
+        },
+        {
+          "id": "toyota-corolla-2020-22",
+          "name": "Toyota Corolla 2020-22",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "toyota-corolla-cross-non-us-only-2020-23",
+          "name": "Toyota Corolla Cross (Non-US only) 2020-23",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 17 mph"
+            }
+          }
+        },
+        {
+          "id": "toyota-corolla-cross-hybrid-non-us-only-2020-22",
+          "name": "Toyota Corolla Cross Hybrid (Non-US only) 2020-22",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 17 mph"
+            }
+          }
+        },
+        {
+          "id": "toyota-corolla-hatchback-2019-22",
+          "name": "Toyota Corolla Hatchback 2019-22",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "toyota-corolla-hybrid-2020-22",
+          "name": "Toyota Corolla Hybrid 2020-22",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "toyota-corolla-hybrid-south-america-only-2020-23",
+          "name": "Toyota Corolla Hybrid (South America only) 2020-23",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes",
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 17 mph"
+            }
+          }
+        },
+        {
+          "id": "toyota-highlander-2017-19",
+          "name": "Toyota Highlander 2017-19",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            }
+          }
+        },
+        {
+          "id": "toyota-highlander-2020-23",
+          "name": "Toyota Highlander 2020-23",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "toyota-highlander-hybrid-2017-19",
+          "name": "Toyota Highlander Hybrid 2017-19",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            }
+          }
+        },
+        {
+          "id": "toyota-highlander-hybrid-2020-23",
+          "name": "Toyota Highlander Hybrid 2020-23",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "toyota-mirai-2021",
+          "name": "Toyota Mirai 2021",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "toyota-prius-2016",
+          "name": "Toyota Prius 2016"
+        },
+        {
+          "id": "toyota-prius-2017-20",
+          "name": "Toyota Prius 2017-20"
+        },
+        {
+          "id": "toyota-prius-2021-22",
+          "name": "Toyota Prius 2021-22",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "toyota-prius-prime-2017-20",
+          "name": "Toyota Prius Prime 2017-20"
+        },
+        {
+          "id": "toyota-prius-prime-2021-22",
+          "name": "Toyota Prius Prime 2021-22",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "toyota-prius-v-2017",
+          "name": "Toyota Prius v 2017",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            }
+          }
+        },
+        {
+          "id": "toyota-rav4-2016",
+          "name": "Toyota RAV4 2016",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            }
+          }
+        },
+        {
+          "id": "toyota-rav4-2017-18",
+          "name": "Toyota RAV4 2017-18",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            }
+          }
+        },
+        {
+          "id": "toyota-rav4-2019-21",
+          "name": "Toyota RAV4 2019-21",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "toyota-rav4-2022",
+          "name": "Toyota RAV4 2022",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+            },
+            "exp": "partial"
+          }
+        },
+        {
+          "id": "toyota-rav4-2023-25",
+          "name": "Toyota RAV4 2023-25",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+            },
+            "exp": "partial"
+          }
+        },
+        {
+          "id": "toyota-rav4-hybrid-2016",
+          "name": "Toyota RAV4 Hybrid 2016",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            }
+          }
+        },
+        {
+          "id": "toyota-rav4-hybrid-2017-18",
+          "name": "Toyota RAV4 Hybrid 2017-18",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            }
+          }
+        },
+        {
+          "id": "toyota-rav4-hybrid-2019-21",
+          "name": "Toyota RAV4 Hybrid 2019-21",
+          "features": {
+            "oplong": "yes",
+            "exp": "yes"
+          }
+        },
+        {
+          "id": "toyota-rav4-hybrid-2022",
+          "name": "Toyota RAV4 Hybrid 2022",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+            },
+            "exp": "partial"
+          }
+        },
+        {
+          "id": "toyota-rav4-hybrid-2023-25",
+          "name": "Toyota RAV4 Hybrid 2023-25",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal behind the Alpha Longitudinal toggle"
+            },
+            "exp": "partial"
+          }
+        },
+        {
+          "id": "toyota-sienna-2018-20",
+          "name": "Toyota Sienna 2018-20",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "no ACC accel below 19 mph"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "volkswagen",
+      "name": "Volkswagen",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "partial",
+          "note": "openpilot longitudinal behind the Alpha Longitudinal toggle; J533 gateway-harness cars only"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "needs the Alpha Longitudinal toggle"
+        },
+        "sng": "yes",
+        "alc": "yes"
+      },
+      "cars": [
+        {
+          "id": "volkswagen-arteon-2018-23",
+          "name": "Volkswagen Arteon 2018-23"
+        },
+        {
+          "id": "volkswagen-arteon-ehybrid-2020-23",
+          "name": "Volkswagen Arteon eHybrid 2020-23"
+        },
+        {
+          "id": "volkswagen-arteon-r-2020-23",
+          "name": "Volkswagen Arteon R 2020-23"
+        },
+        {
+          "id": "volkswagen-arteon-shooting-brake-2020-23",
+          "name": "Volkswagen Arteon Shooting Brake 2020-23"
+        },
+        {
+          "id": "volkswagen-atlas-2018-23",
+          "name": "Volkswagen Atlas 2018-23"
+        },
+        {
+          "id": "volkswagen-atlas-cross-sport-2020-22",
+          "name": "Volkswagen Atlas Cross Sport 2020-22"
+        },
+        {
+          "id": "volkswagen-california-2021-23",
+          "name": "Volkswagen California 2021-23",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 31 mph"
+            }
+          }
+        },
+        {
+          "id": "volkswagen-caravelle-2020",
+          "name": "Volkswagen Caravelle 2020",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 31 mph"
+            }
+          }
+        },
+        {
+          "id": "volkswagen-cc-2018-22",
+          "name": "Volkswagen CC 2018-22"
+        },
+        {
+          "id": "volkswagen-crafter-2017-24",
+          "name": "Volkswagen Crafter 2017-24",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 31 mph"
+            }
+          }
+        },
+        {
+          "id": "volkswagen-e-crafter-2018-24",
+          "name": "Volkswagen e-Crafter 2018-24",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 31 mph"
+            }
+          }
+        },
+        {
+          "id": "volkswagen-e-golf-2014-20",
+          "name": "Volkswagen e-Golf 2014-20"
+        },
+        {
+          "id": "volkswagen-golf-2015-20",
+          "name": "Volkswagen Golf 2015-20"
+        },
+        {
+          "id": "volkswagen-golf-alltrack-2015-19",
+          "name": "Volkswagen Golf Alltrack 2015-19"
+        },
+        {
+          "id": "volkswagen-golf-gtd-2015-20",
+          "name": "Volkswagen Golf GTD 2015-20"
+        },
+        {
+          "id": "volkswagen-golf-gte-2015-20",
+          "name": "Volkswagen Golf GTE 2015-20"
+        },
+        {
+          "id": "volkswagen-golf-gti-2015-21",
+          "name": "Volkswagen Golf GTI 2015-21"
+        },
+        {
+          "id": "volkswagen-golf-r-2015-19",
+          "name": "Volkswagen Golf R 2015-19"
+        },
+        {
+          "id": "volkswagen-golf-sportsvan-2015-20",
+          "name": "Volkswagen Golf SportsVan 2015-20"
+        },
+        {
+          "id": "volkswagen-grand-california-2019-24",
+          "name": "Volkswagen Grand California 2019-24",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "no ALC below 31 mph"
+            }
+          }
+        },
+        {
+          "id": "volkswagen-jetta-2019-23",
+          "name": "Volkswagen Jetta 2019-23"
+        },
+        {
+          "id": "volkswagen-jetta-gli-2021-23",
+          "name": "Volkswagen Jetta GLI 2021-23"
+        },
+        {
+          "id": "volkswagen-passat-2015-22",
+          "name": "Volkswagen Passat 2015-22",
+          "note": "MQB-based European B8 Passat only, not the US/China NMS Passat"
+        },
+        {
+          "id": "volkswagen-passat-alltrack-2015-22",
+          "name": "Volkswagen Passat Alltrack 2015-22"
+        },
+        {
+          "id": "volkswagen-passat-gte-2015-22",
+          "name": "Volkswagen Passat GTE 2015-22"
+        },
+        {
+          "id": "volkswagen-polo-2018-23",
+          "name": "Volkswagen Polo 2018-23"
+        },
+        {
+          "id": "volkswagen-polo-gti-2018-23",
+          "name": "Volkswagen Polo GTI 2018-23"
+        },
+        {
+          "id": "volkswagen-t-cross-2021",
+          "name": "Volkswagen T-Cross 2021"
+        },
+        {
+          "id": "volkswagen-t-roc-2018-23",
+          "name": "Volkswagen T-Roc 2018-23"
+        },
+        {
+          "id": "volkswagen-taos-2022-24",
+          "name": "Volkswagen Taos 2022-24"
+        },
+        {
+          "id": "volkswagen-teramont-2018-22",
+          "name": "Volkswagen Teramont 2018-22"
+        },
+        {
+          "id": "volkswagen-teramont-cross-sport-2021-22",
+          "name": "Volkswagen Teramont Cross Sport 2021-22"
+        },
+        {
+          "id": "volkswagen-teramont-x-2021-22",
+          "name": "Volkswagen Teramont X 2021-22"
+        },
+        {
+          "id": "volkswagen-tiguan-2018-24",
+          "name": "Volkswagen Tiguan 2018-24"
+        },
+        {
+          "id": "volkswagen-tiguan-ehybrid-2021-23",
+          "name": "Volkswagen Tiguan eHybrid 2021-23"
+        },
+        {
+          "id": "volkswagen-touran-2016-23",
+          "name": "Volkswagen Touran 2016-23"
+        }
+      ]
+    },
+    {
+      "id": "mg",
+      "name": "MG",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "unknown",
+          "note": "xnor-added MG port in code; brand absent from the published CARS.md; untested by this fork"
+        },
+        "exp": {
+          "status": "unknown",
+          "note": "xnor-added MG port in code; brand absent from the published CARS.md; untested by this fork"
+        },
+        "sng": {
+          "status": "unknown",
+          "note": "xnor-added MG port in code; brand absent from the published CARS.md; untested by this fork"
+        },
+        "alc": {
+          "status": "unknown",
+          "note": "xnor-added MG port in code; brand absent from the published CARS.md; untested by this fork"
+        }
+      },
+      "cars": [
+        {
+          "id": "mg-5-ev-2021-24",
+          "name": "MG 5 EV 2021-24",
+          "note": "in code (xnor-added brand) but not in the published CARS.md"
+        },
+        {
+          "id": "mg-zs-ev-2022",
+          "name": "MG ZS EV 2022",
+          "note": "in code (xnor-added brand) but not in the published CARS.md"
+        },
+        {
+          "id": "mg-zs-2025",
+          "name": "MG ZS 2025",
+          "note": "in code (xnor-added brand) but not in the published CARS.md"
+        }
+      ]
+    },
+    {
+      "id": "psa",
+      "name": "Peugeot (PSA)",
+      "features": {
+        "mapd": "yes",
+        "roadname": "yes",
+        "location-services": "yes",
+        "connect": "yes",
+        "networking": "yes",
+        "dm": "yes",
+        "dm-plus": "yes",
+        "green-light-alert": "yes",
+        "confidence-ball": "yes",
+        "auto-recal": "yes",
+        "lca": "yes",
+        "nlc": {
+          "status": "no",
+          "note": "only on the fork's two cars (Tesla Raven + F-150 Lightning)"
+        },
+        "ndob": {
+          "status": "no",
+          "note": "toggle present but greyed/unsupported in this fork"
+        },
+        "ces": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "vtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "mtsc": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "rain": {
+          "status": "unknown",
+          "note": "requires op-long; tuned and road-tested only on the fork's two cars"
+        },
+        "icbm": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-4sig-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-angle-lateral": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "ford-long-ext": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bluecruise-hud": {
+          "status": "no",
+          "note": "F-150 Lightning only"
+        },
+        "bsm": {
+          "status": "no",
+          "note": "Tesla Raven only"
+        },
+        "tesla-raven": {
+          "status": "no",
+          "note": "legacy Tesla Model S/X only"
+        },
+        "oplong": {
+          "status": "no",
+          "note": "dashcamOnly=True in code \u2014 WIP brand, no control"
+        },
+        "exp": {
+          "status": "no",
+          "note": "dashcamOnly=True in code \u2014 WIP brand, no control"
+        },
+        "sng": {
+          "status": "no",
+          "note": "dashcamOnly=True in code \u2014 WIP brand, no control"
+        },
+        "alc": {
+          "status": "no",
+          "note": "dashcamOnly=True in code \u2014 WIP brand, no control"
+        }
+      },
+      "cars": [
+        {
+          "id": "psa-peugeot-208-2019-25",
+          "name": "Peugeot 208 2019-25",
+          "note": "in code but dashcam-only (WIP port) and not in the published CARS.md"
+        }
+      ]
+    }
+  ]
+}

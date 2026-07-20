@@ -1,0 +1,3668 @@
+{
+  "schema_version": 1,
+  "fork": {
+    "id": "dragonpilot",
+    "name": "dragonpilot",
+    "repo": "https://github.com/dragonpilot/dragonpilot",
+    "branch": "pre-build",
+    "base": "commaai/openpilot (v0.11.1 lineage, base commit 2026-06-04)",
+    "description": "Long-running Chinese-community openpilot fork (est. 2019) with a 'Less is More' philosophy: minimal changes over a strong upstream model. Adds always-on lane keeping (ALKA), adaptive coasting/experimental/personality modes, a phone web dashboard (dashy), full multi-language UI, and support for comma 3/3X plus community O3-series hardware. Also carries a fork-added MG ZS car port.",
+    "generated_at": "2026-07-19",
+    "generator": {
+      "tool": "generate-db.py + claude CLI",
+      "model": "claude-fable-5",
+      "branch": "current checkout"
+    }
+  },
+  "features": [
+    {
+      "id": "alc",
+      "abbrev": "ALC",
+      "name": "Automated Lane Centering",
+      "category": "Lateral",
+      "origin": "openpilot",
+      "description": "Stock openpilot lateral control: steers to keep the car centered in its lane whenever openpilot is engaged."
+    },
+    {
+      "id": "oplong",
+      "abbrev": "OPLONG",
+      "name": "openpilot Longitudinal Control",
+      "category": "Longitudinal",
+      "origin": "openpilot",
+      "description": "openpilot controls gas and brake instead of the car's stock adaptive cruise. Standard on some brands (Toyota, GM, Honda Nidec); on others it is an alpha opt-in toggle or unavailable."
+    },
+    {
+      "id": "exp",
+      "abbrev": "EXP",
+      "name": "Experimental Mode (end-to-end longitudinal)",
+      "category": "Longitudinal",
+      "origin": "openpilot",
+      "description": "The driving model directly decides speed, slowing for curves, stopped traffic and traffic lights. Requires openpilot longitudinal control on the car."
+    },
+    {
+      "id": "lca",
+      "abbrev": "LCA",
+      "name": "Lane Change Assist",
+      "category": "Lateral",
+      "origin": "openpilot",
+      "description": "Signal and nudge the wheel to have openpilot complete the lane change. dragonpilot adds an adjustable minimum activation speed (dp_lat_lca_speed) and an off switch."
+    },
+    {
+      "id": "sng",
+      "abbrev": "SNG",
+      "name": "Stop and Go",
+      "category": "Longitudinal",
+      "origin": "openpilot",
+      "description": "Comes to a complete stop behind traffic and resumes automatically. Depends on the car's ACC/radar hardware; some older platforms cannot auto-resume."
+    },
+    {
+      "id": "dm",
+      "abbrev": "DM",
+      "name": "Driver Monitoring",
+      "category": "Monitoring",
+      "origin": "openpilot",
+      "description": "Stock camera-based driver attention monitoring with escalating alerts. dragonpilot does not weaken it."
+    },
+    {
+      "id": "model-selector",
+      "abbrev": "MODEL",
+      "name": "Driving Model Selector",
+      "category": "Device",
+      "origin": "frogpilot",
+      "description": "Choose which bundled driving neural-network model to run (dp_dev_model_selected / dp_dev_model_list). Feature concept popularized by FrogPilot; dragonpilot has its own implementation."
+    },
+    {
+      "id": "aol",
+      "abbrev": "ALKA",
+      "name": "Always-on Lane Keeping Assist (ALKA)",
+      "category": "Lateral",
+      "origin": "dragonpilot",
+      "description": "dragonpilot's flagship: lateral control stays active when ACC Main is on even with cruise disengaged, toggled by the ACC Main/LKAS button; vehicle must be moving. Opt-in toggle, gated in panda safety per brand (Toyota/Lexus, Honda, Hyundai/Kia/Genesis, VW group, Subaru, Mazda, Nissan, Ford, MG). Pioneered by dragonpilot in v0.6.2 (2019)."
+    },
+    {
+      "id": "dashy",
+      "abbrev": "DASHY",
+      "name": "Dashy Web Dashboard",
+      "category": "Device",
+      "origin": "dragonpilot",
+      "description": "Phone-browser dashboard served from the device (always-on serverd plus onroad dashyd) for live status and settings without the comma cloud. Opt-in toggle."
+    },
+    {
+      "id": "acm",
+      "abbrev": "ACM",
+      "name": "Adaptive Coasting Mode",
+      "category": "Longitudinal",
+      "origin": "dragonpilot",
+      "description": "Reduces braking to allow smoother coasting when appropriate. Opt-in toggle; only shown/active when the car runs openpilot longitudinal control."
+    },
+    {
+      "id": "aem",
+      "abbrev": "AEM",
+      "name": "Adaptive Experimental Mode",
+      "category": "Longitudinal",
+      "origin": "dragonpilot",
+      "description": "Automatically switches between ACC and Blended/Experimental longitudinal based on driving context. Opt-in; requires openpilot longitudinal control."
+    },
+    {
+      "id": "apm",
+      "abbrev": "APM",
+      "name": "Adaptive Personality Mode",
+      "category": "Longitudinal",
+      "origin": "dragonpilot",
+      "description": "Automatically switches driving personality to Aggressive below ~30 km/h and restores your chosen personality above 40 km/h. Opt-in; requires openpilot longitudinal control."
+    },
+    {
+      "id": "nlc",
+      "abbrev": "ALCA",
+      "name": "Auto Lane Change (timer)",
+      "category": "Lateral",
+      "origin": "dragonpilot",
+      "description": "After signaling, openpilot starts the lane change by itself after a configurable delay (dp_lat_lca_auto_sec) \u2014 no steering nudge needed. Off by default."
+    },
+    {
+      "id": "red",
+      "abbrev": "RED",
+      "name": "Road Edge Detection",
+      "category": "Lateral",
+      "origin": "dragonpilot",
+      "description": "Blocks lane change assist toward a detected road edge, surfacing a 'Car Detected in Blindspot' style warning. Opt-in toggle."
+    },
+    {
+      "id": "lat-offset",
+      "abbrev": "OFFSET",
+      "name": "Lane Position Offset",
+      "category": "Lateral",
+      "origin": "dragonpilot",
+      "description": "Fine-tune where the car sits in the lane in centimeters (positive = left, negative = right)."
+    },
+    {
+      "id": "multilang",
+      "abbrev": "LANG",
+      "name": "Multi-language UI",
+      "category": "Display",
+      "origin": "dragonpilot",
+      "description": "Full Traditional Chinese, Simplified Chinese and English interface with live language switching; dragonpilot shipped multi-language UI before upstream openpilot."
+    },
+    {
+      "id": "display-mode",
+      "abbrev": "DISP",
+      "name": "Display Mode & HUD Hiding",
+      "category": "Display",
+      "origin": "dragonpilot",
+      "description": "Control when the screen is on/off (tied to ACC Main or engagement) and optionally hide speed/MAX/icons above a set speed to prevent screen burn-in."
+    },
+    {
+      "id": "lead-stats",
+      "abbrev": "LEAD",
+      "name": "Lead / Radar Stats Overlay",
+      "category": "Display",
+      "origin": "dragonpilot",
+      "description": "On-screen statistics for the lead car and/or radar tracking points; radar option only works on some vehicles."
+    },
+    {
+      "id": "rainbow-path",
+      "abbrev": "RNBW",
+      "name": "Rainbow Driving Path",
+      "category": "Display",
+      "origin": "dragonpilot",
+      "description": "Tesla-style rainbow driving path rendering. Pure fun toggle ('Why not?')."
+    },
+    {
+      "id": "ext-radar",
+      "abbrev": "XRADAR",
+      "name": "External Radar Support",
+      "category": "Longitudinal",
+      "origin": "dragonpilot",
+      "description": "Opt-in support for an aftermarket external radar (eFiniLan openpilot-ext-radar-addon) to provide lead data on cars without usable radar."
+    },
+    {
+      "id": "stock-long-toggle",
+      "abbrev": "STKLON",
+      "name": "Stock ACC Longitudinal Toggle",
+      "category": "Longitudinal",
+      "origin": "dragonpilot",
+      "description": "Per-brand toggles (Toyota/Lexus, Honda Nidec) to hand gas/brake back to the car's built-in ACC while openpilot keeps steering."
+    },
+    {
+      "id": "device-tools",
+      "abbrev": "DEVTOOL",
+      "name": "Device Utilities",
+      "category": "Device",
+      "origin": "dragonpilot",
+      "description": "Bundle of dp device toggles: auto shutdown timer, tethering on boot, disable comma-connect, delayed logging, audible alert modes, engagement beep, and the opview live camera viewer."
+    },
+    {
+      "id": "o3-support",
+      "abbrev": "O3",
+      "name": "comma 3 & O3-series Hardware Support",
+      "category": "Device",
+      "origin": "dragonpilot",
+      "description": "Runs on comma 3 and 3X plus community O3 / O3L / O3XL hardware; dragonpilot remained the fork supporting comma 3 after comma dropped it in 0.10.0."
+    },
+    {
+      "id": "sng-plus",
+      "abbrev": "SNG+",
+      "name": "Stop-and-Go Restore (TSS1 / VAG A0)",
+      "category": "Longitudinal",
+      "origin": "other",
+      "description": "Community-derived toggles that restore auto-resume from a stop on Toyota TSS1 vehicles and VAG A0-platform cars (Polo, Fabia, Kamiq, Scala, T-Cross). Off by default."
+    },
+    {
+      "id": "vag-eps-lockout",
+      "abbrev": "EPSLOCK",
+      "name": "VW EPS Lockout Avoidance",
+      "category": "Lateral",
+      "origin": "other",
+      "description": "Scales steering torque down at low speeds on VW-group cars to avoid the EPS locking out openpilot steering. Opt-in toggle."
+    },
+    {
+      "id": "toyota-door-lock",
+      "abbrev": "DLOCK",
+      "name": "Toyota Auto Door Lock/Unlock",
+      "category": "Other",
+      "origin": "other",
+      "description": "Auto-locks doors above 20 km/h and unlocks when shifting to Park on Toyota/Lexus. Community-lineage convenience feature, opt-in."
+    }
+  ],
+  "manufacturers": [
+    {
+      "id": "acura",
+      "name": "Acura",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "partial",
+          "note": "Nidec cars run openpilot longitudinal; Bosch cars default to stock ACC with an alpha op-long toggle that disables AEB/FCW"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "lca": "yes",
+        "sng": {
+          "status": "partial",
+          "note": "varies by ACC generation; some Nidec models cannot auto-resume from stop"
+        },
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "yes",
+        "dashy": "yes",
+        "acm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "aem": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "apm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": {
+          "status": "partial",
+          "note": "Nidec models only"
+        },
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "acura-adx-2025-26",
+          "name": "Acura ADX 2025-26",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Community support \u2014 not upstream-tested"
+            }
+          }
+        },
+        {
+          "id": "acura-ilx-2016-18",
+          "name": "Acura ILX 2016-18"
+        },
+        {
+          "id": "acura-ilx-2019",
+          "name": "Acura ILX 2019"
+        },
+        {
+          "id": "acura-integra-2023-25",
+          "name": "Acura Integra 2023-25",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Community support \u2014 not upstream-tested"
+            }
+          }
+        },
+        {
+          "id": "acura-mdx-2015-16",
+          "name": "Acura MDX 2015-16 (Advance Package)",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Community support \u2014 not upstream-tested"
+            }
+          }
+        },
+        {
+          "id": "acura-mdx-2017-20",
+          "name": "Acura MDX 2017-20",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Community support \u2014 not upstream-tested"
+            }
+          }
+        },
+        {
+          "id": "acura-mdx-2022-24",
+          "name": "Acura MDX 2022-24"
+        },
+        {
+          "id": "acura-mdx-2025-26",
+          "name": "Acura MDX 2025-26 (all except Type S)"
+        },
+        {
+          "id": "acura-mdx-hybrid-2017-20",
+          "name": "Acura MDX Hybrid 2017-20",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Community support \u2014 not upstream-tested"
+            }
+          }
+        },
+        {
+          "id": "acura-rdx-2016-18",
+          "name": "Acura RDX 2016-18"
+        },
+        {
+          "id": "acura-rdx-2019-21",
+          "name": "Acura RDX 2019-21"
+        },
+        {
+          "id": "acura-rdx-2022-24",
+          "name": "Acura RDX 2022-24",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "acura-rdx-2025-26",
+          "name": "Acura RDX 2025-26",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Community support \u2014 not upstream-tested"
+            }
+          }
+        },
+        {
+          "id": "acura-rlx-2017",
+          "name": "Acura RLX 2017 (Advance or Technology Package)",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Community support \u2014 not upstream-tested"
+            }
+          }
+        },
+        {
+          "id": "acura-tlx-2015-17",
+          "name": "Acura TLX 2015-17 (Advance Package)",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Community support \u2014 not upstream-tested"
+            }
+          }
+        },
+        {
+          "id": "acura-tlx-2018-20",
+          "name": "Acura TLX 2018-20",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Community support \u2014 not upstream-tested"
+            }
+          }
+        },
+        {
+          "id": "acura-tlx-2021-22",
+          "name": "Acura TLX 2021-22"
+        },
+        {
+          "id": "acura-tlx-2023",
+          "name": "Acura TLX 2023",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Community support \u2014 not upstream-tested"
+            }
+          }
+        },
+        {
+          "id": "acura-tlx-2025",
+          "name": "Acura TLX 2025"
+        },
+        {
+          "id": "acura-zdx-2024",
+          "name": "Acura ZDX 2024",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Not compatible \u2014 CAN bus security (GM Global B)"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        }
+      ]
+    },
+    {
+      "id": "audi",
+      "name": "Audi",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "partial",
+          "note": "stock ACC by default; alpha op-long toggle, gateway (J533) harness installs only"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "yes",
+        "dashy": "yes",
+        "acm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "aem": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "apm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "yes",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "audi-a3-2014-19",
+          "name": "Audi A3 2014-19"
+        },
+        {
+          "id": "audi-a3-etron-2017-18",
+          "name": "Audi A3 Sportback e-tron 2017-18"
+        },
+        {
+          "id": "audi-a4-2016-24",
+          "name": "Audi A4 2016-24",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Not compatible \u2014 FlexRay"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "audi-a5-2016-24",
+          "name": "Audi A5 2016-24",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Not compatible \u2014 FlexRay"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "audi-q2-2018",
+          "name": "Audi Q2 2018"
+        },
+        {
+          "id": "audi-q3-2019-24",
+          "name": "Audi Q3 2019-24"
+        },
+        {
+          "id": "audi-q5-2013-17",
+          "name": "Audi Q5 2013-17",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "audi-q5-2017-24",
+          "name": "Audi Q5 2017-24",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Not compatible \u2014 FlexRay"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "audi-rs3-2018",
+          "name": "Audi RS3 2018"
+        },
+        {
+          "id": "audi-s3-2015-17",
+          "name": "Audi S3 2015-17"
+        }
+      ]
+    },
+    {
+      "id": "chevrolet",
+      "name": "Chevrolet",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "yes",
+          "note": "openpilot longitudinal (alpha toggle) on supported camera-harness GM cars"
+        },
+        "exp": "yes",
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": {
+          "status": "no",
+          "note": "ALKA not enabled for GM in panda safety"
+        },
+        "dashy": "yes",
+        "acm": "yes",
+        "aem": "yes",
+        "apm": "yes",
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "chevrolet-bolt-euv-2022-23",
+          "name": "Chevrolet Bolt EUV 2022-23"
+        },
+        {
+          "id": "chevrolet-bolt-ev-2022-23",
+          "name": "Chevrolet Bolt EV 2022-23"
+        },
+        {
+          "id": "chevrolet-equinox-2019-22",
+          "name": "Chevrolet Equinox 2019-22"
+        },
+        {
+          "id": "chevrolet-silverado-1500-2020-21",
+          "name": "Chevrolet Silverado 1500 2020-21"
+        },
+        {
+          "id": "chevrolet-trailblazer-2021-22",
+          "name": "Chevrolet Trailblazer 2021-22"
+        }
+      ]
+    },
+    {
+      "id": "chrysler",
+      "name": "Chrysler",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "no",
+          "note": "stock ACC only; no openpilot longitudinal"
+        },
+        "exp": "no",
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": {
+          "status": "no",
+          "note": "ALKA not enabled for Chrysler in panda safety"
+        },
+        "dashy": "yes",
+        "acm": "no",
+        "aem": "no",
+        "apm": "no",
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "chrysler-pacifica-2017-18",
+          "name": "Chrysler Pacifica 2017-18"
+        },
+        {
+          "id": "chrysler-pacifica-2019-20",
+          "name": "Chrysler Pacifica 2019-20"
+        },
+        {
+          "id": "chrysler-pacifica-2021-23",
+          "name": "Chrysler Pacifica 2021-23"
+        },
+        {
+          "id": "chrysler-pacifica-hybrid-2017-18",
+          "name": "Chrysler Pacifica Hybrid 2017-18"
+        },
+        {
+          "id": "chrysler-pacifica-hybrid-2019-25",
+          "name": "Chrysler Pacifica Hybrid 2019-25"
+        }
+      ]
+    },
+    {
+      "id": "comma",
+      "name": "comma",
+      "features": {
+        "alc": {
+          "status": "no",
+          "note": "robot platform \u2014 car driving features not applicable"
+        },
+        "oplong": "no",
+        "exp": "no",
+        "lca": "no",
+        "sng": "no",
+        "dm": "no",
+        "model-selector": "yes",
+        "aol": "no",
+        "dashy": "yes",
+        "acm": "no",
+        "aem": "no",
+        "apm": "no",
+        "nlc": "no",
+        "red": "no",
+        "lat-offset": "no",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "no",
+        "rainbow-path": "no",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "comma-body",
+          "name": "comma body"
+        }
+      ]
+    },
+    {
+      "id": "cupra",
+      "name": "CUPRA",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "partial",
+          "note": "stock ACC by default; alpha op-long toggle"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "yes",
+        "dashy": "yes",
+        "acm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "aem": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "apm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "yes",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "cupra-ateca-2018-23",
+          "name": "CUPRA Ateca 2018-23"
+        }
+      ]
+    },
+    {
+      "id": "dodge",
+      "name": "Dodge",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "no",
+          "note": "stock ACC only; no openpilot longitudinal"
+        },
+        "exp": "no",
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": {
+          "status": "no",
+          "note": "ALKA not enabled for Chrysler-brand cars in panda safety"
+        },
+        "dashy": "yes",
+        "acm": "no",
+        "aem": "no",
+        "apm": "no",
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "dodge-durango-2020-21",
+          "name": "Dodge Durango 2020-21"
+        }
+      ]
+    },
+    {
+      "id": "ford",
+      "name": "Ford",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "partial",
+          "note": "stock ACC by default; alpha op-long toggle on radar-less models"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "yes",
+        "dashy": "yes",
+        "acm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "aem": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "apm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "ford-bronco-sport-2021-24",
+          "name": "Ford Bronco Sport 2021-24"
+        },
+        {
+          "id": "ford-escape-2020-22",
+          "name": "Ford Escape 2020-22"
+        },
+        {
+          "id": "ford-escape-2023-24",
+          "name": "Ford Escape 2023-24"
+        },
+        {
+          "id": "ford-escape-hybrid-2020-22",
+          "name": "Ford Escape Hybrid 2020-22"
+        },
+        {
+          "id": "ford-escape-hybrid-2023-24",
+          "name": "Ford Escape Hybrid 2023-24"
+        },
+        {
+          "id": "ford-escape-phev-2020-22",
+          "name": "Ford Escape Plug-in Hybrid 2020-22"
+        },
+        {
+          "id": "ford-escape-phev-2023-24",
+          "name": "Ford Escape Plug-in Hybrid 2023-24"
+        },
+        {
+          "id": "ford-expedition-2022-24",
+          "name": "Ford Expedition 2022-24"
+        },
+        {
+          "id": "ford-explorer-2020-24",
+          "name": "Ford Explorer 2020-24"
+        },
+        {
+          "id": "ford-explorer-hybrid-2020-24",
+          "name": "Ford Explorer Hybrid 2020-24"
+        },
+        {
+          "id": "ford-f-150-2021-23",
+          "name": "Ford F-150 2021-23"
+        },
+        {
+          "id": "ford-f-150-hybrid-2021-23",
+          "name": "Ford F-150 Hybrid 2021-23"
+        },
+        {
+          "id": "ford-focus-2018",
+          "name": "Ford Focus 2018",
+          "features": {
+            "alc": {
+              "status": "yes",
+              "note": "Focus Mk4 (C519, Europe/China/Taiwan/Australasia) only \u2014 not the North/South America Mk3"
+            }
+          }
+        },
+        {
+          "id": "ford-focus-hybrid-2018",
+          "name": "Ford Focus Hybrid 2018",
+          "features": {
+            "alc": {
+              "status": "yes",
+              "note": "Focus Mk4 (C519) only \u2014 not the North/South America Mk3"
+            }
+          }
+        },
+        {
+          "id": "ford-kuga-2020-23",
+          "name": "Ford Kuga 2020-23"
+        },
+        {
+          "id": "ford-kuga-hybrid-2020-23",
+          "name": "Ford Kuga Hybrid 2020-23"
+        },
+        {
+          "id": "ford-kuga-hybrid-2024",
+          "name": "Ford Kuga Hybrid 2024"
+        },
+        {
+          "id": "ford-kuga-phev-2020-23",
+          "name": "Ford Kuga Plug-in Hybrid 2020-23"
+        },
+        {
+          "id": "ford-kuga-phev-2024",
+          "name": "Ford Kuga Plug-in Hybrid 2024"
+        },
+        {
+          "id": "ford-maverick-2022",
+          "name": "Ford Maverick 2022 (LARIAT Luxury)"
+        },
+        {
+          "id": "ford-maverick-2023-24",
+          "name": "Ford Maverick 2023-24"
+        },
+        {
+          "id": "ford-maverick-hybrid-2022",
+          "name": "Ford Maverick Hybrid 2022 (LARIAT Luxury)"
+        },
+        {
+          "id": "ford-maverick-hybrid-2023-24",
+          "name": "Ford Maverick Hybrid 2023-24"
+        },
+        {
+          "id": "ford-mustang-mach-e-2021-24",
+          "name": "Ford Mustang Mach-E 2021-24"
+        },
+        {
+          "id": "ford-ranger-2024",
+          "name": "Ford Ranger 2024"
+        }
+      ]
+    },
+    {
+      "id": "genesis",
+      "name": "Genesis",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "partial",
+          "note": "stock SCC by default; alpha op-long toggle"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "yes",
+        "dashy": "yes",
+        "acm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "aem": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "apm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "genesis-g70-2018",
+          "name": "Genesis G70 2018"
+        },
+        {
+          "id": "genesis-g70-2019-21",
+          "name": "Genesis G70 2019-21"
+        },
+        {
+          "id": "genesis-g70-2022-23",
+          "name": "Genesis G70 2022-23"
+        },
+        {
+          "id": "genesis-g80-2017",
+          "name": "Genesis G80 2017"
+        },
+        {
+          "id": "genesis-g80-2018-19",
+          "name": "Genesis G80 2018-19"
+        },
+        {
+          "id": "genesis-g80-2024-hda2",
+          "name": "Genesis G80 (2.5T Advanced Trim, with HDA II) 2024"
+        },
+        {
+          "id": "genesis-g90-2017-20",
+          "name": "Genesis G90 2017-20"
+        },
+        {
+          "id": "genesis-gv60-advanced-2023",
+          "name": "Genesis GV60 (Advanced Trim) 2023"
+        },
+        {
+          "id": "genesis-gv60-performance-2022-23",
+          "name": "Genesis GV60 (Performance Trim) 2022-23"
+        },
+        {
+          "id": "genesis-gv70-25t-2022-24",
+          "name": "Genesis GV70 (2.5T Trim, without HDA II) 2022-24"
+        },
+        {
+          "id": "genesis-gv70-35t-2022-23",
+          "name": "Genesis GV70 (3.5T Trim, without HDA II) 2022-23"
+        },
+        {
+          "id": "genesis-gv70-electrified-au-2022",
+          "name": "Genesis GV70 Electrified (Australia Only) 2022"
+        },
+        {
+          "id": "genesis-gv70-electrified-2023-24",
+          "name": "Genesis GV70 Electrified (with HDA II) 2023-24"
+        },
+        {
+          "id": "genesis-gv80-2023",
+          "name": "Genesis GV80 2023"
+        }
+      ]
+    },
+    {
+      "id": "gmc",
+      "name": "GMC",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "yes",
+          "note": "openpilot longitudinal (alpha toggle) on supported camera-harness GM cars"
+        },
+        "exp": "yes",
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": {
+          "status": "no",
+          "note": "ALKA not enabled for GM in panda safety"
+        },
+        "dashy": "yes",
+        "acm": "yes",
+        "aem": "yes",
+        "apm": "yes",
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "gmc-sierra-1500-2020-21",
+          "name": "GMC Sierra 1500 2020-21"
+        },
+        {
+          "id": "gmc-yukon-2019-20",
+          "name": "GMC Yukon 2019-20",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        }
+      ]
+    },
+    {
+      "id": "honda",
+      "name": "Honda",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "partial",
+          "note": "Nidec cars run openpilot longitudinal; Bosch cars default to stock ACC with an alpha op-long toggle that disables AEB/FCW"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "lca": "yes",
+        "sng": {
+          "status": "partial",
+          "note": "varies by ACC generation; some Nidec models cannot auto-resume from stop"
+        },
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "yes",
+        "dashy": "yes",
+        "acm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "aem": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "apm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": {
+          "status": "partial",
+          "note": "dp 'Use Stock Longitudinal (Nidec)' toggle \u2014 Nidec models only"
+        },
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "honda-accord-2016-17",
+          "name": "Honda Accord 2016-17",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Community support \u2014 not upstream-tested"
+            }
+          }
+        },
+        {
+          "id": "honda-accord-2018-22",
+          "name": "Honda Accord 2018-22"
+        },
+        {
+          "id": "honda-accord-2023-25",
+          "name": "Honda Accord 2023-25"
+        },
+        {
+          "id": "honda-accord-hybrid-2017",
+          "name": "Honda Accord Hybrid 2017",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Community support \u2014 not upstream-tested"
+            }
+          }
+        },
+        {
+          "id": "honda-accord-hybrid-2018-22",
+          "name": "Honda Accord Hybrid 2018-22"
+        },
+        {
+          "id": "honda-accord-hybrid-2023-25",
+          "name": "Honda Accord Hybrid 2023-25"
+        },
+        {
+          "id": "honda-city-brazil-2023",
+          "name": "Honda City (Brazil only) 2023"
+        },
+        {
+          "id": "honda-civic-2016-18",
+          "name": "Honda Civic 2016-18"
+        },
+        {
+          "id": "honda-civic-2019-21",
+          "name": "Honda Civic 2019-21"
+        },
+        {
+          "id": "honda-civic-2022-24",
+          "name": "Honda Civic 2022-24"
+        },
+        {
+          "id": "honda-civic-hatchback-2017-18",
+          "name": "Honda Civic Hatchback 2017-18"
+        },
+        {
+          "id": "honda-civic-hatchback-2019-21",
+          "name": "Honda Civic Hatchback 2019-21"
+        },
+        {
+          "id": "honda-civic-hatchback-2022-24",
+          "name": "Honda Civic Hatchback 2022-24"
+        },
+        {
+          "id": "honda-civic-hatchback-hybrid-2025-26",
+          "name": "Honda Civic Hatchback Hybrid 2025-26"
+        },
+        {
+          "id": "honda-civic-hatchback-hybrid-eu-2023",
+          "name": "Honda Civic Hatchback Hybrid (Europe only) 2023"
+        },
+        {
+          "id": "honda-civic-hybrid-2025-26",
+          "name": "Honda Civic Hybrid 2025-26"
+        },
+        {
+          "id": "honda-clarity-2018-21",
+          "name": "Honda Clarity 2018-21",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Community support \u2014 not upstream-tested"
+            }
+          }
+        },
+        {
+          "id": "honda-cr-v-2015-16",
+          "name": "Honda CR-V 2015-16 (Touring Trim)"
+        },
+        {
+          "id": "honda-cr-v-2017-22",
+          "name": "Honda CR-V 2017-22"
+        },
+        {
+          "id": "honda-cr-v-2023-26",
+          "name": "Honda CR-V 2023-26"
+        },
+        {
+          "id": "honda-cr-v-hybrid-2017-22",
+          "name": "Honda CR-V Hybrid 2017-22"
+        },
+        {
+          "id": "honda-cr-v-hybrid-2023-26",
+          "name": "Honda CR-V Hybrid 2023-26"
+        },
+        {
+          "id": "honda-e-2020",
+          "name": "Honda e 2020"
+        },
+        {
+          "id": "honda-fit-2018-20",
+          "name": "Honda Fit 2018-20"
+        },
+        {
+          "id": "honda-freed-2020",
+          "name": "Honda Freed 2020"
+        },
+        {
+          "id": "honda-hr-v-2019-22",
+          "name": "Honda HR-V 2019-22"
+        },
+        {
+          "id": "honda-hr-v-2023-25",
+          "name": "Honda HR-V 2023-25"
+        },
+        {
+          "id": "honda-insight-2019-22",
+          "name": "Honda Insight 2019-22"
+        },
+        {
+          "id": "honda-inspire-2018",
+          "name": "Honda Inspire 2018"
+        },
+        {
+          "id": "honda-n-box-2018",
+          "name": "Honda N-Box 2018"
+        },
+        {
+          "id": "honda-odyssey-2018-20",
+          "name": "Honda Odyssey 2018-20"
+        },
+        {
+          "id": "honda-odyssey-2021-26",
+          "name": "Honda Odyssey 2021-26"
+        },
+        {
+          "id": "honda-odyssey-singapore-2021",
+          "name": "Honda Odyssey (Singapore) 2021"
+        },
+        {
+          "id": "honda-odyssey-taiwan-2018-19",
+          "name": "Honda Odyssey (Taiwan) 2018-19"
+        },
+        {
+          "id": "honda-passport-2019-25",
+          "name": "Honda Passport 2019-25"
+        },
+        {
+          "id": "honda-passport-2026",
+          "name": "Honda Passport 2026"
+        },
+        {
+          "id": "honda-pilot-2016-22",
+          "name": "Honda Pilot 2016-22"
+        },
+        {
+          "id": "honda-pilot-2023-25",
+          "name": "Honda Pilot 2023-25"
+        },
+        {
+          "id": "honda-pilot-2026",
+          "name": "Honda Pilot 2026",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Community support \u2014 not upstream-tested"
+            }
+          }
+        },
+        {
+          "id": "honda-prologue-2024-25",
+          "name": "Honda Prologue 2024-25",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Not compatible \u2014 CAN bus security (GM Global B)"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "honda-ridgeline-2017-25",
+          "name": "Honda Ridgeline 2017-25"
+        }
+      ]
+    },
+    {
+      "id": "hyundai",
+      "name": "Hyundai",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "partial",
+          "note": "stock SCC by default; alpha op-long toggle"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "yes",
+        "dashy": "yes",
+        "acm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "aem": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "apm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "hyundai-azera-2022",
+          "name": "Hyundai Azera 2022"
+        },
+        {
+          "id": "hyundai-azera-hybrid-2019",
+          "name": "Hyundai Azera Hybrid 2019"
+        },
+        {
+          "id": "hyundai-azera-hybrid-2020",
+          "name": "Hyundai Azera Hybrid 2020"
+        },
+        {
+          "id": "hyundai-custin-2023",
+          "name": "Hyundai Custin 2023"
+        },
+        {
+          "id": "hyundai-elantra-2017-18",
+          "name": "Hyundai Elantra 2017-18"
+        },
+        {
+          "id": "hyundai-elantra-2019",
+          "name": "Hyundai Elantra 2019"
+        },
+        {
+          "id": "hyundai-elantra-2021-23",
+          "name": "Hyundai Elantra 2021-23"
+        },
+        {
+          "id": "hyundai-elantra-gt-2017-20",
+          "name": "Hyundai Elantra GT 2017-20"
+        },
+        {
+          "id": "hyundai-elantra-hybrid-2021-23",
+          "name": "Hyundai Elantra Hybrid 2021-23"
+        },
+        {
+          "id": "hyundai-genesis-2015-16",
+          "name": "Hyundai Genesis 2015-16"
+        },
+        {
+          "id": "hyundai-i30-2017-19",
+          "name": "Hyundai i30 2017-19"
+        },
+        {
+          "id": "hyundai-ioniq-5-sea-eu-2022-24",
+          "name": "Hyundai Ioniq 5 (Southeast Asia and Europe only) 2022-24"
+        },
+        {
+          "id": "hyundai-ioniq-5-hda2-2022-24",
+          "name": "Hyundai Ioniq 5 (with HDA II) 2022-24"
+        },
+        {
+          "id": "hyundai-ioniq-5-2022-24",
+          "name": "Hyundai Ioniq 5 (without HDA II) 2022-24"
+        },
+        {
+          "id": "hyundai-ioniq-6-hda2-2023-24",
+          "name": "Hyundai Ioniq 6 (with HDA II) 2023-24"
+        },
+        {
+          "id": "hyundai-ioniq-6-2023-24",
+          "name": "Hyundai Ioniq 6 (without HDA II) 2023-24"
+        },
+        {
+          "id": "hyundai-ioniq-electric-2019",
+          "name": "Hyundai Ioniq Electric 2019"
+        },
+        {
+          "id": "hyundai-ioniq-electric-2020",
+          "name": "Hyundai Ioniq Electric 2020"
+        },
+        {
+          "id": "hyundai-ioniq-hybrid-2017-19",
+          "name": "Hyundai Ioniq Hybrid 2017-19"
+        },
+        {
+          "id": "hyundai-ioniq-hybrid-2020-22",
+          "name": "Hyundai Ioniq Hybrid 2020-22"
+        },
+        {
+          "id": "hyundai-ioniq-phev-2019",
+          "name": "Hyundai Ioniq Plug-in Hybrid 2019"
+        },
+        {
+          "id": "hyundai-ioniq-phev-2020-22",
+          "name": "Hyundai Ioniq Plug-in Hybrid 2020-22"
+        },
+        {
+          "id": "hyundai-kona-2020",
+          "name": "Hyundai Kona 2020"
+        },
+        {
+          "id": "hyundai-kona-2022-23",
+          "name": "Hyundai Kona 2022-23",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "hyundai-kona-electric-2018-21",
+          "name": "Hyundai Kona Electric 2018-21"
+        },
+        {
+          "id": "hyundai-kona-electric-2022-23",
+          "name": "Hyundai Kona Electric 2022-23"
+        },
+        {
+          "id": "hyundai-kona-electric-hda2-korea-2023",
+          "name": "Hyundai Kona Electric (with HDA II, Korea only) 2023"
+        },
+        {
+          "id": "hyundai-kona-hybrid-2020",
+          "name": "Hyundai Kona Hybrid 2020"
+        },
+        {
+          "id": "hyundai-nexo-2021",
+          "name": "Hyundai Nexo 2021"
+        },
+        {
+          "id": "hyundai-palisade-2020-22",
+          "name": "Hyundai Palisade 2020-22"
+        },
+        {
+          "id": "hyundai-palisade-2023-24",
+          "name": "Hyundai Palisade 2023-24",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Community support \u2014 not upstream-tested"
+            }
+          }
+        },
+        {
+          "id": "hyundai-santa-cruz-2022-24",
+          "name": "Hyundai Santa Cruz 2022-24"
+        },
+        {
+          "id": "hyundai-santa-fe-2019-20",
+          "name": "Hyundai Santa Fe 2019-20"
+        },
+        {
+          "id": "hyundai-santa-fe-2021-23",
+          "name": "Hyundai Santa Fe 2021-23"
+        },
+        {
+          "id": "hyundai-santa-fe-hybrid-2022-23",
+          "name": "Hyundai Santa Fe Hybrid 2022-23"
+        },
+        {
+          "id": "hyundai-santa-fe-phev-2022-23",
+          "name": "Hyundai Santa Fe Plug-in Hybrid 2022-23"
+        },
+        {
+          "id": "hyundai-sonata-2018-19",
+          "name": "Hyundai Sonata 2018-19"
+        },
+        {
+          "id": "hyundai-sonata-2020-23",
+          "name": "Hyundai Sonata 2020-23"
+        },
+        {
+          "id": "hyundai-sonata-hybrid-2020-23",
+          "name": "Hyundai Sonata Hybrid 2020-23"
+        },
+        {
+          "id": "hyundai-staria-2023",
+          "name": "Hyundai Staria 2023"
+        },
+        {
+          "id": "hyundai-tucson-2021",
+          "name": "Hyundai Tucson 2021"
+        },
+        {
+          "id": "hyundai-tucson-2022",
+          "name": "Hyundai Tucson 2022"
+        },
+        {
+          "id": "hyundai-tucson-2023-24",
+          "name": "Hyundai Tucson 2023-24"
+        },
+        {
+          "id": "hyundai-tucson-diesel-2019",
+          "name": "Hyundai Tucson Diesel 2019"
+        },
+        {
+          "id": "hyundai-tucson-hybrid-2022-24",
+          "name": "Hyundai Tucson Hybrid 2022-24"
+        },
+        {
+          "id": "hyundai-tucson-phev-2024",
+          "name": "Hyundai Tucson Plug-in Hybrid 2024"
+        },
+        {
+          "id": "hyundai-veloster-2019-20",
+          "name": "Hyundai Veloster 2019-20"
+        }
+      ]
+    },
+    {
+      "id": "jeep",
+      "name": "Jeep",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "no",
+          "note": "stock ACC only; no openpilot longitudinal"
+        },
+        "exp": "no",
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": {
+          "status": "no",
+          "note": "ALKA not enabled for Chrysler-brand cars in panda safety"
+        },
+        "dashy": "yes",
+        "acm": "no",
+        "aem": "no",
+        "apm": "no",
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "jeep-cherokee-2019-23",
+          "name": "Jeep Cherokee 2019-23",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "jeep-grand-cherokee-2016-18",
+          "name": "Jeep Grand Cherokee 2016-18"
+        },
+        {
+          "id": "jeep-grand-cherokee-2019-21",
+          "name": "Jeep Grand Cherokee 2019-21"
+        }
+      ]
+    },
+    {
+      "id": "kia",
+      "name": "Kia",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "partial",
+          "note": "stock SCC by default; alpha op-long toggle"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "yes",
+        "dashy": "yes",
+        "acm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "aem": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "apm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "kia-carnival-2022-24",
+          "name": "Kia Carnival 2022-24"
+        },
+        {
+          "id": "kia-carnival-china-2023",
+          "name": "Kia Carnival (China only) 2023"
+        },
+        {
+          "id": "kia-ceed-2019-21",
+          "name": "Kia Ceed 2019-21"
+        },
+        {
+          "id": "kia-ev6-sea-2022-24",
+          "name": "Kia EV6 (Southeast Asia only) 2022-24"
+        },
+        {
+          "id": "kia-ev6-hda2-2022-24",
+          "name": "Kia EV6 (with HDA II) 2022-24"
+        },
+        {
+          "id": "kia-ev6-2022-24",
+          "name": "Kia EV6 (without HDA II) 2022-24"
+        },
+        {
+          "id": "kia-forte-2019-21",
+          "name": "Kia Forte 2019-21"
+        },
+        {
+          "id": "kia-forte-2022-23",
+          "name": "Kia Forte 2022-23"
+        },
+        {
+          "id": "kia-k5-2021-24",
+          "name": "Kia K5 2021-24"
+        },
+        {
+          "id": "kia-k5-hybrid-2020-22",
+          "name": "Kia K5 Hybrid 2020-22"
+        },
+        {
+          "id": "kia-k7-2017",
+          "name": "Kia K7 2017"
+        },
+        {
+          "id": "kia-k8-hybrid-hda2-2023",
+          "name": "Kia K8 Hybrid (with HDA II) 2023"
+        },
+        {
+          "id": "kia-niro-ev-2019",
+          "name": "Kia Niro EV 2019"
+        },
+        {
+          "id": "kia-niro-ev-2020",
+          "name": "Kia Niro EV 2020"
+        },
+        {
+          "id": "kia-niro-ev-2021",
+          "name": "Kia Niro EV 2021"
+        },
+        {
+          "id": "kia-niro-ev-2022",
+          "name": "Kia Niro EV 2022"
+        },
+        {
+          "id": "kia-niro-ev-hda2-2024-25",
+          "name": "Kia Niro EV (with HDA II) 2024-25"
+        },
+        {
+          "id": "kia-niro-ev-2023-25",
+          "name": "Kia Niro EV (without HDA II) 2023-25"
+        },
+        {
+          "id": "kia-niro-hybrid-2018",
+          "name": "Kia Niro Hybrid 2018"
+        },
+        {
+          "id": "kia-niro-hybrid-2021",
+          "name": "Kia Niro Hybrid 2021"
+        },
+        {
+          "id": "kia-niro-hybrid-2022",
+          "name": "Kia Niro Hybrid 2022"
+        },
+        {
+          "id": "kia-niro-hybrid-2023-24",
+          "name": "Kia Niro Hybrid 2023-24"
+        },
+        {
+          "id": "kia-niro-phev-2018-19",
+          "name": "Kia Niro Plug-in Hybrid 2018-19"
+        },
+        {
+          "id": "kia-niro-phev-2020",
+          "name": "Kia Niro Plug-in Hybrid 2020"
+        },
+        {
+          "id": "kia-niro-phev-2021",
+          "name": "Kia Niro Plug-in Hybrid 2021"
+        },
+        {
+          "id": "kia-niro-phev-2022",
+          "name": "Kia Niro Plug-in Hybrid 2022"
+        },
+        {
+          "id": "kia-optima-2017",
+          "name": "Kia Optima 2017"
+        },
+        {
+          "id": "kia-optima-2019-20",
+          "name": "Kia Optima 2019-20"
+        },
+        {
+          "id": "kia-optima-hybrid-2017",
+          "name": "Kia Optima Hybrid 2017",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "kia-optima-hybrid-2019",
+          "name": "Kia Optima Hybrid 2019"
+        },
+        {
+          "id": "kia-seltos-2021",
+          "name": "Kia Seltos 2021"
+        },
+        {
+          "id": "kia-sorento-2018",
+          "name": "Kia Sorento 2018"
+        },
+        {
+          "id": "kia-sorento-2019",
+          "name": "Kia Sorento 2019"
+        },
+        {
+          "id": "kia-sorento-2021-23",
+          "name": "Kia Sorento 2021-23"
+        },
+        {
+          "id": "kia-sorento-hybrid-2021-23",
+          "name": "Kia Sorento Hybrid 2021-23"
+        },
+        {
+          "id": "kia-sorento-phev-2022-23",
+          "name": "Kia Sorento Plug-in Hybrid 2022-23"
+        },
+        {
+          "id": "kia-sportage-2023-24",
+          "name": "Kia Sportage 2023-24"
+        },
+        {
+          "id": "kia-sportage-hybrid-2023",
+          "name": "Kia Sportage Hybrid 2023"
+        },
+        {
+          "id": "kia-stinger-2018-20",
+          "name": "Kia Stinger 2018-20"
+        },
+        {
+          "id": "kia-stinger-2022-23",
+          "name": "Kia Stinger 2022-23"
+        },
+        {
+          "id": "kia-telluride-2020-22",
+          "name": "Kia Telluride 2020-22"
+        },
+        {
+          "id": "kia-telluride-2023-24",
+          "name": "Kia Telluride 2023-24",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Community support \u2014 not upstream-tested"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "lexus",
+      "name": "Lexus",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "yes",
+          "note": "openpilot longitudinal standard on supported Toyota/Lexus; dp toggle can hand gas/brake back to stock ACC"
+        },
+        "exp": "yes",
+        "lca": "yes",
+        "sng": {
+          "status": "partial",
+          "note": "TSS2 cars have stock stop-and-go; TSS1 cars need the dp TSS1 SnG toggle"
+        },
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "yes",
+        "dashy": "yes",
+        "acm": "yes",
+        "aem": "yes",
+        "apm": "yes",
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "ext-radar": {
+          "status": "partial",
+          "note": "eFiniLan external-radar addon, developed around Toyota/Lexus installs"
+        },
+        "stock-long-toggle": "yes",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": {
+          "status": "partial",
+          "note": "TSS1 models only"
+        },
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "yes"
+      },
+      "cars": [
+        {
+          "id": "lexus-ct-hybrid-2017-18",
+          "name": "Lexus CT Hybrid 2017-18"
+        },
+        {
+          "id": "lexus-es-2017-18",
+          "name": "Lexus ES 2017-18"
+        },
+        {
+          "id": "lexus-es-2019-25",
+          "name": "Lexus ES 2019-25"
+        },
+        {
+          "id": "lexus-es-hybrid-2017-18",
+          "name": "Lexus ES Hybrid 2017-18"
+        },
+        {
+          "id": "lexus-es-hybrid-2019-25",
+          "name": "Lexus ES Hybrid 2019-25"
+        },
+        {
+          "id": "lexus-gs-f-2016",
+          "name": "Lexus GS F 2016"
+        },
+        {
+          "id": "lexus-is-2017-19",
+          "name": "Lexus IS 2017-19",
+          "highlight": true,
+          "note": "ALKA's development began on the 2017 Lexus IS300h (dragonpilot 0.6.2, per the fork's README)"
+        },
+        {
+          "id": "lexus-is-2022-24",
+          "name": "Lexus IS 2022-24"
+        },
+        {
+          "id": "lexus-lc-2024-25",
+          "name": "Lexus LC 2024-25"
+        },
+        {
+          "id": "lexus-ls-2018",
+          "name": "Lexus LS 2018 (all except Safety System+ A)"
+        },
+        {
+          "id": "lexus-ns-2022-25",
+          "name": "Lexus NS 2022-25",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Not compatible \u2014 CAN bus security (SecOC)"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "lexus-nx-2018-19",
+          "name": "Lexus NX 2018-19"
+        },
+        {
+          "id": "lexus-nx-2020-21",
+          "name": "Lexus NX 2020-21"
+        },
+        {
+          "id": "lexus-nx-hybrid-2018-19",
+          "name": "Lexus NX Hybrid 2018-19"
+        },
+        {
+          "id": "lexus-nx-hybrid-2020-21",
+          "name": "Lexus NX Hybrid 2020-21"
+        },
+        {
+          "id": "lexus-rc-2018-20",
+          "name": "Lexus RC 2018-20"
+        },
+        {
+          "id": "lexus-rc-2023",
+          "name": "Lexus RC 2023"
+        },
+        {
+          "id": "lexus-rx-2016",
+          "name": "Lexus RX 2016"
+        },
+        {
+          "id": "lexus-rx-2017-19",
+          "name": "Lexus RX 2017-19"
+        },
+        {
+          "id": "lexus-rx-2020-22",
+          "name": "Lexus RX 2020-22"
+        },
+        {
+          "id": "lexus-rx-hybrid-2016",
+          "name": "Lexus RX Hybrid 2016"
+        },
+        {
+          "id": "lexus-rx-hybrid-2017-19",
+          "name": "Lexus RX Hybrid 2017-19"
+        },
+        {
+          "id": "lexus-rx-hybrid-2020-22",
+          "name": "Lexus RX Hybrid 2020-22"
+        },
+        {
+          "id": "lexus-ux-hybrid-2019-24",
+          "name": "Lexus UX Hybrid 2019-24"
+        }
+      ]
+    },
+    {
+      "id": "lincoln",
+      "name": "Lincoln",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "partial",
+          "note": "stock ACC by default; alpha op-long toggle on radar-less models"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "yes",
+        "dashy": "yes",
+        "acm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "aem": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "apm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "lincoln-aviator-2020-24",
+          "name": "Lincoln Aviator 2020-24"
+        },
+        {
+          "id": "lincoln-aviator-phev-2020-24",
+          "name": "Lincoln Aviator Plug-in Hybrid 2020-24"
+        }
+      ]
+    },
+    {
+      "id": "man",
+      "name": "MAN",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "partial",
+          "note": "stock ACC by default; alpha op-long toggle"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "yes",
+        "dashy": "yes",
+        "acm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "aem": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "apm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "yes",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "man-etge-2020-24",
+          "name": "MAN eTGE 2020-24"
+        },
+        {
+          "id": "man-tge-2017-24",
+          "name": "MAN TGE 2017-24"
+        }
+      ]
+    },
+    {
+      "id": "mazda",
+      "name": "Mazda",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "no",
+          "note": "stock ACC only; no openpilot longitudinal"
+        },
+        "exp": "no",
+        "lca": "yes",
+        "sng": {
+          "status": "partial",
+          "note": "older models lack stop-and-go and have minimum speeds; 2022+ CX-5/CX-9 are better supported"
+        },
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "yes",
+        "dashy": "yes",
+        "acm": "no",
+        "aem": "no",
+        "apm": "no",
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "mazda-3-2017-18",
+          "name": "Mazda 3 2017-18",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "mazda-6-2017-20",
+          "name": "Mazda 6 2017-20",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "mazda-cx-5-2017-21",
+          "name": "Mazda CX-5 2017-21",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "mazda-cx-5-2022-25",
+          "name": "Mazda CX-5 2022-25"
+        },
+        {
+          "id": "mazda-cx-9-2016-20",
+          "name": "Mazda CX-9 2016-20",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "mazda-cx-9-2021-23",
+          "name": "Mazda CX-9 2021-23"
+        }
+      ]
+    },
+    {
+      "id": "mg",
+      "name": "MG",
+      "features": {
+        "alc": {
+          "status": "partial",
+          "note": "fork-added port; no FW or CAN fingerprint \u2014 requires manual/forced car selection"
+        },
+        "oplong": {
+          "status": "partial",
+          "note": "LONG_CONTROL safety flag exists but alphaLongitudinalAvailable is False; long control only via forced flag"
+        },
+        "exp": "unknown",
+        "lca": "unknown",
+        "nlc": "unknown",
+        "sng": "unknown",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": {
+          "status": "partial",
+          "note": "enabled in panda safety ('ALKA enabled for MG') but the ALKA settings toggle is not shown for the MG brand"
+        },
+        "dashy": "yes",
+        "acm": "unknown",
+        "aem": "unknown",
+        "apm": "unknown",
+        "red": "unknown",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "mg-zs-2025",
+          "name": "MG ZS 2025",
+          "highlight": true,
+          "note": "Fork-added dragonpilot port, in code but not in the published CARS.md: dedicated opendbc/panda safety mode, torque steering, ICE (NON_EV) variant support added recently; FW query disabled ('no captured FW versions yet'), so the car must be manually selected",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "in code but not in published CARS.md; manual car selection required"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "nissan",
+      "name": "Nissan",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "no",
+          "note": "stock ProPILOT longitudinal only"
+        },
+        "exp": "no",
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "yes",
+        "dashy": "yes",
+        "acm": "no",
+        "aem": "no",
+        "apm": "no",
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "nissan-altima-2019-24",
+          "name": "Nissan Altima 2019-24"
+        },
+        {
+          "id": "nissan-leaf-2018-23",
+          "name": "Nissan Leaf 2018-23"
+        },
+        {
+          "id": "nissan-rogue-2018-20",
+          "name": "Nissan Rogue 2018-20"
+        },
+        {
+          "id": "nissan-x-trail-2017",
+          "name": "Nissan X-Trail 2017"
+        }
+      ]
+    },
+    {
+      "id": "peugeot",
+      "name": "Peugeot",
+      "features": {
+        "alc": {
+          "status": "no",
+          "note": "PSA port is dashcamOnly in code \u2014 will not engage"
+        },
+        "oplong": "no",
+        "exp": "no",
+        "lca": "no",
+        "nlc": "no",
+        "sng": "no",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "no",
+        "dashy": "yes",
+        "acm": "no",
+        "aem": "no",
+        "apm": "no",
+        "red": "no",
+        "lat-offset": "no",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "peugeot-208-2019-25",
+          "name": "Peugeot 208 2019-25"
+        }
+      ]
+    },
+    {
+      "id": "porsche",
+      "name": "Porsche",
+      "features": {
+        "alc": {
+          "status": "no",
+          "note": "Dashcam mode \u2014 will not engage"
+        },
+        "oplong": "no",
+        "exp": "no",
+        "lca": "no",
+        "nlc": "no",
+        "sng": "no",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "no",
+        "dashy": "yes",
+        "acm": "no",
+        "aem": "no",
+        "apm": "no",
+        "red": "no",
+        "lat-offset": "no",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "porsche-macan-2017-24",
+          "name": "Porsche Macan 2017-24"
+        }
+      ]
+    },
+    {
+      "id": "ram",
+      "name": "Ram",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "no",
+          "note": "stock ACC only; no openpilot longitudinal"
+        },
+        "exp": "no",
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": {
+          "status": "no",
+          "note": "ALKA not enabled for Chrysler-brand cars in panda safety"
+        },
+        "dashy": "yes",
+        "acm": "no",
+        "aem": "no",
+        "apm": "no",
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "ram-1500-2019-24",
+          "name": "Ram 1500 2019-24"
+        },
+        {
+          "id": "ram-2500-2020-24",
+          "name": "Ram 2500 2020-24",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "ram-3500-2019-22",
+          "name": "Ram 3500 2019-22",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rivian",
+      "name": "Rivian",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "partial",
+          "note": "stock longitudinal by default; no alpha op-long toggle exposed (alphaLongitudinalAvailable=False)"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": {
+          "status": "no",
+          "note": "ALKA not enabled for Rivian in panda safety"
+        },
+        "dashy": "yes",
+        "acm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "aem": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "apm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "rivian-r1s-2022-24",
+          "name": "Rivian R1S 2022-24"
+        },
+        {
+          "id": "rivian-r1s-2025",
+          "name": "Rivian R1S 2025"
+        },
+        {
+          "id": "rivian-r1t-2022-24",
+          "name": "Rivian R1T 2022-24"
+        },
+        {
+          "id": "rivian-r1t-2025",
+          "name": "Rivian R1T 2025"
+        }
+      ]
+    },
+    {
+      "id": "seat",
+      "name": "SEAT",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "partial",
+          "note": "stock ACC by default; alpha op-long toggle"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "yes",
+        "dashy": "yes",
+        "acm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "aem": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "apm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "yes",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "seat-alhambra-2018-20",
+          "name": "SEAT Alhambra 2018-20",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "seat-ateca-2016-23",
+          "name": "SEAT Ateca 2016-23"
+        },
+        {
+          "id": "seat-leon-2014-20",
+          "name": "SEAT Leon 2014-20"
+        }
+      ]
+    },
+    {
+      "id": "subaru",
+      "name": "Subaru",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "partial",
+          "note": "alpha op-long only on some models (not global Gen2, pre-global, or hybrid); enabling it disables EyeSight AEB/LDW/RAB"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "lca": "yes",
+        "sng": {
+          "status": "partial",
+          "note": "stock EyeSight handles stop-and-go on global-platform cars"
+        },
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "yes",
+        "dashy": "yes",
+        "acm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "aem": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "apm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "subaru-ascent-2019-21",
+          "name": "Subaru Ascent 2019-21"
+        },
+        {
+          "id": "subaru-ascent-2023",
+          "name": "Subaru Ascent 2023",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "subaru-crosstrek-2018-19",
+          "name": "Subaru Crosstrek 2018-19"
+        },
+        {
+          "id": "subaru-crosstrek-2020-23",
+          "name": "Subaru Crosstrek 2020-23"
+        },
+        {
+          "id": "subaru-crosstrek-hybrid-2020",
+          "name": "Subaru Crosstrek Hybrid 2020",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "subaru-forester-2017-18",
+          "name": "Subaru Forester 2017-18",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "subaru-forester-2019-21",
+          "name": "Subaru Forester 2019-21"
+        },
+        {
+          "id": "subaru-forester-2022-24",
+          "name": "Subaru Forester 2022-24",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "subaru-forester-hybrid-2020",
+          "name": "Subaru Forester Hybrid 2020",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "subaru-impreza-2017-19",
+          "name": "Subaru Impreza 2017-19"
+        },
+        {
+          "id": "subaru-impreza-2020-22",
+          "name": "Subaru Impreza 2020-22"
+        },
+        {
+          "id": "subaru-legacy-2015-18",
+          "name": "Subaru Legacy 2015-18",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "subaru-legacy-2020-22",
+          "name": "Subaru Legacy 2020-22"
+        },
+        {
+          "id": "subaru-outback-2015-17",
+          "name": "Subaru Outback 2015-17",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "subaru-outback-2018-19",
+          "name": "Subaru Outback 2018-19",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "subaru-outback-2020-22",
+          "name": "Subaru Outback 2020-22"
+        },
+        {
+          "id": "subaru-outback-2023",
+          "name": "Subaru Outback 2023",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "subaru-solterra-2023-25",
+          "name": "Subaru Solterra 2023-25",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Not compatible \u2014 CAN bus security (SecOC)"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "subaru-xv-2018-19",
+          "name": "Subaru XV 2018-19"
+        },
+        {
+          "id": "subaru-xv-2020-21",
+          "name": "Subaru XV 2020-21"
+        }
+      ]
+    },
+    {
+      "id": "skoda",
+      "name": "\u0160koda",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "partial",
+          "note": "stock ACC by default; alpha op-long toggle"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "yes",
+        "dashy": "yes",
+        "acm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "aem": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "apm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": {
+          "status": "partial",
+          "note": "A0-platform models (Fabia, Kamiq, Scala) via the dp 'A0 SnG' toggle"
+        },
+        "vag-eps-lockout": "yes",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "skoda-fabia-2022-23",
+          "name": "\u0160koda Fabia 2022-23"
+        },
+        {
+          "id": "skoda-kamiq-2021-23",
+          "name": "\u0160koda Kamiq 2021-23"
+        },
+        {
+          "id": "skoda-karoq-2019-23",
+          "name": "\u0160koda Karoq 2019-23"
+        },
+        {
+          "id": "skoda-kodiaq-2017-23",
+          "name": "\u0160koda Kodiaq 2017-23"
+        },
+        {
+          "id": "skoda-octavia-2015-19",
+          "name": "\u0160koda Octavia 2015-19"
+        },
+        {
+          "id": "skoda-octavia-rs-2016",
+          "name": "\u0160koda Octavia RS 2016"
+        },
+        {
+          "id": "skoda-octavia-scout-2017-19",
+          "name": "\u0160koda Octavia Scout 2017-19"
+        },
+        {
+          "id": "skoda-scala-2020-23",
+          "name": "\u0160koda Scala 2020-23"
+        },
+        {
+          "id": "skoda-superb-2015-22",
+          "name": "\u0160koda Superb 2015-22"
+        }
+      ]
+    },
+    {
+      "id": "tesla",
+      "name": "Tesla",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "partial",
+          "note": "alpha op-long toggle; stock Autopilot longitudinal otherwise"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": {
+          "status": "no",
+          "note": "ALKA not enabled for Tesla in panda safety"
+        },
+        "dashy": "yes",
+        "acm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "aem": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "apm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": "no",
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "tesla-model-3-hw3-2019-23",
+          "name": "Tesla Model 3 (with HW3) 2019-23"
+        },
+        {
+          "id": "tesla-model-3-hw4-2024-25",
+          "name": "Tesla Model 3 (with HW4) 2024-25"
+        },
+        {
+          "id": "tesla-model-x-hw4-2024",
+          "name": "Tesla Model X (with HW4) 2024",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "tesla-model-y-hw3-2020-23",
+          "name": "Tesla Model Y (with HW3) 2020-23"
+        },
+        {
+          "id": "tesla-model-y-hw4-2024-25",
+          "name": "Tesla Model Y (with HW4) 2024-25"
+        }
+      ]
+    },
+    {
+      "id": "toyota",
+      "name": "Toyota",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "yes",
+          "note": "openpilot longitudinal standard on supported Toyota; dp 'Use Stock Longitudinal' toggle can hand gas/brake back to stock ACC"
+        },
+        "exp": "yes",
+        "lca": "yes",
+        "sng": {
+          "status": "partial",
+          "note": "TSS2 cars have stock stop-and-go; TSS1 cars need the dp TSS1 SnG toggle"
+        },
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "yes",
+        "dashy": "yes",
+        "acm": "yes",
+        "aem": "yes",
+        "apm": "yes",
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "ext-radar": {
+          "status": "partial",
+          "note": "eFiniLan external-radar addon, developed around Toyota installs"
+        },
+        "stock-long-toggle": "yes",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": {
+          "status": "partial",
+          "note": "TSS1 models only, via the dp 'Enable Stop-and-Go on TSS1' toggle"
+        },
+        "vag-eps-lockout": "no",
+        "toyota-door-lock": "yes"
+      },
+      "cars": [
+        {
+          "id": "toyota-alphard-2019-20",
+          "name": "Toyota Alphard 2019-20"
+        },
+        {
+          "id": "toyota-alphard-hybrid-2021",
+          "name": "Toyota Alphard Hybrid 2021"
+        },
+        {
+          "id": "toyota-avalon-2016",
+          "name": "Toyota Avalon 2016"
+        },
+        {
+          "id": "toyota-avalon-2017-18",
+          "name": "Toyota Avalon 2017-18"
+        },
+        {
+          "id": "toyota-avalon-2019-21",
+          "name": "Toyota Avalon 2019-21"
+        },
+        {
+          "id": "toyota-avalon-2022",
+          "name": "Toyota Avalon 2022"
+        },
+        {
+          "id": "toyota-avalon-hybrid-2019-21",
+          "name": "Toyota Avalon Hybrid 2019-21"
+        },
+        {
+          "id": "toyota-avalon-hybrid-2022",
+          "name": "Toyota Avalon Hybrid 2022"
+        },
+        {
+          "id": "toyota-bz4x-2023-25",
+          "name": "Toyota bZ4x 2023-25",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Not compatible \u2014 CAN bus security (SecOC)"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "toyota-c-hr-2017-20",
+          "name": "Toyota C-HR 2017-20"
+        },
+        {
+          "id": "toyota-c-hr-2021",
+          "name": "Toyota C-HR 2021"
+        },
+        {
+          "id": "toyota-c-hr-hybrid-2017-20",
+          "name": "Toyota C-HR Hybrid 2017-20"
+        },
+        {
+          "id": "toyota-c-hr-hybrid-2021-22",
+          "name": "Toyota C-HR Hybrid 2021-22"
+        },
+        {
+          "id": "toyota-camry-2018-20",
+          "name": "Toyota Camry 2018-20",
+          "features": {
+            "sng": {
+              "status": "partial",
+              "note": "4-cyl L/LE/SE trims without full-speed-range radar cruise operate above 28 mph only"
+            }
+          }
+        },
+        {
+          "id": "toyota-camry-2021-24",
+          "name": "Toyota Camry 2021-24"
+        },
+        {
+          "id": "toyota-camry-2025",
+          "name": "Toyota Camry 2025",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Not compatible \u2014 CAN bus security (SecOC)"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "toyota-camry-hybrid-2018-20",
+          "name": "Toyota Camry Hybrid 2018-20"
+        },
+        {
+          "id": "toyota-camry-hybrid-2021-24",
+          "name": "Toyota Camry Hybrid 2021-24"
+        },
+        {
+          "id": "toyota-corolla-2017-19",
+          "name": "Toyota Corolla 2017-19"
+        },
+        {
+          "id": "toyota-corolla-2020-22",
+          "name": "Toyota Corolla 2020-22"
+        },
+        {
+          "id": "toyota-corolla-cross-2022-25",
+          "name": "Toyota Corolla Cross 2022-25",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Not compatible \u2014 CAN bus security (SecOC, US model)"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "toyota-corolla-cross-nonus-2020-23",
+          "name": "Toyota Corolla Cross (Non-US only) 2020-23"
+        },
+        {
+          "id": "toyota-corolla-cross-hybrid-nonus-2020-22",
+          "name": "Toyota Corolla Cross Hybrid (Non-US only) 2020-22"
+        },
+        {
+          "id": "toyota-corolla-hatchback-2019-22",
+          "name": "Toyota Corolla Hatchback 2019-22"
+        },
+        {
+          "id": "toyota-corolla-hybrid-2020-22",
+          "name": "Toyota Corolla Hybrid 2020-22"
+        },
+        {
+          "id": "toyota-corolla-hybrid-sa-2020-23",
+          "name": "Toyota Corolla Hybrid (South America only) 2020-23"
+        },
+        {
+          "id": "toyota-highlander-2017-19",
+          "name": "Toyota Highlander 2017-19"
+        },
+        {
+          "id": "toyota-highlander-2020-23",
+          "name": "Toyota Highlander 2020-23"
+        },
+        {
+          "id": "toyota-highlander-2025",
+          "name": "Toyota Highlander 2025",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Not compatible \u2014 CAN bus security (SecOC)"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "toyota-highlander-hybrid-2017-19",
+          "name": "Toyota Highlander Hybrid 2017-19"
+        },
+        {
+          "id": "toyota-highlander-hybrid-2020-23",
+          "name": "Toyota Highlander Hybrid 2020-23"
+        },
+        {
+          "id": "toyota-mirai-2021",
+          "name": "Toyota Mirai 2021"
+        },
+        {
+          "id": "toyota-prius-2016",
+          "name": "Toyota Prius 2016"
+        },
+        {
+          "id": "toyota-prius-2017-20",
+          "name": "Toyota Prius 2017-20"
+        },
+        {
+          "id": "toyota-prius-2021-22",
+          "name": "Toyota Prius 2021-22"
+        },
+        {
+          "id": "toyota-prius-prime-2017-20",
+          "name": "Toyota Prius Prime 2017-20"
+        },
+        {
+          "id": "toyota-prius-prime-2021-22",
+          "name": "Toyota Prius Prime 2021-22"
+        },
+        {
+          "id": "toyota-prius-v-2017",
+          "name": "Toyota Prius v 2017"
+        },
+        {
+          "id": "toyota-rav4-2016",
+          "name": "Toyota RAV4 2016"
+        },
+        {
+          "id": "toyota-rav4-2017-18",
+          "name": "Toyota RAV4 2017-18"
+        },
+        {
+          "id": "toyota-rav4-2019-21",
+          "name": "Toyota RAV4 2019-21"
+        },
+        {
+          "id": "toyota-rav4-2022",
+          "name": "Toyota RAV4 2022"
+        },
+        {
+          "id": "toyota-rav4-2023-25",
+          "name": "Toyota RAV4 2023-25"
+        },
+        {
+          "id": "toyota-rav4-hybrid-2016",
+          "name": "Toyota RAV4 Hybrid 2016"
+        },
+        {
+          "id": "toyota-rav4-hybrid-2017-18",
+          "name": "Toyota RAV4 Hybrid 2017-18"
+        },
+        {
+          "id": "toyota-rav4-hybrid-2019-21",
+          "name": "Toyota RAV4 Hybrid 2019-21"
+        },
+        {
+          "id": "toyota-rav4-hybrid-2022",
+          "name": "Toyota RAV4 Hybrid 2022"
+        },
+        {
+          "id": "toyota-rav4-hybrid-2023-25",
+          "name": "Toyota RAV4 Hybrid 2023-25"
+        },
+        {
+          "id": "toyota-rav4-prime-2021-23",
+          "name": "Toyota RAV4 Prime 2021-23",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Requires community-recovered SecOC key; not plug-and-play"
+            }
+          }
+        },
+        {
+          "id": "toyota-rav4-prime-2024-25",
+          "name": "Toyota RAV4 Prime 2024-25",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Not compatible \u2014 CAN bus security (SecOC)"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "toyota-sequoia-2023-25",
+          "name": "Toyota Sequoia 2023-25",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Not compatible \u2014 CAN bus security (SecOC)"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "toyota-sienna-2018-20",
+          "name": "Toyota Sienna 2018-20"
+        },
+        {
+          "id": "toyota-sienna-2021-23",
+          "name": "Toyota Sienna 2021-23",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Requires community-recovered SecOC key; not plug-and-play"
+            }
+          }
+        },
+        {
+          "id": "toyota-sienna-2024-25",
+          "name": "Toyota Sienna 2024-25",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Not compatible \u2014 CAN bus security (SecOC)"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "toyota-tundra-2022-25",
+          "name": "Toyota Tundra 2022-25",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Not compatible \u2014 CAN bus security (SecOC)"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "toyota-venza-2021-25",
+          "name": "Toyota Venza 2021-25",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Not compatible \u2014 CAN bus security (SecOC)"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "toyota-yaris-nonus-2020-2023",
+          "name": "Toyota Yaris (Non-US only) 2020, 2023",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "Requires community-recovered SecOC key; not plug-and-play"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "volkswagen",
+      "name": "Volkswagen",
+      "features": {
+        "alc": "yes",
+        "oplong": {
+          "status": "partial",
+          "note": "stock ACC by default; alpha op-long toggle, gateway (J533) harness installs only"
+        },
+        "exp": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "lca": "yes",
+        "sng": "yes",
+        "dm": "yes",
+        "model-selector": "yes",
+        "aol": "yes",
+        "dashy": "yes",
+        "acm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "aem": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "apm": {
+          "status": "partial",
+          "note": "requires openpilot longitudinal"
+        },
+        "nlc": "yes",
+        "red": "yes",
+        "lat-offset": "yes",
+        "multilang": "yes",
+        "display-mode": "yes",
+        "lead-stats": "yes",
+        "rainbow-path": "yes",
+        "stock-long-toggle": "no",
+        "device-tools": "yes",
+        "o3-support": "yes",
+        "sng-plus": {
+          "status": "partial",
+          "note": "A0-platform models (Polo, T-Cross) via the dp 'A0 SnG' toggle"
+        },
+        "vag-eps-lockout": "yes",
+        "toyota-door-lock": "no"
+      },
+      "cars": [
+        {
+          "id": "vw-arteon-2018-23",
+          "name": "Volkswagen Arteon 2018-23"
+        },
+        {
+          "id": "vw-arteon-ehybrid-2020-23",
+          "name": "Volkswagen Arteon eHybrid 2020-23"
+        },
+        {
+          "id": "vw-arteon-r-2020-23",
+          "name": "Volkswagen Arteon R 2020-23"
+        },
+        {
+          "id": "vw-arteon-shooting-brake-2020-23",
+          "name": "Volkswagen Arteon Shooting Brake 2020-23"
+        },
+        {
+          "id": "vw-atlas-2018-23",
+          "name": "Volkswagen Atlas 2018-23"
+        },
+        {
+          "id": "vw-atlas-cross-sport-2020-22",
+          "name": "Volkswagen Atlas Cross Sport 2020-22"
+        },
+        {
+          "id": "vw-caddy-2019",
+          "name": "Volkswagen Caddy 2019",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "vw-caddy-maxi-2019",
+          "name": "Volkswagen Caddy Maxi 2019",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "vw-california-2021-23",
+          "name": "Volkswagen California 2021-23"
+        },
+        {
+          "id": "vw-caravelle-2020",
+          "name": "Volkswagen Caravelle 2020"
+        },
+        {
+          "id": "vw-cc-2018-22",
+          "name": "Volkswagen CC 2018-22"
+        },
+        {
+          "id": "vw-crafter-2017-24",
+          "name": "Volkswagen Crafter 2017-24"
+        },
+        {
+          "id": "vw-e-crafter-2018-24",
+          "name": "Volkswagen e-Crafter 2018-24"
+        },
+        {
+          "id": "vw-e-golf-2014-20",
+          "name": "Volkswagen e-Golf 2014-20"
+        },
+        {
+          "id": "vw-golf-2015-20",
+          "name": "Volkswagen Golf 2015-20"
+        },
+        {
+          "id": "vw-golf-alltrack-2015-19",
+          "name": "Volkswagen Golf Alltrack 2015-19"
+        },
+        {
+          "id": "vw-golf-gtd-2015-20",
+          "name": "Volkswagen Golf GTD 2015-20"
+        },
+        {
+          "id": "vw-golf-gte-2015-20",
+          "name": "Volkswagen Golf GTE 2015-20"
+        },
+        {
+          "id": "vw-golf-gti-2015-21",
+          "name": "Volkswagen Golf GTI 2015-21"
+        },
+        {
+          "id": "vw-golf-r-2015-19",
+          "name": "Volkswagen Golf R 2015-19"
+        },
+        {
+          "id": "vw-golf-sportsvan-2015-20",
+          "name": "Volkswagen Golf SportsVan 2015-20"
+        },
+        {
+          "id": "vw-grand-california-2019-24",
+          "name": "Volkswagen Grand California 2019-24"
+        },
+        {
+          "id": "vw-jetta-2015-18",
+          "name": "Volkswagen Jetta 2015-18",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "vw-jetta-2019-23",
+          "name": "Volkswagen Jetta 2019-23"
+        },
+        {
+          "id": "vw-jetta-gli-2021-23",
+          "name": "Volkswagen Jetta GLI 2021-23"
+        },
+        {
+          "id": "vw-passat-2015-22",
+          "name": "Volkswagen Passat 2015-22 (MQB B8, not US NMS)"
+        },
+        {
+          "id": "vw-passat-alltrack-2015-22",
+          "name": "Volkswagen Passat Alltrack 2015-22"
+        },
+        {
+          "id": "vw-passat-gte-2015-22",
+          "name": "Volkswagen Passat GTE 2015-22"
+        },
+        {
+          "id": "vw-passat-nms-2017-22",
+          "name": "Volkswagen Passat NMS 2017-22",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "vw-polo-2018-23",
+          "name": "Volkswagen Polo 2018-23"
+        },
+        {
+          "id": "vw-polo-gti-2018-23",
+          "name": "Volkswagen Polo GTI 2018-23"
+        },
+        {
+          "id": "vw-sharan-2018-22",
+          "name": "Volkswagen Sharan 2018-22",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "Dashcam mode \u2014 will not engage"
+            },
+            "aol": "no",
+            "oplong": "no"
+          }
+        },
+        {
+          "id": "vw-t-cross-2021",
+          "name": "Volkswagen T-Cross 2021"
+        },
+        {
+          "id": "vw-t-roc-2018-23",
+          "name": "Volkswagen T-Roc 2018-23"
+        },
+        {
+          "id": "vw-taos-2022-24",
+          "name": "Volkswagen Taos 2022-24"
+        },
+        {
+          "id": "vw-teramont-2018-22",
+          "name": "Volkswagen Teramont 2018-22"
+        },
+        {
+          "id": "vw-teramont-cross-sport-2021-22",
+          "name": "Volkswagen Teramont Cross Sport 2021-22"
+        },
+        {
+          "id": "vw-teramont-x-2021-22",
+          "name": "Volkswagen Teramont X 2021-22"
+        },
+        {
+          "id": "vw-tiguan-2018-24",
+          "name": "Volkswagen Tiguan 2018-24"
+        },
+        {
+          "id": "vw-tiguan-ehybrid-2021-23",
+          "name": "Volkswagen Tiguan eHybrid 2021-23"
+        },
+        {
+          "id": "vw-touran-2016-23",
+          "name": "Volkswagen Touran 2016-23"
+        }
+      ]
+    }
+  ]
+}
