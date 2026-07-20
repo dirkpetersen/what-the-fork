@@ -386,6 +386,19 @@ function mfrUnion() {
   return [...map.values()].sort((a, b) => a.name.localeCompare(b.name));
 }
 
+/* Cross-fork feature synonyms: forks name the same concept differently —
+   map them onto one row key so by-car mode shows them as a single feature.
+   Each fork's own abbrev/name still shows in its cell tooltip. */
+const FEATURE_ALIASES = {
+  cem: 'dec', // FrogPilot "Conditional Experimental Mode"
+  ces: 'dec', // PNW "Conditional Experimental Switching"  (sunnypilot DEC is canonical)
+};
+
+function featKey(f) {
+  const k = norm(f.id || f.abbrev);
+  return FEATURE_ALIASES[k] || k;
+}
+
 /* Variants of the same model — "(with HDA II)", "(Raven)", year ranges — are
    grouped under one model root so forks that split rows differently still
    line up. Variant detail is preserved in the cell tooltips. */
@@ -471,7 +484,7 @@ function renderCarMatrix() {
     const hit = findCars(db, state.mfrKey, state.modelKey);
     return {
       entry, db, mfr: hit ? hit.mfr : null, cars: hit ? hit.cars : null,
-      featIndex: new Map((db.features || []).map((f) => [norm(f.id || f.abbrev), f])),
+      featIndex: new Map((db.features || []).map((f) => [featKey(f), f])),
     };
   });
   if (!forks.length || !state.modelKey) {
@@ -485,7 +498,7 @@ function renderCarMatrix() {
   for (const fk of forks) {
     if (!fk.cars) continue;
     for (const feat of fk.db.features || []) {
-      const k = norm(feat.id || feat.abbrev);
+      const k = featKey(feat);
       if (!rows.has(k)) rows.set(k, { key: k, abbrev: feat.abbrev, name: feat.name });
     }
   }
