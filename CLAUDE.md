@@ -38,7 +38,10 @@ generator is pointed at.
 
 Manufacturers and features are matched on `norm(id || name)` (lowercase
 kebab) — the generator prompt pushes **conventional feature ids** (`vtsc`,
-`nlc`, `oplong`) so those line up. **Cars are matched on the model root**
+`nlc`, `oplong`) so those line up. Known cross-fork synonyms are folded via
+`FEATURE_ALIASES` in app.js (e.g. FrogPilot `cem` and PNW `ces` → sunnypilot
+`dec`, all being conditional-Experimental switching) — add new synonym pairs
+there, not in the data. **Cars are matched on the model root**
 (`modelRoot()`): the display name with parenthetical qualifiers ("(with HDA
 II)", "(Raven)") and year ranges stripped. All variants of a model — HDA
 packages, year splits, hardware generations — group under ONE model-dropdown
