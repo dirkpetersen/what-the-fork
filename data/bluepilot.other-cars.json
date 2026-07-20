@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "fork": {
+    "id": "bluepilot",
+    "name": "BluePilot",
+    "branch": "bp-7.0",
+    "generated_at": "2026-07-19"
+  },
+  "manufacturers": [
+    {
+      "id": "ford",
+      "name": "Ford",
+      "cars": [
+        {
+          "id": "ford-edge-2022",
+          "name": "Ford Edge 2022",
+          "highlight": true,
+          "note": "Fork-added platform (FORD_EDGE_MK2, ALT_STEER_ANGLE flag) added to menu and fingerprints by BluePilot; in code but not in published CARS.md",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "fork-added port, not in published CARS.md"
+            }
+          }
+        },
+        {
+          "id": "ford-mondeo-2014-22",
+          "name": "Ford Mondeo 2014-2022 (MK5)",
+          "highlight": true,
+          "note": "In code (FORD_MONDEO_MK5 CAN-FD platform, custom fingerprint commit) but not in published CARS.md",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "in code but not in published CARS.md"
+            }
+          }
+        },
+        {
+          "id": "ford-f-150-lightning-2022-25",
+          "name": "Ford F-150 Lightning 2022-25",
+          "highlight": true,
+          "note": "In code but hidden from published CARS.md (docs suppressed pending commaai issue #30302); 2025 fingerprint added by fork PR #130; EPS marked non-essential ECU",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "works in code but intentionally not listed as supported"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

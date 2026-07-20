@@ -1,0 +1,852 @@
+{
+  "schema_version": 1,
+  "fork": {
+    "id": "frogpilot",
+    "name": "FrogPilot",
+    "branch": "frogpilot/FrogPilot",
+    "generated_at": "2026-07-19"
+  },
+  "manufacturers": [
+    {
+      "id": "chevrolet",
+      "name": "Chevrolet",
+      "cars": [
+        {
+          "id": "chevrolet-volt-2017-18",
+          "name": "Chevrolet Volt 2017-18",
+          "highlight": true,
+          "note": "in code but not in the published CARS.md; fork-added OPGM port with dedicated Volt SNG toggle, comma pedal support and Experimental GM tune",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "openpilot longitudinal via OPGM port; comma pedal optional"
+            },
+            "sng": {
+              "status": "partial",
+              "note": "Volt SNG toggle adds stop-and-go"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-volt-2017-18-no-acc",
+          "name": "Chevrolet Volt 2017-18 (No ACC)",
+          "note": "in code but not in the published CARS.md; OPGM camera-harness port for cars without factory ACC (CC_LONG)",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "fork-added longitudinal over the stock cruise-control interface"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-bolt-ev-2017-23-no-acc",
+          "name": "Chevrolet Bolt EV 2017-23 (No ACC)",
+          "note": "in code but not in the published CARS.md; OPGM camera-harness port for cars without factory ACC",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "fork-added longitudinal over the stock cruise-control interface"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-equinox-2019-22-no-acc",
+          "name": "Chevrolet Equinox 2019-22 (No ACC)",
+          "note": "in code but not in the published CARS.md; OPGM camera-harness port for cars without factory ACC",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "fork-added longitudinal over the stock cruise-control interface"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-trailblazer-2021-22-no-acc",
+          "name": "Chevrolet Trailblazer 2021-22 (No ACC)",
+          "note": "in code but not in the published CARS.md; OPGM camera-harness port for cars without factory ACC",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "fork-added longitudinal over the stock cruise-control interface"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-suburban-2016-20",
+          "name": "Chevrolet Suburban Premier 2016-20",
+          "note": "in code but not in the published CARS.md; OPGM community port",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "OPGM port, not in published docs"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-suburban-2016-20-no-acc",
+          "name": "Chevrolet Suburban Premier 2016-20 (No ACC)",
+          "note": "in code but not in the published CARS.md; OPGM camera-harness port",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "fork-added longitudinal over the stock cruise-control interface"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-malibu-2017",
+          "name": "Chevrolet Malibu Premier 2017",
+          "note": "in code but not in the published CARS.md; OPGM community port",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "OPGM port, not in published docs"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-malibu-2023-no-acc",
+          "name": "Chevrolet Malibu 2023 (No ACC)",
+          "note": "in code but not in the published CARS.md; OPGM camera-harness port",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "fork-added longitudinal over the stock cruise-control interface"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-traverse-2023",
+          "name": "Chevrolet Traverse 2023",
+          "note": "in code but not in the published CARS.md; OPGM community port",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "OPGM port, not in published docs"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-trax-2024",
+          "name": "Chevrolet Trax 2024",
+          "note": "in code but not in the published CARS.md; OPGM community port",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "OPGM port, not in published docs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "ford",
+      "name": "Ford",
+      "cars": [
+        {
+          "id": "ford-edge-2022",
+          "name": "Ford Edge 2022",
+          "highlight": true,
+          "note": "in code but not in the published CARS.md; fork-added port (shares the ALT_STEER_ANGLE Edge MK2 platform)",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "not in published docs"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "locks to dashcam if the PSCM lacks TJA/LCA configuration"
+            }
+          }
+        },
+        {
+          "id": "ford-fusion-retrofit-2013-19",
+          "name": "Ford Fusion Retrofited 2013-19",
+          "highlight": true,
+          "note": "in code but not in the published CARS.md; fork-added retrofit port (Edge MK2 camera hardware swapped into a Fusion)",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "retrofit-only community port"
+            }
+          }
+        },
+        {
+          "id": "ford-f-150-2022-23",
+          "name": "Ford F-150 2022-23",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: CAN FD Ford, not yet enabled"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        },
+        {
+          "id": "ford-f-150-lightning-2021-23",
+          "name": "Ford F-150 Lightning 2021-23",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: CAN FD Ford, not yet enabled"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        },
+        {
+          "id": "ford-mustang-mach-e-2021-23",
+          "name": "Ford Mustang Mach-E 2021-23",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: CAN FD Ford, not yet enabled"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        },
+        {
+          "id": "ford-ranger-2024",
+          "name": "Ford Ranger 2024",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: CAN FD Ford, not yet enabled"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        }
+      ]
+    },
+    {
+      "id": "gmc",
+      "name": "GMC",
+      "cars": [
+        {
+          "id": "gmc-acadia-2018",
+          "name": "GMC Acadia 2018",
+          "note": "in code but not in the published CARS.md; legacy openpilot/OPGM port",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "not in published docs"
+            }
+          }
+        },
+        {
+          "id": "gmc-yukon-no-acc",
+          "name": "GMC Yukon (No ACC)",
+          "note": "in code but not in the published CARS.md; OPGM camera-harness port",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "fork-added longitudinal over the stock cruise-control interface"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "honda",
+      "name": "Honda",
+      "cars": [
+        {
+          "id": "honda-clarity-2018-22",
+          "name": "Honda Clarity 2018-22",
+          "highlight": true,
+          "note": "in code but not in the published CARS.md; fork-added community port with auto-resume stop-and-go",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "community port, not in published docs"
+            }
+          }
+        },
+        {
+          "id": "honda-civic-hatchback-hybrid-2023-europe",
+          "name": "Honda Civic Hatchback Hybrid 2023 (Europe only)",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "not in published docs"
+            }
+          }
+        },
+        {
+          "id": "honda-civic-hatchback-hybrid-2025",
+          "name": "Honda Civic Hatchback Hybrid 2025",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "not in published docs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "kia",
+      "name": "Kia",
+      "cars": [
+        {
+          "id": "kia-optima-hybrid-2017",
+          "name": "Kia Optima Hybrid 2017",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: KIA_OPTIMA_H is dashcam-only"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mazda",
+      "name": "Mazda",
+      "cars": [
+        {
+          "id": "mazda-cx-5-2017-21",
+          "name": "Mazda CX-5 2017-21",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: older Mazdas are dashcam-only in this tree"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        },
+        {
+          "id": "mazda-cx-9-2016-20",
+          "name": "Mazda CX-9 2016-20",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: older Mazdas are dashcam-only in this tree"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        },
+        {
+          "id": "mazda-3-2017-18",
+          "name": "Mazda 3 2017-18",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: older Mazdas are dashcam-only in this tree"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        },
+        {
+          "id": "mazda-6-2017-20",
+          "name": "Mazda 6 2017-20",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: older Mazdas are dashcam-only in this tree"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        }
+      ]
+    },
+    {
+      "id": "nissan",
+      "name": "Nissan",
+      "cars": [
+        {
+          "id": "nissan-leaf-2018-23-instrument-cluster",
+          "name": "Nissan Leaf 2018-23 (Instrument Cluster harness)",
+          "note": "in code but not in the published CARS.md; alternate-harness variant of the supported Leaf",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "stock ACC only, like other Nissans"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "ram",
+      "name": "Ram",
+      "cars": [
+        {
+          "id": "ram-2500-2020-24",
+          "name": "Ram 2500 2020-24",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: RAM HD is dashcam-only"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        },
+        {
+          "id": "ram-3500-2019-22",
+          "name": "Ram 3500 2019-22",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: RAM HD is dashcam-only"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        }
+      ]
+    },
+    {
+      "id": "seat",
+      "name": "SEAT",
+      "cars": [
+        {
+          "id": "seat-alhambra-2018-20",
+          "name": "SEAT Alhambra 2018-20",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: PQ platform: six-minute HCA steering timer"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        }
+      ]
+    },
+    {
+      "id": "subaru",
+      "name": "Subaru",
+      "cars": [
+        {
+          "id": "subaru-crosstrek-hybrid-2020",
+          "name": "Subaru Crosstrek Hybrid 2020",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: HYBRID flag forces dashcam"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        },
+        {
+          "id": "subaru-forester-hybrid-2020",
+          "name": "Subaru Forester Hybrid 2020",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: HYBRID flag forces dashcam"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        },
+        {
+          "id": "subaru-forester-2017-18",
+          "name": "Subaru Forester 2017-18",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: pre-global platform forces dashcam"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        },
+        {
+          "id": "subaru-legacy-2015-18",
+          "name": "Subaru Legacy 2015-18",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: pre-global platform forces dashcam"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        },
+        {
+          "id": "subaru-outback-2015-17",
+          "name": "Subaru Outback 2015-17",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: pre-global platform forces dashcam"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        },
+        {
+          "id": "subaru-outback-2018-19",
+          "name": "Subaru Outback 2018-19",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: pre-global platform forces dashcam"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        },
+        {
+          "id": "subaru-forester-2022-24",
+          "name": "Subaru Forester 2022-24",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: LKAS_ANGLE cars force dashcam"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        },
+        {
+          "id": "subaru-outback-2023",
+          "name": "Subaru Outback 2023",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: LKAS_ANGLE cars force dashcam"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        },
+        {
+          "id": "subaru-ascent-2023",
+          "name": "Subaru Ascent 2023",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: LKAS_ANGLE cars force dashcam"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        }
+      ]
+    },
+    {
+      "id": "toyota",
+      "name": "Toyota",
+      "cars": [
+        {
+          "id": "toyota-rav4-prime-2021-23",
+          "name": "Toyota RAV4 Prime 2021-23",
+          "highlight": true,
+          "note": "in code but not in the published CARS.md; SecOC car \u2014 requires the user to provide the vehicle's SecOC key",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "works only after supplying a SecOC key"
+            }
+          }
+        },
+        {
+          "id": "toyota-sienna-2021-23",
+          "name": "Toyota Sienna 2021-23",
+          "highlight": true,
+          "note": "in code but not in the published CARS.md; SecOC car \u2014 requires the user to provide the vehicle's SecOC key",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "works only after supplying a SecOC key"
+            }
+          }
+        },
+        {
+          "id": "toyota-yaris-2020-23-non-us",
+          "name": "Toyota Yaris (Non-US only) 2020, 2023",
+          "note": "in code but not in the published CARS.md; SecOC car \u2014 requires the user to provide the vehicle's SecOC key",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "works only after supplying a SecOC key"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "volkswagen",
+      "name": "Volkswagen",
+      "cars": [
+        {
+          "id": "volkswagen-sharan-2018-22",
+          "name": "Volkswagen Sharan 2018-22",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: PQ platform: six-minute HCA steering timer; needs unsupported EPS flash"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        },
+        {
+          "id": "volkswagen-caddy-2019",
+          "name": "Volkswagen Caddy 2019",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: PQ platform: six-minute HCA steering timer; needs unsupported EPS flash"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        },
+        {
+          "id": "volkswagen-caddy-maxi-2019",
+          "name": "Volkswagen Caddy Maxi 2019",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: PQ platform: six-minute HCA steering timer; needs unsupported EPS flash"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        },
+        {
+          "id": "volkswagen-passat-nms-2017-22",
+          "name": "Volkswagen Passat NMS 2017-22",
+          "note": "in code but not in the published CARS.md",
+          "features": {
+            "alc": {
+              "status": "no",
+              "note": "hard-coded dashcamOnly: NMS Passat is dashcam-only"
+            },
+            "oplong": "no",
+            "exp": "no",
+            "sng": "no"
+          }
+        }
+      ]
+    },
+    {
+      "id": "buick",
+      "name": "Buick",
+      "cars": [
+        {
+          "id": "buick-lacrosse-2017-19",
+          "name": "Buick LaCrosse 2017-19",
+          "note": "in code but not in the published CARS.md; OPGM community port",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "not in published docs"
+            }
+          }
+        },
+        {
+          "id": "buick-regal-2018",
+          "name": "Buick Regal Essence 2018",
+          "note": "in code but not in the published CARS.md; OPGM community port",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "not in published docs"
+            }
+          }
+        },
+        {
+          "id": "buick-baby-enclave-2020-23",
+          "name": "Buick Enclave (Baby Enclave) 2020-23",
+          "note": "in code but not in the published CARS.md; OPGM community port",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "not in published docs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "cadillac",
+      "name": "Cadillac",
+      "cars": [
+        {
+          "id": "cadillac-ats-2018",
+          "name": "Cadillac ATS Premium Performance 2018",
+          "note": "in code but not in the published CARS.md; OPGM community port",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "not in published docs"
+            }
+          }
+        },
+        {
+          "id": "cadillac-escalade-2017",
+          "name": "Cadillac Escalade 2017",
+          "note": "in code but not in the published CARS.md; OPGM community port",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "not in published docs"
+            }
+          }
+        },
+        {
+          "id": "cadillac-escalade-esv-2016",
+          "name": "Cadillac Escalade ESV 2016",
+          "note": "in code but not in the published CARS.md; OPGM community port",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "not in published docs"
+            }
+          }
+        },
+        {
+          "id": "cadillac-escalade-esv-2019",
+          "name": "Cadillac Escalade ESV 2019",
+          "note": "in code but not in the published CARS.md; OPGM community port",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "not in published docs"
+            }
+          }
+        },
+        {
+          "id": "cadillac-ct6-no-acc",
+          "name": "Cadillac CT6 (No ACC)",
+          "note": "in code but not in the published CARS.md; OPGM camera-harness port",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "fork-added longitudinal over the stock cruise-control interface"
+            }
+          }
+        },
+        {
+          "id": "cadillac-xt4-2023",
+          "name": "Cadillac XT4 2023",
+          "note": "in code but not in the published CARS.md; OPGM community port",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "not in published docs"
+            }
+          }
+        },
+        {
+          "id": "cadillac-xt5-no-acc",
+          "name": "Cadillac XT5 (No ACC)",
+          "note": "in code but not in the published CARS.md; OPGM camera-harness port",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "fork-added longitudinal over the stock cruise-control interface"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "holden",
+      "name": "Holden",
+      "cars": [
+        {
+          "id": "holden-astra-2017",
+          "name": "Holden Astra 2017",
+          "note": "in code but not in the published CARS.md; legacy OPGM port",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "not in published docs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "tesla",
+      "name": "Tesla",
+      "cars": [
+        {
+          "id": "tesla-ap1-model-s",
+          "name": "Tesla AP1 Model S",
+          "highlight": true,
+          "note": "in code but not in the published CARS.md; pre-Model-3 port present in the tree, hard-coded dashcamOnly"
+        },
+        {
+          "id": "tesla-ap2-model-s",
+          "name": "Tesla AP2 Model S",
+          "highlight": true,
+          "note": "in code but not in the published CARS.md; hard-coded dashcamOnly"
+        },
+        {
+          "id": "tesla-model-s-raven",
+          "name": "Tesla Model S Raven",
+          "highlight": true,
+          "note": "in code but not in the published CARS.md; hard-coded dashcamOnly"
+        }
+      ]
+    }
+  ]
+}

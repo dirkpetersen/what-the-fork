@@ -2276,60 +2276,6 @@
       ]
     },
     {
-      "id": "mg",
-      "name": "MG",
-      "features": {
-        "alc": {
-          "status": "partial",
-          "note": "fork-added port; no FW or CAN fingerprint \u2014 requires manual/forced car selection"
-        },
-        "oplong": {
-          "status": "partial",
-          "note": "LONG_CONTROL safety flag exists but alphaLongitudinalAvailable is False; long control only via forced flag"
-        },
-        "exp": "unknown",
-        "lca": "unknown",
-        "nlc": "unknown",
-        "sng": "unknown",
-        "dm": "yes",
-        "model-selector": "yes",
-        "aol": {
-          "status": "partial",
-          "note": "enabled in panda safety ('ALKA enabled for MG') but the ALKA settings toggle is not shown for the MG brand"
-        },
-        "dashy": "yes",
-        "acm": "unknown",
-        "aem": "unknown",
-        "apm": "unknown",
-        "red": "unknown",
-        "lat-offset": "yes",
-        "multilang": "yes",
-        "display-mode": "yes",
-        "lead-stats": "yes",
-        "rainbow-path": "yes",
-        "stock-long-toggle": "no",
-        "device-tools": "yes",
-        "o3-support": "yes",
-        "sng-plus": "no",
-        "vag-eps-lockout": "no",
-        "toyota-door-lock": "no"
-      },
-      "cars": [
-        {
-          "id": "mg-zs-2025",
-          "name": "MG ZS 2025",
-          "highlight": true,
-          "note": "Fork-added dragonpilot port, in code but not in the published CARS.md: dedicated opendbc/panda safety mode, torque steering, ICE (NON_EV) variant support added recently; FW query disabled ('no captured FW versions yet'), so the car must be manually selected",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "in code but not in published CARS.md; manual car selection required"
-            }
-          }
-        }
-      ]
-    },
-    {
       "id": "nissan",
       "name": "Nissan",
       "features": {

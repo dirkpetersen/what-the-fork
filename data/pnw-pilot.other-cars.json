@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "fork": {
+    "id": "pnw-pilot",
+    "name": "PNW Pilot",
+    "branch": "origin/3testpnw",
+    "generated_at": "2026-07-19"
+  },
+  "manufacturers": [
+    {
+      "id": "tesla",
+      "name": "Tesla",
+      "cars": [
+        {
+          "id": "tesla-model-s-hw3-2020-23",
+          "name": "Tesla Model S (with HW3, 'Raven') 2020-23",
+          "highlight": true,
+          "note": "The fork's primary daily driver (2021 Model S Long Range Plus, Raven). In code (TESLA_MODEL_S_HW3, xnor-tech legacy port: tesla_legacy.h panda safety, legacy CAN builder, Continental ARS4-B radar tap, 0x348 ignition) but NOT in the published CARS.md \u2014 support is fork/xnor-specific, not upstream.",
+          "features": {
+            "tesla-legacy": "yes",
+            "bsm": {
+              "status": "yes",
+              "note": "Blind spot from AutopilotStatus 0x399; walk-by flip test still pending"
+            },
+            "nlc": {
+              "status": "partial",
+              "note": "Opt-in toggle, default OFF"
+            },
+            "oplong": {
+              "status": "partial",
+              "note": "Road-proven daily on this fork, but not a published upstream port; radar requires a CAN tap"
+            }
+          }
+        },
+        {
+          "id": "tesla-model-s-hw1-2014-16",
+          "name": "Tesla Model S (with HW1) 2014-16",
+          "note": "xnor-added legacy platform (TESLA_MODEL_S_HW1); in code but not in the published CARS.md. tesla_legacy.h notes 'Only LKAS (non-emergency) is currently supported'.",
+          "features": {
+            "oplong": "unknown",
+            "exp": "unknown",
+            "ces": "unknown",
+            "vtsc": "unknown",
+            "mtsc": "unknown",
+            "alc": {
+              "status": "unknown",
+              "note": "Port exists (Bosch radar, angle steering) but no evidence of road testing in this fork"
+            },
+            "tesla-legacy": "yes"
+          }
+        },
+        {
+          "id": "tesla-model-s-hw2-2017-19",
+          "name": "Tesla Model S (with HW2) 2017-19",
+          "note": "xnor-added legacy platform (TESLA_MODEL_S_HW2); in code but not in the published CARS.md. Code marks radar unavailable for this platform.",
+          "features": {
+            "oplong": "unknown",
+            "exp": "unknown",
+            "ces": "unknown",
+            "vtsc": "unknown",
+            "mtsc": "unknown",
+            "alc": {
+              "status": "unknown",
+              "note": "radarUnavailable in interface.py; external-panda variant supported"
+            },
+            "tesla-legacy": "yes"
+          }
+        },
+        {
+          "id": "tesla-model-x-hw1-2014-16",
+          "name": "Tesla Model X (with HW1) 2014-16",
+          "note": "xnor-added legacy platform (TESLA_MODEL_X_HW1); in code but not in the published CARS.md.",
+          "features": {
+            "oplong": "unknown",
+            "exp": "unknown",
+            "ces": "unknown",
+            "vtsc": "unknown",
+            "mtsc": "unknown",
+            "alc": "unknown",
+            "tesla-legacy": "yes"
+          }
+        },
+        {
+          "id": "tesla-model-x-hw2-2016-19",
+          "name": "Tesla Model X (with HW2) 2016-19",
+          "note": "xnor-added legacy platform (TESLA_MODEL_X_HW2); in code but not in the published CARS.md.",
+          "features": {
+            "oplong": "unknown",
+            "exp": "unknown",
+            "ces": "unknown",
+            "vtsc": "unknown",
+            "mtsc": "unknown",
+            "alc": "unknown",
+            "tesla-legacy": "yes"
+          }
+        },
+        {
+          "id": "tesla-model-x-hw4-2024",
+          "name": "Tesla Model X (with HW4) 2024",
+          "note": "Upstream platform present in code (TESLA_MODEL_X) but not in this fork's published CARS.md; a disabled dashcam-only line ('pending find invalidLkasSetting signal') remains in interface.py.",
+          "features": {
+            "oplong": "unknown",
+            "exp": "unknown",
+            "ces": "unknown",
+            "vtsc": "unknown",
+            "mtsc": "unknown",
+            "alc": "unknown"
+          }
+        },
+        {
+          "id": "tesla-model-s-hw4-2024",
+          "name": "Tesla Model S (with HW4) 2024",
+          "note": "Upstream platform present in code (TESLA_MODEL_S) but not listed in this fork's published CARS.md.",
+          "features": {
+            "oplong": "unknown",
+            "exp": "unknown",
+            "ces": "unknown",
+            "vtsc": "unknown",
+            "mtsc": "unknown",
+            "alc": "unknown"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mg",
+      "name": "MG",
+      "cars": [
+        {
+          "id": "mg-5-ev-2021-24",
+          "name": "MG 5 EV 2021-24",
+          "note": "In code (xnor-tech 'Tesla legacy & MG support' commit) but not in the published CARS.md"
+        },
+        {
+          "id": "mg-zs-ev-2022",
+          "name": "MG ZS EV 2022",
+          "note": "In code (xnor-tech 'Tesla legacy & MG support' commit) but not in the published CARS.md"
+        },
+        {
+          "id": "mg-zs-2025",
+          "name": "MG ZS 2025",
+          "note": "In code (xnor-tech 'Tesla legacy & MG support' commit) but not in the published CARS.md"
+        }
+      ]
+    },
+    {
+      "id": "peugeot",
+      "name": "Peugeot",
+      "cars": [
+        {
+          "id": "peugeot-208-2019-25",
+          "name": "Peugeot 208 2019-25",
+          "note": "In code but not in the published CARS.md; dashcam-only (no control)"
+        }
+      ]
+    },
+    {
+      "id": "ford",
+      "name": "Ford",
+      "cars": [
+        {
+          "id": "ford-f-150-lightning-2022-25",
+          "name": "Ford F-150 Lightning 2022-25",
+          "highlight": true,
+          "note": "The fork's secondary daily driver. In code (FORD_F_150_LIGHTNING_MK1) but deliberately hidden from the published CARS.md pending openpilot issue #30302; 2025 fingerprint is fork-added (with BluePilot) and known-good only on the dev channel \u2014 a frozen fallback build fingerprints it as MOCK/dashcam. Gets the fork's 4-signal lateral (panda reflash), ICBM stock-ACC curve control, per-car curve penalty and follow shaping.",
+          "features": {
+            "oplong": {
+              "status": "partial",
+              "note": "Opt-in Alpha Long toggle; deployed but flagged not yet fully road-proven"
+            },
+            "icbm": {
+              "status": "yes",
+              "note": "Active when Alpha Long is OFF; taps stock ACC SET\u00b1 buttons over CAN"
+            },
+            "ford-4sig": {
+              "status": "yes",
+              "note": "Requires a driver-authorized panda reflash"
+            },
+            "ford-lat-refine": "yes",
+            "ford-follow": {
+              "status": "partial",
+              "note": "Inert until Alpha Long is enabled"
+            },
+            "lightning-curve-penalty": "yes",
+            "nlc": {
+              "status": "partial",
+              "note": "Opt-in toggle, default OFF"
+            },
+            "context-indicators": "yes"
+          }
+        }
+      ]
+    }
+  ]
+}

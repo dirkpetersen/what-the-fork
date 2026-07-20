@@ -253,24 +253,6 @@
           }
         },
         {
-          "id": "acura-rdx-2022-24",
-          "name": "Acura RDX 2022-24 (MMR)",
-          "highlight": true,
-          "note": "In code (ACURA_RDX_3G_MMR) but not in published CARS.md; dashcam-only on release branches \u2014 code TODO: 'release from dashcam when there's enough driving data for torqued/paramsd to converge'",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "drivable on master/nightly only"
-            },
-            "oplong": {
-              "status": "partial",
-              "note": "alpha longitudinal pedal tuning present in code"
-            },
-            "exp": "unknown",
-            "sng": "unknown"
-          }
-        },
-        {
           "id": "acura-tlx-2021-22",
           "name": "Acura TLX 2021-22"
         },
@@ -283,126 +265,6 @@
               "note": "stock ACC only (Bosch C)"
             },
             "exp": "no"
-          }
-        },
-        {
-          "id": "acura-adx-2025-26",
-          "name": "Acura ADX 2025-26",
-          "note": "In code (extra_cars.py) as community-supported only, not in published CARS.md",
-          "features": {
-            "alc": "unknown",
-            "lca": "unknown",
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
-        },
-        {
-          "id": "acura-integra-2023-25",
-          "name": "Acura Integra 2023-25",
-          "note": "In code (extra_cars.py) as community-supported only, not in published CARS.md",
-          "features": {
-            "alc": "unknown",
-            "lca": "unknown",
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
-        },
-        {
-          "id": "acura-mdx-2015-16",
-          "name": "Acura MDX 2015-16",
-          "note": "In code (extra_cars.py) as community-supported only, not in published CARS.md",
-          "features": {
-            "alc": "unknown",
-            "lca": "unknown",
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
-        },
-        {
-          "id": "acura-mdx-2017-20",
-          "name": "Acura MDX 2017-20",
-          "note": "In code (extra_cars.py) as community-supported only, not in published CARS.md",
-          "features": {
-            "alc": "unknown",
-            "lca": "unknown",
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
-        },
-        {
-          "id": "acura-mdx-hybrid-2017-20",
-          "name": "Acura MDX Hybrid 2017-20",
-          "note": "In code (extra_cars.py) as community-supported only, not in published CARS.md",
-          "features": {
-            "alc": "unknown",
-            "lca": "unknown",
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
-        },
-        {
-          "id": "acura-rdx-2025-26",
-          "name": "Acura RDX 2025-26",
-          "note": "In code (extra_cars.py) as community-supported only, not in published CARS.md",
-          "features": {
-            "alc": "unknown",
-            "lca": "unknown",
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
-        },
-        {
-          "id": "acura-rlx-2017",
-          "name": "Acura RLX 2017",
-          "note": "In code (extra_cars.py) as community-supported only, not in published CARS.md",
-          "features": {
-            "alc": "unknown",
-            "lca": "unknown",
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
-        },
-        {
-          "id": "acura-tlx-2015-17",
-          "name": "Acura TLX 2015-17",
-          "note": "In code (extra_cars.py) as community-supported only, not in published CARS.md",
-          "features": {
-            "alc": "unknown",
-            "lca": "unknown",
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
-        },
-        {
-          "id": "acura-tlx-2018-20",
-          "name": "Acura TLX 2018-20",
-          "note": "In code (extra_cars.py) as community-supported only, not in published CARS.md",
-          "features": {
-            "alc": "unknown",
-            "lca": "unknown",
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
-        },
-        {
-          "id": "acura-tlx-2023",
-          "name": "Acura TLX 2023",
-          "note": "In code (extra_cars.py) as community-supported only, not in published CARS.md",
-          "features": {
-            "alc": "unknown",
-            "lca": "unknown",
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
           }
         },
         {
@@ -471,21 +333,6 @@
           "name": "Audi S3 2015-17"
         },
         {
-          "id": "audi-q5-2013-17",
-          "name": "Audi Q5 2013-17",
-          "note": "In code but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "no",
-              "note": "dashcam mode"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
           "id": "audi-a4-2016-24",
           "name": "Audi A4 2016-24",
           "note": "In code (extra_cars.py) as incompatible \u2014 FlexRay bus",
@@ -519,135 +366,6 @@
             "oplong": "no",
             "exp": "no",
             "sng": "no"
-          }
-        }
-      ]
-    },
-    {
-      "id": "buick",
-      "name": "Buick",
-      "features": {
-        "alc": {
-          "status": "no",
-          "note": "all Buick platforms are dashcam-only upstream"
-        },
-        "lca": "no",
-        "oplong": "no",
-        "exp": "no",
-        "sng": "no",
-        "dm": "yes",
-        "aod": "yes",
-        "ldw": "yes",
-        "personality": "yes",
-        "disengage-on-accelerator": "yes",
-        "record-front": "yes",
-        "record-audio": "yes",
-        "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
-      },
-      "cars": [
-        {
-          "id": "buick-lacrosse-2017-19",
-          "name": "Buick LaCrosse 2017-19",
-          "note": "In code but not in published CARS.md; dashcam-only (gateway network location without usable radar)",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream; may drive in community forks"
-            }
-          }
-        },
-        {
-          "id": "buick-regal-essence-2018",
-          "name": "Buick Regal Essence 2018",
-          "note": "In code but not in published CARS.md; dashcam 'due to lack of users and test coverage' \u2014 code comment says these cars 'likely still work fine'",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream; likely works, needs a test route"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "cadillac",
-      "name": "Cadillac",
-      "features": {
-        "alc": {
-          "status": "no",
-          "note": "all Cadillac platforms are dashcam-only upstream"
-        },
-        "lca": "no",
-        "oplong": "no",
-        "exp": "no",
-        "sng": "no",
-        "dm": "yes",
-        "aod": "yes",
-        "ldw": "yes",
-        "personality": "yes",
-        "disengage-on-accelerator": "yes",
-        "record-front": "yes",
-        "record-audio": "yes",
-        "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
-      },
-      "cars": [
-        {
-          "id": "cadillac-ats-2018",
-          "name": "Cadillac ATS Premium Performance 2018",
-          "note": "In code but not in published CARS.md; dashcam 'due to lack of users and test coverage' \u2014 code comment says these cars 'likely still work fine'",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream; likely works, needs a test route"
-            }
-          }
-        },
-        {
-          "id": "cadillac-escalade-2017",
-          "name": "Cadillac Escalade 2017",
-          "note": "In code but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            }
-          }
-        },
-        {
-          "id": "cadillac-escalade-esv-2016",
-          "name": "Cadillac Escalade ESV 2016",
-          "note": "In code but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            }
-          }
-        },
-        {
-          "id": "cadillac-escalade-esv-2019",
-          "name": "Cadillac Escalade ESV 2019",
-          "note": "In code but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            }
-          }
-        },
-        {
-          "id": "cadillac-xt4-2023",
-          "name": "Cadillac XT4 2023",
-          "note": "In code but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            }
           }
         }
       ]
@@ -701,66 +419,6 @@
         {
           "id": "chevrolet-trailblazer-2021-22",
           "name": "Chevrolet Trailblazer 2021-22"
-        },
-        {
-          "id": "chevrolet-volt-2017-18",
-          "name": "Chevrolet Volt 2017-18",
-          "note": "In code but not in published CARS.md; dashcam-only upstream (gateway network location without usable radar)",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream; may drive in community forks"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "chevrolet-volt-2019",
-          "name": "Chevrolet Volt 2019",
-          "note": "In code but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "chevrolet-malibu-premier-2017",
-          "name": "Chevrolet Malibu Premier 2017",
-          "note": "In code but not in published CARS.md; dashcam 'due to lack of users and test coverage' \u2014 'likely still work fine'",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream; likely works, needs a test route"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "chevrolet-traverse-2022-23",
-          "name": "Chevrolet Traverse 2022-23",
-          "note": "In code but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
         }
       ]
     },
@@ -1335,74 +993,6 @@
         {
           "id": "gmc-sierra-1500-2020-21",
           "name": "GMC Sierra 1500 2020-21"
-        },
-        {
-          "id": "gmc-acadia-2018",
-          "name": "GMC Acadia 2018",
-          "note": "In code but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "gmc-yukon-2019-20",
-          "name": "GMC Yukon 2019-20",
-          "highlight": true,
-          "note": "In code but not in published CARS.md; explicit per-car dashcam with code comment 'Needs steerRatio, tireStiffness, and lat accel factor tuning'",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam pending tuning"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        }
-      ]
-    },
-    {
-      "id": "holden",
-      "name": "Holden",
-      "features": {
-        "alc": {
-          "status": "no",
-          "note": "dashcam-only upstream"
-        },
-        "lca": "no",
-        "oplong": "no",
-        "exp": "no",
-        "sng": "no",
-        "dm": "yes",
-        "aod": "yes",
-        "ldw": "yes",
-        "personality": "yes",
-        "disengage-on-accelerator": "yes",
-        "record-front": "yes",
-        "record-audio": "yes",
-        "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
-      },
-      "cars": [
-        {
-          "id": "holden-astra-2017",
-          "name": "Holden Astra 2017",
-          "note": "In code but not in published CARS.md; dashcam 'due to lack of users and test coverage' \u2014 'likely still work fine'",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream; likely works, needs a test route"
-            }
-          }
         }
       ]
     },
@@ -1859,54 +1449,6 @@
           }
         },
         {
-          "id": "honda-accord-2016-17",
-          "name": "Honda Accord 2016-17",
-          "note": "In code (extra_cars.py) as community-supported only, not in published CARS.md",
-          "features": {
-            "alc": "unknown",
-            "lca": "unknown",
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
-        },
-        {
-          "id": "honda-accord-hybrid-2017",
-          "name": "Honda Accord Hybrid 2017",
-          "note": "In code (extra_cars.py) as community-supported only, not in published CARS.md",
-          "features": {
-            "alc": "unknown",
-            "lca": "unknown",
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
-        },
-        {
-          "id": "honda-clarity-2018-21",
-          "name": "Honda Clarity 2018-21",
-          "note": "In code (extra_cars.py) as community-supported only, not in published CARS.md",
-          "features": {
-            "alc": "unknown",
-            "lca": "unknown",
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
-        },
-        {
-          "id": "honda-pilot-2026",
-          "name": "Honda Pilot 2026",
-          "note": "In code (extra_cars.py) as community-supported only, not in published CARS.md",
-          "features": {
-            "alc": "unknown",
-            "lca": "unknown",
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
-        },
-        {
           "id": "honda-prologue-2024-25",
           "name": "Honda Prologue 2024-25",
           "note": "In code (extra_cars.py) as incompatible \u2014 GM CAN bus security",
@@ -2161,21 +1703,6 @@
           }
         },
         {
-          "id": "hyundai-kona-2022-23",
-          "name": "Hyundai Kona 2022-23",
-          "note": "In code (HYUNDAI_KONA_2022) but not in published CARS.md; dashcamOnly via ALT_LIMITS_2 flag (see opendbc PR #1137)",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
           "id": "hyundai-kona-electric-2018-21",
           "name": "Hyundai Kona Electric 2018-21"
         },
@@ -2205,18 +1732,6 @@
         {
           "id": "hyundai-palisade-2020-22",
           "name": "Hyundai Palisade 2020-22"
-        },
-        {
-          "id": "hyundai-palisade-2023-24",
-          "name": "Hyundai Palisade 2023-24 (HDA II)",
-          "note": "In code (extra_cars.py) as community-supported only, not in published CARS.md",
-          "features": {
-            "alc": "unknown",
-            "lca": "unknown",
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
         },
         {
           "id": "hyundai-santa-cruz-2022-24",
@@ -2354,19 +1869,6 @@
               "status": "partial",
               "note": "no steering below 39 mph"
             }
-          }
-        },
-        {
-          "id": "jeep-cherokee-2019-23",
-          "name": "Jeep Cherokee 2019-23",
-          "note": "In code (JEEP_CHEROKEE_5TH_GEN, CUSW platform) but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "sng": "no"
           }
         }
       ]
@@ -2587,21 +2089,6 @@
           }
         },
         {
-          "id": "kia-optima-hybrid-2017",
-          "name": "Kia Optima Hybrid 2017",
-          "note": "In code (KIA_OPTIMA_H) but not in published CARS.md; dashcam-only \u2014 code TODO: 'Optima Hybrid 2017 uses a different SCC12 checksum'",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
           "id": "kia-optima-hybrid-2019",
           "name": "Kia Optima Hybrid 2019",
           "features": {
@@ -2669,18 +2156,6 @@
         {
           "id": "kia-telluride-2020-22",
           "name": "Kia Telluride 2020-22"
-        },
-        {
-          "id": "kia-telluride-2023-24",
-          "name": "Kia Telluride 2023-24 (HDA II)",
-          "note": "In code (extra_cars.py) as community-supported only, not in published CARS.md",
-          "features": {
-            "alc": "unknown",
-            "lca": "unknown",
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
         }
       ]
     },
@@ -3071,58 +2546,6 @@
               "note": "no steering below 28 mph"
             }
           }
-        },
-        {
-          "id": "mazda-3-2017-18",
-          "name": "Mazda 3 2017-18",
-          "note": "In code but not in published CARS.md; interface sets dashcamOnly for all Mazdas except CX-5 2022+ and CX-9 2021+",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "mazda-6-2017-20",
-          "name": "Mazda 6 2017-20",
-          "note": "In code but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "mazda-cx-5-2017-21",
-          "name": "Mazda CX-5 2017-21",
-          "note": "In code but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "mazda-cx-9-2016-20",
-          "name": "Mazda CX-9 2016-20",
-          "note": "In code but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "sng": "no"
-          }
         }
       ]
     },
@@ -3172,81 +2595,6 @@
       ]
     },
     {
-      "id": "peugeot",
-      "name": "Peugeot",
-      "features": {
-        "alc": {
-          "status": "no",
-          "note": "PSA port is dashcam-only"
-        },
-        "lca": "no",
-        "oplong": "no",
-        "exp": "no",
-        "sng": "no",
-        "dm": "yes",
-        "aod": "yes",
-        "ldw": "yes",
-        "personality": "yes",
-        "disengage-on-accelerator": "yes",
-        "record-front": "yes",
-        "record-audio": "yes",
-        "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
-      },
-      "cars": [
-        {
-          "id": "peugeot-208-2019-25",
-          "name": "Peugeot 208 2019-25",
-          "highlight": true,
-          "note": "New in-development PSA brand port in code but not in published CARS.md: interface hardcodes dashcamOnly=True and the FW query is a placeholder ('will be added in separate PR')",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "port under active development; dashcam-only"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "id": "porsche",
-      "name": "Porsche",
-      "features": {
-        "alc": {
-          "status": "no",
-          "note": "dashcam-only upstream"
-        },
-        "lca": "no",
-        "oplong": "no",
-        "exp": "no",
-        "sng": "no",
-        "dm": "yes",
-        "aod": "yes",
-        "ldw": "yes",
-        "personality": "yes",
-        "disengage-on-accelerator": "yes",
-        "record-front": "yes",
-        "record-audio": "yes",
-        "firehose": "yes",
-        "connect": "yes",
-        "maneuver-testing": "yes"
-      },
-      "cars": [
-        {
-          "id": "porsche-macan-2017-24",
-          "name": "Porsche Macan 2017-24",
-          "note": "In code (volkswagen brand, PORSCHE_MACAN_MK1) but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            }
-          }
-        }
-      ]
-    },
-    {
       "id": "ram",
       "name": "Ram",
       "features": {
@@ -3278,32 +2626,6 @@
               "status": "partial",
               "note": "no steering below 32 mph"
             }
-          }
-        },
-        {
-          "id": "ram-2500-2020-24",
-          "name": "Ram 2500 2020-24",
-          "note": "In code (RAM_HD_5TH_GEN) but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "ram-3500-2019-22",
-          "name": "Ram 3500 2019-22",
-          "note": "In code (RAM_HD_5TH_GEN) but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "sng": "no"
           }
         }
       ]
@@ -3381,21 +2703,6 @@
         {
           "id": "seat-leon-2014-20",
           "name": "SEAT Leon 2014-20"
-        },
-        {
-          "id": "seat-alhambra-2018-20",
-          "name": "SEAT Alhambra 2018-20",
-          "note": "In code but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
         }
       ]
     },
@@ -3573,141 +2880,6 @@
           "name": "Subaru XV 2020-21"
         },
         {
-          "id": "subaru-ascent-2023",
-          "name": "Subaru Ascent 2023",
-          "note": "In code but not in published CARS.md; dashcam-only upstream (LKAS_ANGLE flag)",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "subaru-crosstrek-hybrid-2020",
-          "name": "Subaru Crosstrek Hybrid 2020",
-          "note": "In code but not in published CARS.md; dashcam-only upstream (HYBRID flag)",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "subaru-forester-2017-18",
-          "name": "Subaru Forester 2017-18",
-          "note": "In code but not in published CARS.md; dashcam-only upstream (pre-global platform)",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "subaru-forester-2022-24",
-          "name": "Subaru Forester 2022-24",
-          "note": "In code but not in published CARS.md; dashcam-only upstream (LKAS_ANGLE flag)",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "subaru-forester-hybrid-2020",
-          "name": "Subaru Forester Hybrid 2020",
-          "note": "In code but not in published CARS.md; dashcam-only upstream (HYBRID flag)",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "subaru-legacy-2015-18",
-          "name": "Subaru Legacy 2015-18",
-          "note": "In code but not in published CARS.md; dashcam-only upstream (pre-global platform)",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "subaru-outback-2015-17",
-          "name": "Subaru Outback 2015-17",
-          "note": "In code but not in published CARS.md; dashcam-only upstream (pre-global platform)",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "subaru-outback-2018-19",
-          "name": "Subaru Outback 2018-19",
-          "note": "In code but not in published CARS.md; dashcam-only upstream (pre-global platform)",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "subaru-outback-2023",
-          "name": "Subaru Outback 2023",
-          "note": "In code but not in published CARS.md; dashcam-only upstream (LKAS_ANGLE flag)",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
           "id": "subaru-solterra-2023-25",
           "name": "Subaru Solterra 2023-25",
           "note": "In code (extra_cars.py) as incompatible \u2014 Toyota CAN bus security",
@@ -3769,22 +2941,6 @@
         {
           "id": "tesla-model-y-hw4-2024-25",
           "name": "Tesla Model Y (HW4) 2024-25"
-        },
-        {
-          "id": "tesla-model-x-hw4-2024",
-          "name": "Tesla Model X (HW4) 2024",
-          "highlight": true,
-          "note": "In code (TESLA_MODEL_X) but not in published CARS.md; interface comment: 'dashcam only, pending find invalidLkasSetting signal'",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam-only pending invalidLkasSetting signal"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
         }
       ]
     },
@@ -4306,49 +3462,6 @@
           }
         },
         {
-          "id": "toyota-rav4-prime-2021-23",
-          "name": "Toyota RAV4 Prime 2021-23",
-          "highlight": true,
-          "note": "In code (SecOC platform, support_type CUSTOM) but not in published CARS.md; requires a per-vehicle SecOC key and is dashcam-only on release branches",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "custom support: needs SecOC key; non-release branches only"
-            },
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
-        },
-        {
-          "id": "toyota-sienna-2021-23",
-          "name": "Toyota Sienna 2021-23",
-          "note": "In code (SecOC platform, support_type CUSTOM) but not in published CARS.md; requires a per-vehicle SecOC key and is dashcam-only on release branches",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "custom support: needs SecOC key; non-release branches only"
-            },
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
-        },
-        {
-          "id": "toyota-yaris-non-us-2020-2023",
-          "name": "Toyota Yaris (Non-US) 2020, 2023",
-          "note": "In code (SecOC platform, support_type CUSTOM) but not in published CARS.md; requires a per-vehicle SecOC key and is dashcam-only on release branches",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "custom support: needs SecOC key; non-release branches only"
-            },
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
-        },
-        {
           "id": "toyota-bz4x-2023-25",
           "name": "Toyota bZ4x 2023-25",
           "note": "In code (extra_cars.py) as incompatible \u2014 Toyota CAN bus security",
@@ -4688,97 +3801,6 @@
         {
           "id": "vw-touran-2016-23",
           "name": "Volkswagen Touran 2016-23"
-        },
-        {
-          "id": "vw-id4-2021-23",
-          "name": "Volkswagen ID.4 2021-23",
-          "highlight": true,
-          "note": "In code (VOLKSWAGEN_ID4_MK1, recent MEB angle-control port \u2014 'Volkswagen ID.4 EA' commit) but not in published CARS.md; interface comment: 'Release support needs HCA timeout fix, safety validation'",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam on release branches; port under active development"
-            },
-            "lca": "unknown",
-            "oplong": "unknown",
-            "exp": "unknown",
-            "sng": "unknown"
-          }
-        },
-        {
-          "id": "vw-caddy-2019",
-          "name": "Volkswagen Caddy 2019",
-          "note": "In code (PQ platform) but not in published CARS.md; dashcam-only \u2014 'Release support needs HCA timeout fix, safety validation, revised J533 harness'",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "vw-caddy-maxi-2019",
-          "name": "Volkswagen Caddy Maxi 2019",
-          "note": "In code (PQ platform) but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "vw-jetta-2015-18",
-          "name": "Volkswagen Jetta 2015-18",
-          "note": "In code (PQ platform) but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "vw-passat-nms-2017-22",
-          "name": "Volkswagen Passat NMS 2017-22",
-          "note": "In code (PQ platform) but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
-        },
-        {
-          "id": "vw-sharan-2018-22",
-          "name": "Volkswagen Sharan 2018-22",
-          "note": "In code (PQ platform) but not in published CARS.md; dashcam-only upstream",
-          "features": {
-            "alc": {
-              "status": "partial",
-              "note": "dashcam upstream"
-            },
-            "lca": "no",
-            "oplong": "no",
-            "exp": "no",
-            "sng": "no"
-          }
         }
       ]
     }

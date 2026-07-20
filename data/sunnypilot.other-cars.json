@@ -1,0 +1,801 @@
+{
+  "schema_version": 1,
+  "fork": {
+    "id": "sunnypilot",
+    "name": "sunnypilot",
+    "branch": "sunnypilot-upstream/master",
+    "generated_at": "2026-07-19"
+  },
+  "manufacturers": [
+    {
+      "id": "acura",
+      "name": "Acura",
+      "cars": [
+        {
+          "id": "acura-rdx-2022-24",
+          "name": "Acura RDX 2022-24",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md"
+        }
+      ]
+    },
+    {
+      "id": "audi",
+      "name": "Audi",
+      "cars": [
+        {
+          "id": "audi-q5-2013-17",
+          "name": "Audi Q5 2013-17",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md"
+        }
+      ]
+    },
+    {
+      "id": "buick",
+      "name": "Buick",
+      "cars": [
+        {
+          "id": "buick-lacrosse-2017-19",
+          "name": "Buick LaCrosse 2017-19",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md; legacy GM port retained by the fork"
+        },
+        {
+          "id": "buick-regal-2018",
+          "name": "Buick Regal 2018",
+          "note": "in code but not in the published CARS.md; dashcam-only platform in code",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "cadillac",
+      "name": "Cadillac",
+      "cars": [
+        {
+          "id": "cadillac-escalade-2017",
+          "name": "Cadillac Escalade 2017",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md; legacy GM port retained by the fork"
+        },
+        {
+          "id": "cadillac-escalade-esv-2016",
+          "name": "Cadillac Escalade ESV 2016",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md; legacy GM port retained by the fork"
+        },
+        {
+          "id": "cadillac-escalade-esv-2019",
+          "name": "Cadillac Escalade ESV 2019",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md; legacy GM port retained by the fork"
+        },
+        {
+          "id": "cadillac-xt4-2023",
+          "name": "Cadillac XT4 2023",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md"
+        },
+        {
+          "id": "cadillac-ct6-non-acc-2017-18",
+          "name": "Cadillac CT6 Non-ACC 2017-18",
+          "note": "in code but not in the published CARS.md; dashcam-only: \"untested platforms, need user validations\"",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        },
+        {
+          "id": "cadillac-xt5-non-acc-2018",
+          "name": "Cadillac XT5 Non-ACC 2018",
+          "note": "in code but not in the published CARS.md; dashcam-only: \"untested platforms, need user validations\"",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        },
+        {
+          "id": "cadillac-ats-2018",
+          "name": "Cadillac ATS 2018",
+          "note": "in code but not in the published CARS.md; dashcam-only platform in code",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "chevrolet",
+      "name": "Chevrolet",
+      "cars": [
+        {
+          "id": "chevrolet-bolt-ev-non-acc-2017",
+          "name": "Chevrolet Bolt EV Non-ACC 2017",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "lateral-only port; stock non-adaptive cruise retained"
+            },
+            "sng": {
+              "status": "no",
+              "note": "no ACC"
+            },
+            "exp": {
+              "status": "no",
+              "note": "no longitudinal control"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "engages above 24 mph, min steer ~6 mph"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-bolt-ev-non-acc-2018-21",
+          "name": "Chevrolet Bolt EV Non-ACC 2018-21",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "lateral-only port; stock non-adaptive cruise retained"
+            },
+            "sng": {
+              "status": "no",
+              "note": "no ACC"
+            },
+            "exp": {
+              "status": "no",
+              "note": "no longitudinal control"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "engages above 24 mph, min steer ~6 mph"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-bolt-euv-lt-non-acc-2022-23",
+          "name": "Chevrolet Bolt EUV LT Non-ACC 2022-23",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "lateral-only port; stock non-adaptive cruise retained"
+            },
+            "sng": {
+              "status": "no",
+              "note": "no ACC"
+            },
+            "exp": {
+              "status": "no",
+              "note": "no longitudinal control"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "engages above 24 mph, min steer ~6 mph"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-bolt-ev-lt-non-acc-2022-23",
+          "name": "Chevrolet Bolt EV LT Non-ACC 2022-23",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "lateral-only port; stock non-adaptive cruise retained"
+            },
+            "sng": {
+              "status": "no",
+              "note": "no ACC"
+            },
+            "exp": {
+              "status": "no",
+              "note": "no longitudinal control"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "engages above 24 mph, min steer ~6 mph"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-equinox-non-acc-2019-22",
+          "name": "Chevrolet Equinox Non-ACC 2019-22",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "lateral-only port; stock non-adaptive cruise retained"
+            },
+            "sng": {
+              "status": "no",
+              "note": "no ACC"
+            },
+            "exp": {
+              "status": "no",
+              "note": "no longitudinal control"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "engages above 24 mph, min steer ~6 mph"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-malibu-non-acc-2016-23",
+          "name": "Chevrolet Malibu Non-ACC 2016-23",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "lateral-only port; stock non-adaptive cruise retained"
+            },
+            "sng": {
+              "status": "no",
+              "note": "no ACC"
+            },
+            "exp": {
+              "status": "no",
+              "note": "no longitudinal control"
+            },
+            "alc": {
+              "status": "partial",
+              "note": "engages above 24 mph, min steer ~6 mph"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-traverse-2022-23",
+          "name": "Chevrolet Traverse 2022-23",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md"
+        },
+        {
+          "id": "chevrolet-volt-2017-18",
+          "name": "Chevrolet Volt 2017-18",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md; legacy GM port retained by the fork"
+        },
+        {
+          "id": "chevrolet-volt-2019",
+          "name": "Chevrolet Volt 2019",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md; legacy GM port retained by the fork"
+        },
+        {
+          "id": "chevrolet-suburban-non-acc-2016-20",
+          "name": "Chevrolet Suburban Non-ACC 2016-20",
+          "note": "in code but not in the published CARS.md; dashcam-only: \"untested platforms, need user validations\"",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-trailblazer-non-acc-2021-22",
+          "name": "Chevrolet Trailblazer Non-ACC 2021-22",
+          "note": "in code but not in the published CARS.md; dashcam-only: \"untested platforms, need user validations\"",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        },
+        {
+          "id": "chevrolet-malibu-2017",
+          "name": "Chevrolet Malibu 2017",
+          "note": "in code but not in the published CARS.md; dashcam-only platform in code",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "ford",
+      "name": "Ford",
+      "cars": [
+        {
+          "id": "ford-f-150-lightning-2022-23",
+          "name": "Ford F-150 Lightning 2022-23",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md"
+        }
+      ]
+    },
+    {
+      "id": "genesis",
+      "name": "Genesis",
+      "cars": [
+        {
+          "id": "genesis-g70-non-scc-2021",
+          "name": "Genesis G70 Non-SCC 2021",
+          "note": "in code but not in the published CARS.md; dashcam-only: \"untested non-SCC platforms, need user validations\"",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "gmc",
+      "name": "GMC",
+      "cars": [
+        {
+          "id": "gmc-acadia-2018",
+          "name": "GMC Acadia 2018",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md; legacy GM port retained by the fork"
+        }
+      ]
+    },
+    {
+      "id": "holden",
+      "name": "Holden",
+      "cars": [
+        {
+          "id": "holden-astra-2017",
+          "name": "Holden Astra 2017",
+          "note": "in code but not in the published CARS.md; dashcam-only platform in code",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "honda",
+      "name": "Honda",
+      "cars": [
+        {
+          "id": "honda-clarity-2018-21",
+          "name": "Honda Clarity 2018-21",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md; fork Nidec-hybrid port with modified EPS support"
+        }
+      ]
+    },
+    {
+      "id": "hyundai",
+      "name": "Hyundai",
+      "cars": [
+        {
+          "id": "hyundai-elantra-non-scc-2022",
+          "name": "Hyundai Elantra Non-SCC 2022",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "lateral-only port; no factory adaptive cruise"
+            },
+            "sng": {
+              "status": "no",
+              "note": "no ACC"
+            },
+            "exp": {
+              "status": "no",
+              "note": "no longitudinal control"
+            }
+          }
+        },
+        {
+          "id": "hyundai-kona-non-scc-2019",
+          "name": "Hyundai Kona Non-SCC 2019",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "lateral-only port; no factory adaptive cruise"
+            },
+            "sng": {
+              "status": "no",
+              "note": "no ACC"
+            },
+            "exp": {
+              "status": "no",
+              "note": "no longitudinal control"
+            }
+          }
+        },
+        {
+          "id": "hyundai-kona-electric-non-scc-2019",
+          "name": "Hyundai Kona Electric Non-SCC 2019",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "lateral-only port; no factory adaptive cruise"
+            },
+            "sng": {
+              "status": "no",
+              "note": "no ACC"
+            },
+            "exp": {
+              "status": "no",
+              "note": "no longitudinal control"
+            }
+          }
+        },
+        {
+          "id": "hyundai-bayon-non-scc-2021",
+          "name": "Hyundai Bayon Non-SCC 2021",
+          "note": "in code but not in the published CARS.md; dashcam-only: \"untested non-SCC platforms, need user validations\"",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "jeep",
+      "name": "Jeep",
+      "cars": [
+        {
+          "id": "jeep-cherokee-2019-23",
+          "name": "Jeep Cherokee 2019-23",
+          "note": "in code but not in the published CARS.md; dashcam-only (CUSW platform)",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "kia",
+      "name": "Kia",
+      "cars": [
+        {
+          "id": "kia-ceed-plug-in-hybrid-non-scc-2022",
+          "name": "Kia Ceed Plug-in Hybrid Non-SCC 2022",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "lateral-only port; no factory adaptive cruise"
+            },
+            "sng": {
+              "status": "no",
+              "note": "no ACC"
+            },
+            "exp": {
+              "status": "no",
+              "note": "no longitudinal control"
+            }
+          }
+        },
+        {
+          "id": "kia-forte-non-scc-2019",
+          "name": "Kia Forte Non-SCC 2019",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md",
+          "features": {
+            "oplong": {
+              "status": "no",
+              "note": "lateral-only port; no factory adaptive cruise"
+            },
+            "sng": {
+              "status": "no",
+              "note": "no ACC"
+            },
+            "exp": {
+              "status": "no",
+              "note": "no longitudinal control"
+            }
+          }
+        },
+        {
+          "id": "kia-forte-non-scc-2021",
+          "name": "Kia Forte Non-SCC 2021",
+          "note": "in code but not in the published CARS.md; dashcam-only: \"untested non-SCC platforms, need user validations\"",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        },
+        {
+          "id": "kia-seltos-non-scc-2023-24",
+          "name": "Kia Seltos Non-SCC 2023-24",
+          "note": "in code but not in the published CARS.md; dashcam-only: \"untested non-SCC platforms, need user validations\"",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        },
+        {
+          "id": "kia-optima-hybrid-2017",
+          "name": "Kia Optima Hybrid 2017",
+          "note": "in code but not in the published CARS.md; dashcam-only: \"Optima Hybrid 2017 uses a different SCC12 checksum\" (code TODO)",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "mazda",
+      "name": "Mazda",
+      "cars": [
+        {
+          "id": "mazda-3-2017-18",
+          "name": "Mazda 3 2017-18",
+          "note": "in code but not in the published CARS.md; dashcam-only: only CX-5 2022+ and CX-9 2021+ are supported Mazdas",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        },
+        {
+          "id": "mazda-6-2017-20",
+          "name": "Mazda 6 2017-20",
+          "note": "in code but not in the published CARS.md; dashcam-only: only CX-5 2022+ and CX-9 2021+ are supported Mazdas",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        },
+        {
+          "id": "mazda-cx-5-2017-21",
+          "name": "Mazda CX-5 2017-21",
+          "note": "in code but not in the published CARS.md; dashcam-only: only CX-5 2022+ and CX-9 2021+ are supported Mazdas",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        },
+        {
+          "id": "mazda-cx-9-2016-20",
+          "name": "Mazda CX-9 2016-20",
+          "note": "in code but not in the published CARS.md; dashcam-only: only CX-5 2022+ and CX-9 2021+ are supported Mazdas",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "peugeot",
+      "name": "Peugeot",
+      "cars": [
+        {
+          "id": "peugeot-208-2019-25",
+          "name": "Peugeot 208 2019-25",
+          "note": "in code but not in the published CARS.md; dashcam-only WIP PSA port (\"Placeholder, FW Query will be added in separate PR\")",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "porsche",
+      "name": "Porsche",
+      "cars": [
+        {
+          "id": "porsche-macan-2017-24",
+          "name": "Porsche Macan 2017-24",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md; supported via the VW-group port"
+        }
+      ]
+    },
+    {
+      "id": "seat",
+      "name": "SEAT",
+      "cars": [
+        {
+          "id": "seat-alhambra-2018-20",
+          "name": "SEAT Alhambra 2018-20",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md"
+        }
+      ]
+    },
+    {
+      "id": "subaru",
+      "name": "Subaru",
+      "cars": [
+        {
+          "id": "subaru-crosstrek-hybrid-2020",
+          "name": "Subaru Crosstrek Hybrid 2020",
+          "note": "in code but not in the published CARS.md; dashcam-only (Subaru hybrid)",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        },
+        {
+          "id": "subaru-forester-hybrid-2020",
+          "name": "Subaru Forester Hybrid 2020",
+          "note": "in code but not in the published CARS.md; dashcam-only (Subaru hybrid)",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        },
+        {
+          "id": "subaru-forester-2022-24",
+          "name": "Subaru Forester 2022-24",
+          "note": "in code but not in the published CARS.md; dashcam-only (LKAS angle-control Subaru)",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        },
+        {
+          "id": "subaru-outback-2023",
+          "name": "Subaru Outback 2023",
+          "note": "in code but not in the published CARS.md; dashcam-only (LKAS angle-control Subaru)",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        },
+        {
+          "id": "subaru-ascent-2023",
+          "name": "Subaru Ascent 2023",
+          "note": "in code but not in the published CARS.md; dashcam-only (LKAS angle-control Subaru)",
+          "features": {
+            "alc": {
+              "status": "unknown",
+              "note": "dashcam-only in code"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "tesla",
+      "name": "Tesla",
+      "cars": [
+        {
+          "id": "tesla-model-x-with-hw4-2024",
+          "name": "Tesla Model X (with HW4) 2024",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md; Model X is dashcam-only upstream, re-enabled by the fork"
+        }
+      ]
+    },
+    {
+      "id": "toyota",
+      "name": "Toyota",
+      "cars": [
+        {
+          "id": "toyota-rav4-prime-2021-23",
+          "name": "Toyota RAV4 Prime 2021-23",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md; Toyota SecOC security platform, unsupported upstream",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "SecOC platform; support depends on obtaining the car security key"
+            }
+          }
+        },
+        {
+          "id": "toyota-sienna-2021-23",
+          "name": "Toyota Sienna 2021-23",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md; Toyota SecOC security platform, unsupported upstream",
+          "features": {
+            "oplong": {
+              "status": "unknown",
+              "note": "SecOC platform; support depends on obtaining the car security key"
+            }
+          }
+        },
+        {
+          "id": "toyota-yaris-non-us-only-2020-2023",
+          "name": "Toyota Yaris (Non-US only) 2020, 2023",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md"
+        }
+      ]
+    },
+    {
+      "id": "volkswagen",
+      "name": "Volkswagen",
+      "cars": [
+        {
+          "id": "volkswagen-caddy-2019",
+          "name": "Volkswagen Caddy 2019",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md"
+        },
+        {
+          "id": "volkswagen-caddy-maxi-2019",
+          "name": "Volkswagen Caddy Maxi 2019",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md"
+        },
+        {
+          "id": "volkswagen-jetta-2015-18",
+          "name": "Volkswagen Jetta 2015-18",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md"
+        },
+        {
+          "id": "volkswagen-passat-nms-2017-22",
+          "name": "Volkswagen Passat NMS 2017-22",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md"
+        },
+        {
+          "id": "volkswagen-sharan-2018-22",
+          "name": "Volkswagen Sharan 2018-22",
+          "highlight": true,
+          "note": "fork-added: in sunnypilot code, absent from published CARS.md"
+        }
+      ]
+    }
+  ]
+}

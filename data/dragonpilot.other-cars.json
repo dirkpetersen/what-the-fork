@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "fork": {
+    "id": "dragonpilot",
+    "name": "dragonpilot",
+    "branch": "pre-build",
+    "generated_at": "2026-07-19"
+  },
+  "manufacturers": [
+    {
+      "id": "mg",
+      "name": "MG",
+      "cars": [
+        {
+          "id": "mg-zs-2025",
+          "name": "MG ZS 2025",
+          "highlight": true,
+          "note": "Fork-added dragonpilot port, in code but not in the published CARS.md: dedicated opendbc/panda safety mode, torque steering, ICE (NON_EV) variant support added recently; FW query disabled ('no captured FW versions yet'), so the car must be manually selected",
+          "features": {
+            "alc": {
+              "status": "partial",
+              "note": "in code but not in published CARS.md; manual car selection required"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

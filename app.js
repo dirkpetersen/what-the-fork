@@ -118,6 +118,15 @@ async function loadDb(entry) {
   try {
     const db = await fetchJson(entry.file);
     try {
+      // Cars found only in code/comments/docs — merged in, marked codeOnly.
+      const extra = await fetchJson(entry.file.replace(/\.json$/, '.other-cars.json'));
+      for (const om of extra.manufacturers || []) {
+        let m = (db.manufacturers || []).find((x) => norm(x.id || x.name) === norm(om.id || om.name));
+        if (!m) { m = { id: om.id, name: om.name, cars: [] }; (db.manufacturers = db.manufacturers || []).push(m); }
+        for (const car of om.cars || []) m.cars.push(Object.assign({}, car, { codeOnly: true }));
+      }
+    } catch { /* no other-cars file — fine */ }
+    try {
       mergeOverrides(db, await fetchJson(entry.file.replace(/\.json$/, '.overrides.json')));
     } catch { /* no overrides file — fine */ }
     state.dbs[entry.id] = db;
@@ -140,6 +149,7 @@ function featTipHtml(feat) {
 
 const HL_TIP = '<div class="tt-note">★ Explicitly referenced in this fork\'s code</div>';
 const INH_TIP = '<div class="tt-note">Manufacturer-wide setting</div>';
+const CO_TIP = '<div class="tt-note">† Found in code/comments/docs — not in the published CARS.md</div>';
 
 function cellTipHtml(title, sub, status, note) {
   const st = STATUS[status];
@@ -274,15 +284,20 @@ function renderForkMatrix() {
     rh.className = 'rowhead';
     rh.tabIndex = 0;
     rh.setAttribute('role', 'button');
+    const nPub = cars.filter((c) => !c.codeOnly).length;
+    const nCode = cars.length - nPub;
     rh.innerHTML = `<span class="chev">▸</span>${esc(mfr.name)}` +
-      `<span class="mfr-count">${cars.length} car${cars.length === 1 ? '' : 's'}</span>`;
+      `<span class="mfr-count">${nPub} car${nPub === 1 ? '' : 's'}` +
+      `${nCode ? ` +${nCode}†` : ''}</span>`;
     mtr.appendChild(rh);
 
     for (const feat of feats) {
       const entries = cars.map((c) => resolveEntry(mfr, c, feat.id));
-      const agg = aggregate(entries.map((e) => e.status));
+      // aggregate over published cars only; code-only rows shouldn't grey out a brand
+      const pub = entries.filter((_, i) => !cars[i].codeOnly);
+      const agg = aggregate((pub.length ? pub : entries).map((e) => e.status));
       const breakdown = cars.map((c, i) =>
-        `${statusChip(entries[i].status)} ${esc(c.name)}`).join('<br>');
+        `${statusChip(entries[i].status)} ${c.codeOnly ? '† ' : ''}${esc(c.name)}`).join('<br>');
       mtr.appendChild(makeCell(agg, () =>
         `<div class="tt-title">${esc(feat.abbrev)} — ${esc(mfr.name)}</div>` +
         `<div class="tt-body">${statusChip(agg)} ${esc(STATUS[agg].label)} (aggregate)</div>` +
@@ -296,16 +311,16 @@ function renderForkMatrix() {
       ctr.className = 'car';
       const crh = document.createElement('td');
       crh.className = 'rowhead';
-      if (car.highlight) {
-        ctr.classList.add('hl');
-        crh.innerHTML = `<span class="hl-star">★</span>${esc(car.name)}`;
-      } else {
-        crh.textContent = car.name;
-      }
-      if (car.note || car.highlight) bindTip(crh, () =>
+      if (car.highlight) ctr.classList.add('hl');
+      if (car.codeOnly) ctr.classList.add('code-only');
+      const marks = (car.highlight ? '<span class="hl-star">★</span>' : '') +
+        (car.codeOnly ? '<span class="co-mark">†</span>' : '');
+      if (marks) crh.innerHTML = marks + esc(car.name);
+      else crh.textContent = car.name;
+      if (car.note || car.highlight || car.codeOnly) bindTip(crh, () =>
         `<div class="tt-title">${esc(car.name)}</div>` +
         (car.note ? `<div class="tt-body">${esc(car.note)}</div>` : '') +
-        (car.highlight ? HL_TIP : ''));
+        (car.highlight ? HL_TIP : '') + (car.codeOnly ? CO_TIP : ''));
       ctr.appendChild(crh);
       for (const feat of feats) {
         const entry = resolveEntry(mfr, car, feat.id);
@@ -551,7 +566,7 @@ function renderCarMatrix() {
       const agg = aggregate(entries.map((e) => e.status));
       const single = fk.cars.length === 1 ? entries[0] : null;
       const breakdown = fk.cars.length > 1
-        ? fk.cars.map((c, i) => `${statusChip(entries[i].status)} ${esc(c.name)}` +
+        ? fk.cars.map((c, i) => `${statusChip(entries[i].status)} ${c.codeOnly ? '† ' : ''}${esc(c.name)}` +
             (entries[i].note ? ` — ${esc(entries[i].note)}` : '')).join('<br>')
         : '';
       const entry = {
@@ -565,6 +580,7 @@ function renderCarMatrix() {
         (breakdown ? `<div class="tt-note">${breakdown}</div>` : '') +
         (single && single.inherited ? INH_TIP : '') +
         (fk.cars.some((c) => c.highlight) ? HL_TIP : '') +
+        (fk.cars.every((c) => c.codeOnly) ? CO_TIP : '') +
         (entry.override ? '<div class="tt-note">◆ Community correction</div>' : '') + TT_HINT);
       if (entry.override) markOverride(td);
       enableDispute(td, ctx(feat.id, feat.abbrev, feat.name, entry));

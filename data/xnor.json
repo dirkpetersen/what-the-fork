@@ -180,11 +180,6 @@
           "note": "listed as community-supported in CARS.md; no port code ships in this fork"
         },
         {
-          "id": "acura-mdx-2022-24",
-          "name": "Acura MDX 2022-24",
-          "note": "upstream-supported per opendbc CARS.md, but not yet a row in this build's openpilot supported-cars table"
-        },
-        {
           "id": "acura-mdx-2025-26",
           "name": "Acura MDX 2025-26",
           "features": {
@@ -1361,11 +1356,6 @@
           }
         },
         {
-          "id": "honda-odyssey-singapore-2021",
-          "name": "Honda Odyssey (Singapore) 2021",
-          "note": "upstream-supported per opendbc CARS.md, but not yet a row in this build's openpilot supported-cars table"
-        },
-        {
           "id": "honda-odyssey-taiwan-2018-19",
           "name": "Honda Odyssey (Taiwan) 2018-19",
           "features": {
@@ -2512,65 +2502,6 @@
       ]
     },
     {
-      "id": "mg",
-      "name": "MG",
-      "features": {
-        "dm": "yes",
-        "firehose": "yes",
-        "panda-ext": "yes",
-        "tesla-legacy": "no",
-        "mg-port": {
-          "status": "partial",
-          "note": "fork-added brand port with custom mg panda safety mode and mg.dbc; not in published CARS.md"
-        },
-        "oplong": {
-          "status": "partial",
-          "note": "openpilot longitudinal only engages with the alpha-long option, and the port does not advertise the toggle (alphaLongitudinalAvailable=False)"
-        },
-        "exp": {
-          "status": "partial",
-          "note": "requires the opt-in alpha openpilot longitudinal path"
-        },
-        "alc": {
-          "status": "partial",
-          "note": "torque-based steering with generic torque tune; no published support entry"
-        },
-        "lca": "unknown",
-        "sng": "unknown"
-      },
-      "cars": [
-        {
-          "id": "mg-5-ev-2021-24",
-          "name": "MG 5 EV 2021-24",
-          "highlight": true,
-          "note": "fork-added community MG port, in code but not in the published CARS.md"
-        },
-        {
-          "id": "mg-zs-ev-2022",
-          "name": "MG ZS EV 2022",
-          "highlight": true,
-          "note": "fork-added community MG port, in code but not in the published CARS.md; uses ALT_BRAKE safety variant"
-        },
-        {
-          "id": "mg-zs-2025",
-          "name": "MG ZS 2025 (ICE)",
-          "highlight": true,
-          "note": "added in the fork's opendbc master-xnor branch after this build (NON_EV safety variant); not present in this branch's code or CARS.md",
-          "features": {
-            "mg-port": {
-              "status": "unknown",
-              "note": "platform exists only in newer fork commits, not in this checkout"
-            },
-            "oplong": "unknown",
-            "exp": "unknown",
-            "alc": "unknown",
-            "lca": "unknown",
-            "sng": "unknown"
-          }
-        }
-      ]
-    },
-    {
       "id": "nissan",
       "name": "Nissan",
       "features": {
@@ -2721,18 +2652,8 @@
           "name": "Rivian R1S 2022-24"
         },
         {
-          "id": "rivian-r1s-2025",
-          "name": "Rivian R1S 2025",
-          "note": "upstream-supported per opendbc CARS.md, but not yet a row in this build's openpilot supported-cars table"
-        },
-        {
           "id": "rivian-r1t-2022-24",
           "name": "Rivian R1T 2022-24"
-        },
-        {
-          "id": "rivian-r1t-2025",
-          "name": "Rivian R1T 2025",
-          "note": "upstream-supported per opendbc CARS.md, but not yet a row in this build's openpilot supported-cars table"
         }
       ]
     },

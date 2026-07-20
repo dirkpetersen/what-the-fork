@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "fork": {
+    "id": "xnor",
+    "name": "xnor",
+    "branch": "xnor/xnor",
+    "generated_at": "2026-07-19"
+  },
+  "manufacturers": [
+    {
+      "id": "mg",
+      "name": "MG",
+      "cars": [
+        {
+          "id": "mg-5-ev-2021-24",
+          "name": "MG 5 EV 2021-24",
+          "highlight": true,
+          "note": "fork-added community MG port, in code but not in the published CARS.md"
+        },
+        {
+          "id": "mg-zs-ev-2022",
+          "name": "MG ZS EV 2022",
+          "highlight": true,
+          "note": "fork-added community MG port, in code but not in the published CARS.md; uses ALT_BRAKE safety variant"
+        },
+        {
+          "id": "mg-zs-2025",
+          "name": "MG ZS 2025 (ICE)",
+          "highlight": true,
+          "note": "added in the fork's opendbc master-xnor branch after this build (NON_EV safety variant); not present in this branch's code or CARS.md",
+          "features": {
+            "mg-port": {
+              "status": "unknown",
+              "note": "platform exists only in newer fork commits, not in this checkout"
+            },
+            "oplong": "unknown",
+            "exp": "unknown",
+            "alc": "unknown",
+            "lca": "unknown",
+            "sng": "unknown"
+          }
+        }
+      ]
+    },
+    {
+      "id": "acura",
+      "name": "Acura",
+      "cars": [
+        {
+          "id": "acura-mdx-2022-24",
+          "name": "Acura MDX 2022-24",
+          "note": "upstream-supported per opendbc CARS.md, but not yet a row in this build's openpilot supported-cars table"
+        }
+      ]
+    },
+    {
+      "id": "honda",
+      "name": "Honda",
+      "cars": [
+        {
+          "id": "honda-odyssey-singapore-2021",
+          "name": "Honda Odyssey (Singapore) 2021",
+          "note": "upstream-supported per opendbc CARS.md, but not yet a row in this build's openpilot supported-cars table"
+        }
+      ]
+    },
+    {
+      "id": "rivian",
+      "name": "Rivian",
+      "cars": [
+        {
+          "id": "rivian-r1s-2025",
+          "name": "Rivian R1S 2025",
+          "note": "upstream-supported per opendbc CARS.md, but not yet a row in this build's openpilot supported-cars table"
+        },
+        {
+          "id": "rivian-r1t-2025",
+          "name": "Rivian R1T 2025",
+          "note": "upstream-supported per opendbc CARS.md, but not yet a row in this build's openpilot supported-cars table"
+        }
+      ]
+    }
+  ]
+}

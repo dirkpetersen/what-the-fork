@@ -399,6 +399,14 @@ tr.car .rowhead::before {
 }
 tr.car.hl .rowhead { color: var(--ink); }
 
+/* cars found only in code/comments/docs (not in the published CARS.md) */
+.co-mark {
+  color: var(--ink-faint);
+  margin-right: 6px;
+  font-size: 12px;
+}
+tr.car.code-only .rowhead { font-style: italic; }
+
 /* status cells */
 td.cell {
   text-align: center;

@@ -71,14 +71,17 @@ The supported-car list must come from BOTH of these, cross-checked:
   flags a limitation, reflect that as "partial"/"unknown" with a note quoting
   the caveat.
 
-CARS.md is the authoritative BASELINE of supported cars. Cars that appear in
-the CODE (platform enums, fingerprints, fork-added ports) or in external
-sources but are ABSENT from CARS.md must STILL be listed — but explicitly
-flagged: give them status "unknown" or "partial" (whichever the evidence
-supports, never an unqualified "yes") with a note stating they are "in code
-but not in the published CARS.md" plus any caveat found. Never omit them and
-never silently count them as fully supported. This keeps car counts
-comparable across forks: published cars + explicitly-flagged code extras.
+CARS.md is the authoritative BASELINE: the "manufacturers" section of your
+output must contain ONLY cars published in CARS.md. Cars that appear ONLY in
+the CODE (platform enums, fingerprints, fork-added ports), code COMMENTS,
+OTHER docs, or git/PR history — but are absent from CARS.md — go into the
+separate top-level "other_cars" array (same manufacturer/cars structure).
+Sweep for them thoroughly: they are often the most interesting part of a
+fork. Give each a status of "unknown" or "partial" (whichever the evidence
+supports, never an unqualified "yes") and a note citing WHERE it was found
+("platform enum only", "WIP per comment in values.py", "mentioned in wiki").
+Never omit them and never mix them into "manufacturers". Include
+"other_cars" even when empty.
 
 Identify:
 
@@ -165,7 +168,11 @@ matching exactly this shape:
     "cars": [ {{ "id": "...", "name": "...",
                  "highlight": true, "note": "why it is highlighted",
                  "features": {{ "<feature-id>": {{ "status": "partial",
-                                                  "note": "..." }} }} }} ] }} ]
+                                                  "note": "..." }} }} }} ] }} ],
+  "other_cars": [ {{ "id": "...", "name": "...",
+    "cars": [ {{ "id": "...", "name": "...",
+                 "note": "where in code/docs it was found",
+                 "features": {{ "<feature-id>": "unknown" }} }} ] }} ]
 }}
 """
 
@@ -405,11 +412,35 @@ def main() -> int:
             "branch": branch_label,
         }
 
+        # Cars found only in code/comments/docs go to a sibling file so the
+        # main DB stays CARS.md-faithful. Always written, even when empty.
+        other = db.pop("other_cars", None) or []
+        feat_ids = {f.get("id") for f in db.get("features", [])}
+        for m in other:
+            for car in m.get("cars", []) or []:
+                for fid, val in list((car.get("features") or {}).items()):
+                    status = val.get("status") if isinstance(val, dict) else val
+                    if fid not in feat_ids or status not in VALID_STATUSES:
+                        print(f"warning: other_cars {car.get('name')}: dropping bad entry {fid!r}",
+                              file=sys.stderr)
+                        del car["features"][fid]
+        other_path = out_path.with_name(out_path.stem + ".other-cars.json")
+        other_path.parent.mkdir(parents=True, exist_ok=True)
+        other_path.write_text(json.dumps({
+            "schema_version": 1,
+            "fork": {"id": args.fork_id, "name": db["fork"].get("name"),
+                     "branch": branch_label,
+                     "generated_at": db["fork"]["generated_at"]},
+            "manufacturers": other,
+        }, indent=2) + "\n")
+
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(json.dumps(db, indent=2) + "\n")
         n_feats = len(db.get("features", []))
         n_cars = sum(len(m.get("cars", []) or []) for m in db.get("manufacturers", []))
+        n_other = sum(len(m.get("cars", []) or []) for m in other)
         print(f"wrote {out_path}  ({n_feats} features, {n_cars} cars)")
+        print(f"wrote {other_path}  ({n_other} code/doc-only cars)")
 
         label = args.label or (f"{db['fork'].get('name', fork_name)} — {args.branch}" if args.branch
                                else db["fork"].get("name", fork_name))
